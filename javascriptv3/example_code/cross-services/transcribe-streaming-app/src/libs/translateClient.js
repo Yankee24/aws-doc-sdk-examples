@@ -1,5 +1,7 @@
-/* Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
-SPDX-License-Identifier: Apache-2.0
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
+
+/*
 ABOUT THIS NODE.JS EXAMPLE: This example works with the AWS SDK for JavaScript version 3 (v3),
 which is available at https://github.com/aws/aws-sdk-js-v3.
 
@@ -10,22 +12,32 @@ This file handles the translation of the transcribed text using AWS Translate
 // snippet-start:[translateClient.JavaScript.streaming.createclientv3]
 import { CognitoIdentityClient } from "@aws-sdk/client-cognito-identity";
 import { fromCognitoIdentityPool } from "@aws-sdk/credential-provider-cognito-identity";
-import { TranslateClient, TranslateTextCommand } from "@aws-sdk/client-translate";
-import { ComprehendClient, DetectDominantLanguageCommand } from "@aws-sdk/client-comprehend";
+import {
+  TranslateClient,
+  TranslateTextCommand,
+} from "@aws-sdk/client-translate";
+import {
+  ComprehendClient,
+  DetectDominantLanguageCommand,
+} from "@aws-sdk/client-comprehend";
 import * as awsID from "./awsID.js";
 
 export const translateTextToLanguage = async (text, targetLanguage) => {
   const sourceLanguage = await detectLanguageOfText(text);
-  return await translateTextFromLanguageToLanguage(text, sourceLanguage, targetLanguage);
+  return await translateTextFromLanguageToLanguage(
+    text,
+    sourceLanguage,
+    targetLanguage,
+  );
 };
 
-const detectLanguageOfText = async(text) => {
+const detectLanguageOfText = async (text) => {
   const comprehendClient = createComprehendClient();
   const data = await comprehendClient.send(
-    new DetectDominantLanguageCommand({ Text: text })
+    new DetectDominantLanguageCommand({ Text: text }),
   );
   return data.Languages[0].LanguageCode;
-}
+};
 
 const createComprehendClient = () => {
   return new ComprehendClient({
@@ -35,9 +47,13 @@ const createComprehendClient = () => {
       identityPoolId: awsID.IDENTITY_POOL_ID,
     }),
   });
-}
+};
 
-const translateTextFromLanguageToLanguage = async (text, sourceLanguage, targetLanguage) => {
+const translateTextFromLanguageToLanguage = async (
+  text,
+  sourceLanguage,
+  targetLanguage,
+) => {
   const translateClient = createTranslateClient();
   const translateParams = {
     Text: text,
@@ -45,11 +61,10 @@ const translateTextFromLanguageToLanguage = async (text, sourceLanguage, targetL
     TargetLanguageCode: targetLanguage,
   };
   const data = await translateClient.send(
-    new TranslateTextCommand(translateParams)
+    new TranslateTextCommand(translateParams),
   );
   return data.TranslatedText;
-
-}
+};
 
 const createTranslateClient = () => {
   return new TranslateClient({
@@ -59,6 +74,6 @@ const createTranslateClient = () => {
       identityPoolId: awsID.IDENTITY_POOL_ID,
     }),
   });
-}
+};
 
 // snippet-end:[translateClient.JavaScript.streaming.createclientv3]

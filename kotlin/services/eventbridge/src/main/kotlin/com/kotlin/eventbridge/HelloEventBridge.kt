@@ -1,11 +1,5 @@
-// snippet-sourcedescription:[HelloEventBridge.kt demonstrates how to list your Amazon EventBridge buses.]
-// snippet-keyword:[AWS SDK for Kotlin]
-// snippet-service:[Amazon EventBridge]
-
-/*
-   Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
-   SPDX-License-Identifier: Apache-2.0
-*/
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 
 package com.kotlin.eventbridge
 // snippet-start:[eventbridge.kotlin._list_buses.main]
@@ -18,9 +12,10 @@ suspend fun main() {
 }
 
 suspend fun listBusesHello() {
-    val request = ListEventBusesRequest {
-        limit = 10
-    }
+    val request =
+        ListEventBusesRequest {
+            limit = 10
+        }
 
     EventBridgeClient { region = "us-west-2" }.use { eventBrClient ->
         val response: ListEventBusesResponse = eventBrClient.listEventBuses(request)

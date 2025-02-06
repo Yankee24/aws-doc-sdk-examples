@@ -1,19 +1,19 @@
 {
-  "name": "example-javascriptv3-cloudwatchevents",
+  "name": "@aws-doc-sdk-examples/example-javascriptv3-cloudwatchevents",
   "version": "1.0.0",
   "author": "Corey Pyle <corepyle@amazon.com>",
   "license": "Apache-2.0",
   "dependencies": {
+    "@aws-doc-sdk-examples/lib": "^1.0.0",
     "@aws-sdk/client-cloudwatch-events": "^3.229.0",
     "@aws-sdk/client-cloudwatch-logs": "^3.229.0",
-    "@aws-sdk/client-lambda": "^3.229.0",
-    "libs": "*"
+    "@aws-sdk/client-lambda": "^3.229.0"
   },
   "type": "module",
   "scripts": {
-    "integration-test": "vitest run **/*.integration.test.js"
+    "integration-test": "vitest run **/*.integration.test.js --reporter=junit --outputFile=test_results/$npm_package_name.junit.xml"
   },
   "devDependencies": {
-    "vitest": "^0.25.7"
+    "vitest": "^1.6.0"
   }
 }

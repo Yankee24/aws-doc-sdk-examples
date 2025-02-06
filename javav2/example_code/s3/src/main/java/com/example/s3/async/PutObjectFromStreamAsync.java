@@ -1,3 +1,5 @@
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 package com.example.s3.async;
 
 // snippet-start:[s3.java2.async_stream.complete]
@@ -19,9 +21,8 @@ import java.util.concurrent.CompletableFuture;
 public class PutObjectFromStreamAsync {
     private static final Logger logger = LoggerFactory.getLogger(PutObjectFromStreamAsync.class);
 
-
     public static void main(String[] args) {
-        String bucketName = "x-" + UUID.randomUUID();
+        String bucketName = "amzn-s3-demo-bucket-" + UUID.randomUUID(); // Change bucket name.
         String key = UUID.randomUUID().toString();
 
         AsyncExampleUtils.createBucket(bucketName);

@@ -1,9 +1,9 @@
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
+
 /*
    A class to record the Amazon S3 buckets and files created by a code example,
    so that they can easily be cleaned up after the example is finished.
-
-   Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
-   SPDX-License-Identifier: Apache-2.0
 */
 
 import Foundation
@@ -54,7 +54,7 @@ public class S3DemoCleanup {
 
     init() async {
         do {
-            self.client = try S3Client(region: "us-east-2")
+            self.client = try await S3Client()
         } catch {
             print("Error initializing S3 client for tracking and deleting Amazon S3 buckets and files created by the example:")
             dump(error)

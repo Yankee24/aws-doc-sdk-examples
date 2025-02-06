@@ -1,3 +1,5 @@
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 import { describe, it, expect } from "vitest";
 
 import { main } from "../actions/partiql/partiql-batch-get.js";
@@ -14,7 +16,7 @@ describe("partiql-batch-get", () => {
         AttributeType: "S",
       },
     ],
-    [{ Unit: { S: "Teaspoons" } }, { Unit: { S: "Grams" } }]
+    [{ Unit: { S: "Teaspoons" } }, { Unit: { S: "Grams" } }],
   );
 
   it("should get specific items from the database", async () => {

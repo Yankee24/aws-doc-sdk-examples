@@ -1,7 +1,5 @@
-/*
-   Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
-   SPDX-License-Identifier: Apache-2.0
-*/
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 /**
  * Before running this C++ code example, set up your development environment, including your credentials.
  *
@@ -117,9 +115,10 @@ bool AwsDoc::DynamoDB::batchWriteItem(const Aws::String &jsonFilePath,
         std::cerr << "Error with DynamoDB::BatchWriteItem. "
                   << outcome.GetError().GetMessage()
                   << std::endl;
+        return false;
     }
 
-    return true;
+    return outcome.IsSuccess();
 }
 
 //! Convert requests in JSON format to a vector of WriteRequest objects.

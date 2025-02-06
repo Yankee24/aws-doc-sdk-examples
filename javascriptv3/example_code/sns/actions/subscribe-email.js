@@ -1,9 +1,7 @@
-/*
- * Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
- * SPDX-License-Identifier: Apache-2.0
- */
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 
-import { fileURLToPath } from "url";
+import { fileURLToPath } from "node:url";
 
 // snippet-start:[sns.JavaScript.subscriptions.subscribeEmailV3]
 
@@ -16,14 +14,14 @@ import { snsClient } from "../libs/snsClient.js";
  */
 export const subscribeEmail = async (
   topicArn = "TOPIC_ARN",
-  emailAddress = "usern@me.com"
+  emailAddress = "usern@me.com",
 ) => {
   const response = await snsClient.send(
     new SubscribeCommand({
       Protocol: "email",
       TopicArn: topicArn,
       Endpoint: emailAddress,
-    })
+    }),
   );
   console.log(response);
   // {

@@ -1,7 +1,5 @@
-/*
- * Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
- * SPDX-License-Identifier: Apache-2.0
- */
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 import {
   AttachRolePolicyCommand,
   CreateRoleCommand,
@@ -10,9 +8,8 @@ import {
   DetachRolePolicyCommand,
   IAMClient,
 } from "@aws-sdk/client-iam";
-import { DEFAULT_REGION } from "./constants.js";
 
-const client = new IAMClient({ region: DEFAULT_REGION });
+const client = new IAMClient({});
 
 const createRole = async (roleName, statement) => {
   const command = new CreateRoleCommand({
@@ -30,7 +27,7 @@ const createRole = async (roleName, statement) => {
   return Arn;
 };
 
-export const createLambdaRole = async (roleName) => {
+export const createLambdaRole = (roleName) => {
   return createRole(roleName, [
     {
       Effect: "Allow",
@@ -47,7 +44,7 @@ export const deleteRole = (roleName) => {
   return client.send(command);
 };
 
-export const attachRolePolicy = async (roleName, policyArn) => {
+export const attachRolePolicy = (roleName, policyArn) => {
   const command = new AttachRolePolicyCommand({
     PolicyArn: policyArn, // For example, arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
     RoleName: roleName, // For example, lambda-basic-execution-role
@@ -55,7 +52,6 @@ export const attachRolePolicy = async (roleName, policyArn) => {
 
   return client.send(command);
 };
-
 
 export const detachRolePolicy = (roleName, policyArn) => {
   const command = new DetachRolePolicyCommand({

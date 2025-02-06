@@ -1,10 +1,5 @@
-// snippet-sourcedescription:[GetJobs.kt demonstrates how to list all AWS Glue jobs.]
-// snippet-keyword:[AWS SDK for Kotlin]
-// snippet-keyword:[AWS Glue]
-/*
-   Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
-   SPDX-License-Identifier: Apache-2.0
-*/
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 
 package com.kotlin.glue
 
@@ -27,10 +22,10 @@ suspend fun main() {
 
 // snippet-start:[glue.kotlin.get_jobs.main]
 suspend fun getAllJobs() {
-
-    val request = GetJobsRequest {
-        maxResults = 10
-    }
+    val request =
+        GetJobsRequest {
+            maxResults = 10
+        }
 
     GlueClient { region = "us-east-1" }.use { glueClient ->
         val response = glueClient.getJobs(request)

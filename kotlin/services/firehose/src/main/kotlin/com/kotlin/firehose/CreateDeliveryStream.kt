@@ -1,10 +1,5 @@
-// snippet-sourcedescription:[CreateDeliveryStream.kt demonstrates how to create a delivery stream.]
-// snippet-keyword:[AWS SDK for Kotlin]
-// snippet-service:[Amazon Kinesis Data Firehose]
-/*
-   Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
-   SPDX-License-Identifier: Apache-2.0
-*/
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 
 package com.kotlin.firehose
 
@@ -25,7 +20,6 @@ https://docs.aws.amazon.com/sdk-for-kotlin/latest/developer-guide/setup.html
  */
 
 suspend fun main(args: Array<String>) {
-
     val usage = """
     
     Usage:
@@ -49,18 +43,23 @@ suspend fun main(args: Array<String>) {
 }
 
 // snippet-start:[firehose.kotlin.create_stream.main]
-suspend fun createStream(bucketARNVal: String?, roleARNVal: String?, streamName: String?) {
+suspend fun createStream(
+    bucketARNVal: String?,
+    roleARNVal: String?,
+    streamName: String?,
+) {
+    val destinationConfiguration =
+        ExtendedS3DestinationConfiguration {
+            bucketArn = bucketARNVal
+            roleArn = roleARNVal
+        }
 
-    val destinationConfiguration = ExtendedS3DestinationConfiguration {
-        bucketArn = bucketARNVal
-        roleArn = roleARNVal
-    }
-
-    val request = CreateDeliveryStreamRequest {
-        deliveryStreamName = streamName
-        extendedS3DestinationConfiguration = destinationConfiguration
-        deliveryStreamType = DeliveryStreamType.DirectPut
-    }
+    val request =
+        CreateDeliveryStreamRequest {
+            deliveryStreamName = streamName
+            extendedS3DestinationConfiguration = destinationConfiguration
+            deliveryStreamType = DeliveryStreamType.DirectPut
+        }
 
     FirehoseClient { region = "us-west-2" }.use { firehoseClient ->
         val streamResponse = firehoseClient.createDeliveryStream(request)

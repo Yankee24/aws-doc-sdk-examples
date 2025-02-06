@@ -1,11 +1,5 @@
-// snippet-sourcedescription:[DeleteMessages.kt demonstrates how to delete Amazon Simple Queue Service (Amazon SQS) messages and a queue.]
-// snippet-keyword:[AWS SDK for Kotlin]
-// snippet-service:[Amazon Simple Queue Service]
-
-/*
-   Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
-   SPDX-License-Identifier: Apache-2.0
-*/
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 
 package com.kotlin.sqs
 
@@ -24,7 +18,6 @@ For more information, see the following documentation topic:
 https://docs.aws.amazon.com/sdk-for-kotlin/latest/developer-guide/setup.html
  */
 suspend fun main(args: Array<String>) {
-
     val usage = """
         Usage: 
             <queueUrl>
@@ -46,9 +39,10 @@ suspend fun main(args: Array<String>) {
 suspend fun deleteMessages(queueUrlVal: String) {
     println("Delete Messages from $queueUrlVal")
 
-    val purgeRequest = PurgeQueueRequest {
-        queueUrl = queueUrlVal
-    }
+    val purgeRequest =
+        PurgeQueueRequest {
+            queueUrl = queueUrlVal
+        }
 
     SqsClient { region = "us-east-1" }.use { sqsClient ->
         sqsClient.purgeQueue(purgeRequest)
@@ -57,10 +51,10 @@ suspend fun deleteMessages(queueUrlVal: String) {
 }
 
 suspend fun deleteQueue(queueUrlVal: String) {
-
-    val request = DeleteQueueRequest {
-        queueUrl = queueUrlVal
-    }
+    val request =
+        DeleteQueueRequest {
+            queueUrl = queueUrlVal
+        }
 
     SqsClient { region = "us-east-1" }.use { sqsClient ->
         sqsClient.deleteQueue(request)

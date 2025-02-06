@@ -1,9 +1,7 @@
-/*
- * Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
- * SPDX-License-Identifier: Apache-2.0
- */
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 
-import { fileURLToPath } from "url";
+import { fileURLToPath } from "node:url";
 
 // snippet-start:[javascript.v3.support.actions.AddAttachmentsToSet]
 import { AddAttachmentsToSetCommand } from "@aws-sdk/client-support";
@@ -24,7 +22,7 @@ export const main = async () => {
             data: new TextEncoder().encode("some example text"),
           },
         ],
-      })
+      }),
     );
     // Use this ID in AddCommunicationToCase or CreateCase.
     console.log(response.attachmentSetId);

@@ -1,30 +1,8 @@
 <?php
-// snippet-sourcedescription:[GSI_CRUD.php demonstrates how to ]
-// snippet-service:[dynamodb]
-// snippet-keyword:[PHP]
-// snippet-sourcesyntax:[php]
-// snippet-keyword:[Amazon DynamoDB]
-// snippet-keyword:[Code Sample]
-// snippet-keyword:[ ]
-// snippet-sourcetype:[full-example]
-// snippet-sourcedate:[ ]
-// snippet-sourceauthor:[AWS]
-// snippet-start:[dynamodb.php.codeexample.GSI_CRUD] 
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 
-/**
- * Copyright 2010-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
- *
- * This file is licensed under the Apache License, Version 2.0 (the "License").
- * You may not use this file except in compliance with the License. A copy of
- * the License is located at
- *
- * http://aws.amazon.com/apache2.0/
- *
- * This file is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
- * CONDITIONS OF ANY KIND, either express or implied. See the License for the
- * specific language governing permissions and limitations under the License.
-*/
-
+// snippet-start:[dynamodb.php.codeexample.GSI_CRUD]
 require 'vendor/autoload.php';
 
 date_default_timezone_set('UTC');
@@ -43,13 +21,13 @@ $tableName = 'Issues';
 echo "# Creating table $tableName...\n";
 
 try {
-    $response = $dynamodb->createTable ( [
+    $response = $dynamodb->createTable([
         'TableName' => $tableName,
         'AttributeDefinitions' => [
             [ 'AttributeName' => 'IssueId', 'AttributeType' => 'S' ],
             [ 'AttributeName' => 'Title', 'AttributeType' => 'S' ],
             [ 'AttributeName' => 'CreateDate', 'AttributeType' => 'S' ],
-            [ 'AttributeName' => 'DueDate', 'AttributeType' => 'S' ] 
+            [ 'AttributeName' => 'DueDate', 'AttributeType' => 'S' ]
         ],
         'KeySchema' => [
             [ 'AttributeName' => 'IssueId', 'KeyType' => 'HASH' ],  //Partition key
@@ -64,11 +42,11 @@ try {
                 ],
                 'Projection' => [
                     'ProjectionType' => 'INCLUDE',
-                    'NonKeyAttributes' => [ 'Description', 'Status' ] 
+                    'NonKeyAttributes' => [ 'Description', 'Status' ]
                 ],
                 'ProvisionedThroughput' => [
-                    'ReadCapacityUnits' => 1, 'WriteCapacityUnits' => 1 
-                ] 
+                    'ReadCapacityUnits' => 1, 'WriteCapacityUnits' => 1
+                ]
             ],
             [
                 'IndexName' => 'TitleIndex',
@@ -78,8 +56,8 @@ try {
                 ],
                 'Projection' => [ 'ProjectionType' => 'KEYS_ONLY' ],
                 'ProvisionedThroughput' => [
-                    'ReadCapacityUnits' => 1, 'WriteCapacityUnits' => 1 
-                ] 
+                    'ReadCapacityUnits' => 1, 'WriteCapacityUnits' => 1
+                ]
             ],
             [
                 'IndexName' => 'DueDateIndex',
@@ -87,14 +65,14 @@ try {
                     [ 'AttributeName' => 'DueDate', 'KeyType' => 'HASH' ]  //Partition key
                 ],
                 'Projection' => [
-                    'ProjectionType' => 'ALL' 
+                    'ProjectionType' => 'ALL'
                 ],
                 'ProvisionedThroughput' => [
-                    'ReadCapacityUnits' => 1, 'WriteCapacityUnits' => 1 ] 
-            ] 
+                    'ReadCapacityUnits' => 1, 'WriteCapacityUnits' => 1 ]
+            ]
         ],
         'ProvisionedThroughput' => [
-            'ReadCapacityUnits' => 1, 'WriteCapacityUnits' => 1 ] 
+            'ReadCapacityUnits' => 1, 'WriteCapacityUnits' => 1 ]
     ]);
 
     echo "  Waiting for table $tableName to be created.\n";
@@ -106,10 +84,9 @@ try {
             ]
         ]);
     echo "  Table $tableName has been created.\n";
-
 } catch (DynamoDbException $e) {
     echo $e->getMessage() . "\n";
-    exit ("Unable to create table $tableName\n");
+    exit("Unable to create table $tableName\n");
 }
 
 // ########################################
@@ -117,7 +94,7 @@ try {
 
 echo "# Loading data into $tableName...\n";
 
-$response = $dynamodb->putItem ([
+$response = $dynamodb->putItem([
     'TableName' => $tableName,
     'Item' => [
         'IssueId' => [ 'S' => 'A-101' ],
@@ -128,11 +105,11 @@ $response = $dynamodb->putItem ([
         'LastUpdateDate' => [ 'S' => '2014-11-02' ],
         'DueDate' => [ 'S' => '2014-11-10' ],
         'Priority' => [ 'N' => '1' ],
-        'Status' => [ 'S' => 'Assigned' ] 
-    ] 
+        'Status' => [ 'S' => 'Assigned' ]
+    ]
 ]);
 
-$response = $dynamodb->putItem ([
+$response = $dynamodb->putItem([
     'TableName' => $tableName,
     'Item' => [
         'IssueId' => [ 'S' => 'A-102' ],
@@ -143,11 +120,11 @@ $response = $dynamodb->putItem ([
         'LastUpdateDate' => [ 'S' => '2014-11-04' ],
         'DueDate' => [ 'S' => '2014-11-30' ],
         'Priority' => [ 'N' => '2' ],
-        'Status' => [ 'S' => 'In progress' ] 
-    ] 
+        'Status' => [ 'S' => 'In progress' ]
+    ]
 ]);
 
-$response = $dynamodb->putItem ([
+$response = $dynamodb->putItem([
     'TableName' => $tableName,
     'Item' => [
         'IssueId' => [ 'S' => 'A-103' ],
@@ -158,11 +135,11 @@ $response = $dynamodb->putItem ([
         'LastUpdateDate' => [ 'S' => '2014-11-02' ],
         'DueDate' => [ 'S' => '2014-11-10' ],
         'Priority' => [ 'N' => '1' ],
-        'Status' => [ 'S' => 'In progress' ] 
-    ] 
+        'Status' => [ 'S' => 'In progress' ]
+    ]
 ]);
 
-$response = $dynamodb->putItem ([
+$response = $dynamodb->putItem([
     'TableName' => $tableName,
     'Item' => [
         'IssueId' => [ 'S' => 'A-104' ],
@@ -173,11 +150,11 @@ $response = $dynamodb->putItem ([
         'LastUpdateDate' => [ 'S' => '2014-11-16' ],
         'DueDate' => [ 'S' => '2014-11-30' ],
         'Priority' => [ 'N' => '3' ],
-        'Status' => [ 'S' => 'Assigned' ] 
-    ] 
+        'Status' => [ 'S' => 'Assigned' ]
+    ]
 ]);
 
-$response = $dynamodb->putItem ([
+$response = $dynamodb->putItem([
     'TableName' => $tableName,
     'Item' => [
         'IssueId' => [ 'S' => 'A-105' ],
@@ -188,17 +165,17 @@ $response = $dynamodb->putItem ([
         'LastUpdateDate' => [ 'S' => '2014-11-16' ],
         'DueDate' => [ 'S' => '2014-11-19' ],
         'Priority' => [ 'N' => '5' ],
-        'Status' => [ 'S' => 'Assigned' ] 
-    ] 
+        'Status' => [ 'S' => 'Assigned' ]
+    ]
 ]);
 
 // ########################################
 // Query for issues filed on 2014-11-01
 
-$response = $dynamodb->query ( [
+$response = $dynamodb->query([
     'TableName' => $tableName,
     'IndexName' => 'CreateDateIndex',
-    'KeyConditionExpression' => 
+    'KeyConditionExpression' =>
         'CreateDate = :v_dt and begins_with(IssueId, :v_issue)',
     'ExpressionAttributeValues' =>  [
         ':v_dt' => ['S' => '2014-11-01'],
@@ -207,11 +184,11 @@ $response = $dynamodb->query ( [
 ]);
 
 echo '# Query for issues filed on 2014-11-01:' . "\n";
-foreach ( $response ['Items'] as $item ) {
-    echo ' - ' . $item ['CreateDate'] ['S'] . 
-        ' ' . $item ['IssueId'] ['S'] . 
-        ' ' . $item ['Description'] ['S'] . 
-        ' ' . $item ['Status'] ['S'] . 
+foreach ($response ['Items'] as $item) {
+    echo ' - ' . $item ['CreateDate'] ['S'] .
+        ' ' . $item ['IssueId'] ['S'] .
+        ' ' . $item ['Description'] ['S'] .
+        ' ' . $item ['Status'] ['S'] .
         "\n";
 }
 
@@ -220,10 +197,10 @@ echo "\n";
 // ########################################
 // Query for issues that are 'Compilation errors'
 
-$response = $dynamodb->query ( [
+$response = $dynamodb->query([
     'TableName' => $tableName,
     'IndexName' => 'TitleIndex',
-    'KeyConditionExpression' => 
+    'KeyConditionExpression' =>
         'Title = :v_title and IssueId >= :v_issue',
     'ExpressionAttributeValues' =>  [
         ':v_title' => ['S' => 'Compilation error'],
@@ -233,9 +210,9 @@ $response = $dynamodb->query ( [
 
 echo '# Query for issues that are compilation errors: ' . "\n";
 
-foreach ( $response ['Items'] as $item ) {
-    echo ' - ' . $item ['Title'] ['S'] . 
-    ' ' . $item ['IssueId'] ['S'] . 
+foreach ($response ['Items'] as $item) {
+    echo ' - ' . $item ['Title'] ['S'] .
+    ' ' . $item ['IssueId'] ['S'] .
     "\n";
 }
 
@@ -244,7 +221,7 @@ echo "\n";
 // ########################################
 // Query for items that are due on 2014-11-30
 
-$response = $dynamodb->query ( [
+$response = $dynamodb->query([
     'TableName' => $tableName,
     'IndexName' => 'DueDateIndex',
     'KeyConditionExpression' => 'DueDate = :v_dt',
@@ -254,15 +231,14 @@ $response = $dynamodb->query ( [
 ]);
 
 echo "# Querying for items that are due on 2014-11-30:\n";
-foreach ( $response ['Items'] as $item ) {
-    
-    echo ' - ' . $item ['DueDate'] ['S'] . 
-        ' ' . $item ['IssueId'] ['S'] . 
-        ' ' . $item ['Title'] ['S'] . 
-        ' ' . $item ['Description'] ['S'] . 
-        ' ' . $item ['CreateDate'] ['S'] . 
-        ' ' . $item ['LastUpdateDate'] ['S'] . 
-        ' ' . $item ['Priority'] ['N'] . 
+foreach ($response ['Items'] as $item) {
+    echo ' - ' . $item ['DueDate'] ['S'] .
+        ' ' . $item ['IssueId'] ['S'] .
+        ' ' . $item ['Title'] ['S'] .
+        ' ' . $item ['Description'] ['S'] .
+        ' ' . $item ['CreateDate'] ['S'] .
+        ' ' . $item ['LastUpdateDate'] ['S'] .
+        ' ' . $item ['Priority'] ['N'] .
         ' ' . $item ['Status'] ['S'] . "\n";
 }
 
@@ -285,13 +261,9 @@ try {
     ]);
 
     echo "  Table $tableName has been deleted.\n";
-
 } catch (DynamoDbException $e) {
     echo $e->getMessage() . "\n";
-    exit ("Unable to delete table $tableName\n");
+    exit("Unable to delete table $tableName\n");
 }
 
-
-
-// snippet-end:[dynamodb.php.codeexample.GSI_CRUD] 
-?>
+// snippet-end:[dynamodb.php.codeexample.GSI_CRUD]

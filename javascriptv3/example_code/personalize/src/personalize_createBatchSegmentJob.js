@@ -1,5 +1,7 @@
-/* Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
-SPDX-License-Identifier: Apache-2.0
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
+
+/*
 ABOUT THIS NODE.JS EXAMPLE: This example works with the AWS SDK for JavaScript version 3 (v3),
 which is available at https://github.com/aws/aws-sdk-js-v3.
 
@@ -24,8 +26,7 @@ node createBatchSegmentJob.js
 
 // snippet-start:[personalize.JavaScript.createBatchSegmentJobV3]
 // Get service clients module and commands using ES6 syntax.
-import { CreateBatchSegmentJobCommand } from
-  "@aws-sdk/client-personalize";
+import { CreateBatchSegmentJobCommand } from "@aws-sdk/client-personalize";
 import { personalizeClient } from "./libs/personalizeClients.js";
 
 // Or, create the client here.
@@ -34,27 +35,27 @@ import { personalizeClient } from "./libs/personalizeClients.js";
 // Set the batch segment job's parameters.
 
 export const createBatchSegmentJobParam = {
-  jobName: 'NAME',
-  jobInput: {         /* required */
-    s3DataSource: {   /* required */
-      path: 'INPUT_PATH', /* required */
-      // kmsKeyArn: 'INPUT_KMS_KEY_ARN' /* optional */'
-    }
+  jobName: "NAME",
+  jobInput: {
+    s3DataSource: {
+      path: "INPUT_PATH",
+    },
   },
-  jobOutput: {         /* required */
-    s3DataDestination: {   /* required */
-      path: 'OUTPUT_PATH', /* required */
-      // kmsKeyArn: 'OUTPUT_KMS_KEY_ARN' /* optional */'
-    }
+  jobOutput: {
+    s3DataDestination: {
+      path: "OUTPUT_PATH",
+    },
   },
-  roleArn: 'ROLE_ARN', /* required */
-  solutionVersionArn: 'SOLUTION_VERSION_ARN', /* required */
-  numResults: 20 /* optional */
+  roleArn: "ROLE_ARN",
+  solutionVersionArn: "SOLUTION_VERSION_ARN",
+  numResults: 20,
 };
 
 export const run = async () => {
   try {
-    const response = await personalizeClient.send(new CreateBatchSegmentJobCommand(createBatchSegmentJobParam));
+    const response = await personalizeClient.send(
+      new CreateBatchSegmentJobCommand(createBatchSegmentJobParam),
+    );
     console.log("Success", response);
     return response; // For unit tests.
   } catch (err) {

@@ -1,8 +1,6 @@
-/*
- * Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
- * SPDX-License-Identifier: Apache-2.0
- */
-import { fileURLToPath } from "url";
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
+import { fileURLToPath } from "node:url";
 
 // snippet-start:[sns.JavaScript.topics.getTopicAttributesV3]
 import { GetTopicAttributesCommand } from "@aws-sdk/client-sns";
@@ -15,7 +13,7 @@ export const getTopicAttributes = async (topicArn = "TOPIC_ARN") => {
   const response = await snsClient.send(
     new GetTopicAttributesCommand({
       TopicArn: topicArn,
-    })
+    }),
   );
   console.log(response);
   // {

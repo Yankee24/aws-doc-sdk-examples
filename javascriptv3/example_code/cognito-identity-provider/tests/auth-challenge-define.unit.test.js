@@ -1,7 +1,5 @@
-/**
- * Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
- * SPDX-License-Identifier: Apache-2.0
- */
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 
 import { describe, it, expect } from "vitest";
 import { handler } from "../scenarios/lambda-triggers/functions/auth-challenge-define.mjs";
@@ -19,7 +17,7 @@ describe("auth-challenge-define", () => {
           failAuthentication: false,
           challengeName: "PASSWORD_VERIFIER",
         },
-      })
+      }),
     );
   });
 
@@ -40,7 +38,7 @@ describe("auth-challenge-define", () => {
           failAuthentication: false,
           challengeName: "CUSTOM_CHALLENGE",
         },
-      })
+      }),
     );
   });
 
@@ -62,7 +60,7 @@ describe("auth-challenge-define", () => {
           failAuthentication: false,
           challengeName: "CUSTOM_CHALLENGE",
         },
-      })
+      }),
     );
   });
 
@@ -84,7 +82,7 @@ describe("auth-challenge-define", () => {
           issueTokens: true,
           failAuthentication: false,
         },
-      })
+      }),
     );
   });
 
@@ -107,7 +105,7 @@ describe("auth-challenge-define", () => {
           issueTokens: false,
           failAuthentication: true,
         },
-      })
+      }),
     );
   });
 });

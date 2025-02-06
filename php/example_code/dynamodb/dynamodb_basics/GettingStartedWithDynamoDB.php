@@ -1,5 +1,4 @@
 <?php
-
 # Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 # SPDX-License-Identifier: Apache-2.0
 
@@ -33,6 +32,7 @@ use DynamoDb;
 use DynamoDb\DynamoDBAttribute;
 use DynamoDb\DynamoDBService;
 
+use function AwsUtilities\loadMovieData;
 use function AwsUtilities\testable_readline;
 
 class GettingStartedWithDynamoDB

@@ -1,11 +1,5 @@
-// snippet-sourcedescription:[DynamoDBScanItems.kt demonstrates how to return items from an Amazon DynamoDB table using a filter expression.]
-// snippet-keyword:[AWS SDK for Kotlin]
-// snippet-service:[Amazon DynamoDB]
-
-/*
-   Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
-   SPDX-License-Identifier: Apache-2.0
-*/
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 
 package com.kotlin.dynamodb
 
@@ -26,7 +20,6 @@ https://docs.aws.amazon.com/sdk-for-kotlin/latest/developer-guide/setup.html
 */
 
 suspend fun main(args: Array<String>) {
-
     val usage = """
     Usage:
         <tableName>
@@ -46,19 +39,19 @@ suspend fun main(args: Array<String>) {
 
 // snippet-start:[dynamodb.kotlin.scan_items_filter.main]
 suspend fun scanItemsUsingFilter(tableNameVal: String) {
-
     val myMap = HashMap<String, String>()
     myMap.put("#archive2", "archive")
 
     val myExMap = HashMap<String, AttributeValue>()
     myExMap.put(":val", AttributeValue.S("Open"))
 
-    val request = ScanRequest {
-        this.expressionAttributeNames = myMap
-        this.expressionAttributeValues = myExMap
-        tableName = tableNameVal
-        filterExpression = "#archive2 = :val"
-    }
+    val request =
+        ScanRequest {
+            this.expressionAttributeNames = myMap
+            this.expressionAttributeValues = myExMap
+            tableName = tableNameVal
+            filterExpression = "#archive2 = :val"
+        }
 
     DynamoDbClient { region = "us-east-1" }.use { ddb ->
         val response = ddb.scan(request)
@@ -72,7 +65,6 @@ suspend fun scanItemsUsingFilter(tableNameVal: String) {
                         println(myVal)
                     }
                     "status" -> {
-
                         val myVal = splitMyString(item[key].toString())
                         println(myVal)
                     }
@@ -105,7 +97,6 @@ suspend fun scanItemsUsingFilter(tableNameVal: String) {
 }
 
 fun splitMyString(str: String): String {
-
     val del1 = "="
     val del2 = ")"
     val parts = str.split(del1, del2)

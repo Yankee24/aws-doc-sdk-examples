@@ -1,11 +1,5 @@
-// snippet-sourcedescription:[ScenarioPartiQLBatch.kt demonstrates how to work with PartiQL for Amazon DynamoDB.]
-// snippet-keyword:[AWS SDK for Kotlin]
-// snippet-service:[Amazon DynamoDB]
-
-/*
-   Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
-   SPDX-License-Identifier: Apache-2.0
-*/
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 
 package com.kotlin.dynamodb
 
@@ -42,7 +36,6 @@ import aws.sdk.kotlin.services.dynamodb.waiters.waitUntilTableExists
 
 // snippet-start:[dynamodb.kotlin.scenario.partiql.batch.main]
 suspend fun main() {
-
     val ddb = DynamoDbClient { region = "us-east-1" }
     val tableName = "MoviesPartiQBatch"
     println("Creating an Amazon DynamoDB table named $tableName with a key named id and a sort key named title.")
@@ -53,49 +46,58 @@ suspend fun main() {
     deleteTablePartiQLBatch(tableName)
 }
 
-suspend fun createTablePartiQLBatch(ddb: DynamoDbClient, tableNameVal: String, key: String) {
+suspend fun createTablePartiQLBatch(
+    ddb: DynamoDbClient,
+    tableNameVal: String,
+    key: String,
+) {
+    val attDef =
+        AttributeDefinition {
+            attributeName = key
+            attributeType = ScalarAttributeType.N
+        }
 
-    val attDef = AttributeDefinition {
-        attributeName = key
-        attributeType = ScalarAttributeType.N
-    }
+    val attDef1 =
+        AttributeDefinition {
+            attributeName = "title"
+            attributeType = ScalarAttributeType.S
+        }
 
-    val attDef1 = AttributeDefinition {
-        attributeName = "title"
-        attributeType = ScalarAttributeType.S
-    }
+    val keySchemaVal =
+        KeySchemaElement {
+            attributeName = key
+            keyType = KeyType.Hash
+        }
 
-    val keySchemaVal = KeySchemaElement {
-        attributeName = key
-        keyType = KeyType.Hash
-    }
+    val keySchemaVal1 =
+        KeySchemaElement {
+            attributeName = "title"
+            keyType = KeyType.Range
+        }
 
-    val keySchemaVal1 = KeySchemaElement {
-        attributeName = "title"
-        keyType = KeyType.Range
-    }
+    val provisionedVal =
+        ProvisionedThroughput {
+            readCapacityUnits = 10
+            writeCapacityUnits = 10
+        }
 
-    val provisionedVal = ProvisionedThroughput {
-        readCapacityUnits = 10
-        writeCapacityUnits = 10
-    }
-
-    val request = CreateTableRequest {
-        attributeDefinitions = listOf(attDef, attDef1)
-        keySchema = listOf(keySchemaVal, keySchemaVal1)
-        provisionedThroughput = provisionedVal
-        tableName = tableNameVal
-    }
+    val request =
+        CreateTableRequest {
+            attributeDefinitions = listOf(attDef, attDef1)
+            keySchema = listOf(keySchemaVal, keySchemaVal1)
+            provisionedThroughput = provisionedVal
+            tableName = tableNameVal
+        }
 
     val response = ddb.createTable(request)
-    ddb.waitUntilTableExists { // suspend call
+    ddb.waitUntilTableExists {
+        // suspend call
         tableName = tableNameVal
     }
     println("The table was successfully created ${response.tableDescription?.tableArn}")
 }
 
 suspend fun putRecordBatch(ddb: DynamoDbClient) {
-
     val sqlStatement = "INSERT INTO MoviesPartiQBatch VALUE {'year':?, 'title' : ?, 'info' : ?}"
 
     // Create three movies to add to the Amazon DynamoDB table.
@@ -104,10 +106,11 @@ suspend fun putRecordBatch(ddb: DynamoDbClient) {
     parametersMovie1.add(AttributeValue.S("My Movie 1"))
     parametersMovie1.add(AttributeValue.S("No Information"))
 
-    val statementRequestMovie1 = BatchStatementRequest {
-        statement = sqlStatement
-        parameters = parametersMovie1
-    }
+    val statementRequestMovie1 =
+        BatchStatementRequest {
+            statement = sqlStatement
+            parameters = parametersMovie1
+        }
 
     // Set data for Movie 2.
     val parametersMovie2 = mutableListOf<AttributeValue>()
@@ -115,10 +118,11 @@ suspend fun putRecordBatch(ddb: DynamoDbClient) {
     parametersMovie2.add(AttributeValue.S("My Movie 2"))
     parametersMovie2.add(AttributeValue.S("No Information"))
 
-    val statementRequestMovie2 = BatchStatementRequest {
-        statement = sqlStatement
-        parameters = parametersMovie2
-    }
+    val statementRequestMovie2 =
+        BatchStatementRequest {
+            statement = sqlStatement
+            parameters = parametersMovie2
+        }
 
     // Set data for Movie 3.
     val parametersMovie3 = mutableListOf<AttributeValue>()
@@ -126,10 +130,11 @@ suspend fun putRecordBatch(ddb: DynamoDbClient) {
     parametersMovie3.add(AttributeValue.S("My Movie 3"))
     parametersMovie3.add(AttributeValue.S("No Information"))
 
-    val statementRequestMovie3 = BatchStatementRequest {
-        statement = sqlStatement
-        parameters = parametersMovie3
-    }
+    val statementRequestMovie3 =
+        BatchStatementRequest {
+            statement = sqlStatement
+            parameters = parametersMovie3
+        }
 
     // Add all three movies to the list.
     val myBatchStatementList = mutableListOf<BatchStatementRequest>()
@@ -137,9 +142,10 @@ suspend fun putRecordBatch(ddb: DynamoDbClient) {
     myBatchStatementList.add(statementRequestMovie2)
     myBatchStatementList.add(statementRequestMovie3)
 
-    val batchRequest = BatchExecuteStatementRequest {
-        statements = myBatchStatementList
-    }
+    val batchRequest =
+        BatchExecuteStatementRequest {
+            statements = myBatchStatementList
+        }
     val response = ddb.batchExecuteStatement(batchRequest)
     println("ExecuteStatement successful: " + response.toString())
     println("Added new movies using a batch command.")
@@ -151,28 +157,31 @@ suspend fun updateTableItemBatchBatch(ddb: DynamoDbClient) {
     val parametersRec1 = mutableListOf<AttributeValue>()
     parametersRec1.add(AttributeValue.N("2022"))
     parametersRec1.add(AttributeValue.S("My Movie 1"))
-    val statementRequestRec1 = BatchStatementRequest {
-        statement = sqlStatement
-        parameters = parametersRec1
-    }
+    val statementRequestRec1 =
+        BatchStatementRequest {
+            statement = sqlStatement
+            parameters = parametersRec1
+        }
 
     // Update record 2.
     val parametersRec2 = mutableListOf<AttributeValue>()
     parametersRec2.add(AttributeValue.N("2022"))
     parametersRec2.add(AttributeValue.S("My Movie 2"))
-    val statementRequestRec2 = BatchStatementRequest {
-        statement = sqlStatement
-        parameters = parametersRec2
-    }
+    val statementRequestRec2 =
+        BatchStatementRequest {
+            statement = sqlStatement
+            parameters = parametersRec2
+        }
 
     // Update record 3.
     val parametersRec3 = mutableListOf<AttributeValue>()
     parametersRec3.add(AttributeValue.N("2022"))
     parametersRec3.add(AttributeValue.S("My Movie 3"))
-    val statementRequestRec3 = BatchStatementRequest {
-        statement = sqlStatement
-        parameters = parametersRec3
-    }
+    val statementRequestRec3 =
+        BatchStatementRequest {
+            statement = sqlStatement
+            parameters = parametersRec3
+        }
 
     // Add all three movies to the list.
     val myBatchStatementList = mutableListOf<BatchStatementRequest>()
@@ -180,9 +189,10 @@ suspend fun updateTableItemBatchBatch(ddb: DynamoDbClient) {
     myBatchStatementList.add(statementRequestRec2)
     myBatchStatementList.add(statementRequestRec3)
 
-    val batchRequest = BatchExecuteStatementRequest {
-        statements = myBatchStatementList
-    }
+    val batchRequest =
+        BatchExecuteStatementRequest {
+            statements = myBatchStatementList
+        }
 
     val response = ddb.batchExecuteStatement(batchRequest)
     println("ExecuteStatement successful: $response")
@@ -191,35 +201,37 @@ suspend fun updateTableItemBatchBatch(ddb: DynamoDbClient) {
 }
 
 suspend fun deleteItemsBatch(ddb: DynamoDbClient) {
-
     // Specify three records to delete.
     val sqlStatement = "DELETE FROM MoviesPartiQBatch WHERE year = ? and title=?"
     val parametersRec1 = mutableListOf<AttributeValue>()
     parametersRec1.add(AttributeValue.N("2022"))
     parametersRec1.add(AttributeValue.S("My Movie 1"))
 
-    val statementRequestRec1 = BatchStatementRequest {
-        statement = sqlStatement
-        parameters = parametersRec1
-    }
+    val statementRequestRec1 =
+        BatchStatementRequest {
+            statement = sqlStatement
+            parameters = parametersRec1
+        }
 
     // Specify record 2.
     val parametersRec2 = mutableListOf<AttributeValue>()
     parametersRec2.add(AttributeValue.N("2022"))
     parametersRec2.add(AttributeValue.S("My Movie 2"))
-    val statementRequestRec2 = BatchStatementRequest {
-        statement = sqlStatement
-        parameters = parametersRec2
-    }
+    val statementRequestRec2 =
+        BatchStatementRequest {
+            statement = sqlStatement
+            parameters = parametersRec2
+        }
 
     // Specify record 3.
     val parametersRec3 = mutableListOf<AttributeValue>()
     parametersRec3.add(AttributeValue.N("2022"))
     parametersRec3.add(AttributeValue.S("My Movie 3"))
-    val statementRequestRec3 = BatchStatementRequest {
-        statement = sqlStatement
-        parameters = parametersRec3
-    }
+    val statementRequestRec3 =
+        BatchStatementRequest {
+            statement = sqlStatement
+            parameters = parametersRec3
+        }
 
     // Add all three movies to the list.
     val myBatchStatementList = mutableListOf<BatchStatementRequest>()
@@ -227,19 +239,20 @@ suspend fun deleteItemsBatch(ddb: DynamoDbClient) {
     myBatchStatementList.add(statementRequestRec2)
     myBatchStatementList.add(statementRequestRec3)
 
-    val batchRequest = BatchExecuteStatementRequest {
-        statements = myBatchStatementList
-    }
+    val batchRequest =
+        BatchExecuteStatementRequest {
+            statements = myBatchStatementList
+        }
 
     ddb.batchExecuteStatement(batchRequest)
     println("Deleted three movies using a batch command.")
 }
 
 suspend fun deleteTablePartiQLBatch(tableNameVal: String) {
-
-    val request = DeleteTableRequest {
-        tableName = tableNameVal
-    }
+    val request =
+        DeleteTableRequest {
+            tableName = tableNameVal
+        }
 
     DynamoDbClient { region = "us-east-1" }.use { ddb ->
         ddb.deleteTable(request)

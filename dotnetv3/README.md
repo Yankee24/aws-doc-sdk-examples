@@ -34,7 +34,7 @@ Developer Guide](https://docs.aws.amazon.com/sdk-for-net/latest/developer-guide/
 
 - AWS credentials, either configured in a local AWS credentials file, or by
 setting the AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY environment variables.
-For more information, see the [AWS Tools and SDKs Shared Configuration and Credentials Reference Guide](https://docs.aws.amazon.com/credref/latest/refdocs/overview.html).
+For more information, see the authentication topics in the [AWS SDK for .NET Developer Guide](https://docs.aws.amazon.com/sdk-for-net/v3/developer-guide/creds-idc.html) and the [AWS Tools and SDKs Shared Configuration and Credentials Reference Guide](https://docs.aws.amazon.com/sdkref/latest/guide/access.html).
 
 ## Building and running the code examples
 
@@ -48,6 +48,26 @@ In general, follow these steps:
 3. Navigate to the directory containing the code example
    and a **.csproj** file.
 4. Run the project using the ```dotnet run``` command.
+
+## Linting
+We rely on [dotnet-format](https://github.com/dotnet/format) to keep this code consistently formatted and styled.
+To contribute .NET code to this project, please refer to the following installation and usage steps.
+
+### Using dotnet-format
+We run dotnet-format using [a custom configuration file](.editorconfig) against any changed file or directory. See the [.NET Github Action workflow](../.github/workflows/dotnet-check.yml) for details.
+
+To invoke dotnet-format yourself, first install it with
+
+```
+dotnet tool install -g dotnet-format`.
+```
+
+Next, run the dotnet-format command in the directory of your solution or project:
+
+```
+dotnet format
+```
+
 
 ## Tests
 ⚠️ Running the tests might result in charges to your AWS account.
@@ -89,8 +109,7 @@ for more information.
 
 1. Install and run Docker on your machine.
 2. Navigate to the same directory as this README.
-3. Optionally, un-comment the .NET 5 setup in the Docker file. .NET 6 will be installed by default.
-4. Run `docker build -t <image_name> .` where `image_name` is a name you provide for the image.
+3. Run `docker build -t <image_name> .` where `image_name` is a name you provide for the image.
 
 ### Launch the Docker container
 

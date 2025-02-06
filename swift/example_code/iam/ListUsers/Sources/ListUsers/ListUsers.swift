@@ -1,11 +1,10 @@
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 //
 // Swift Example: ListUsers
 //
 // An example showing how to use the Amazon Identity and Access Management (IAM)
 // `IAMClient` function `listUsers()`.
-//
-// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
-// SPDX-License-Identifier: Apache-2.0.
 
 // snippet-start:[iam.swift.listusers.example]
 // snippet-start:[iam.swift.listusers.main.imports]
@@ -29,9 +28,9 @@ struct ExampleCommand: ParsableCommand {
     /// example.
     // snippet-start:[iam.swift.listusers.command.runasync]
     func runAsync() async throws {
-        let serviceHandler = await ServiceHandler()
-
         do {
+            let serviceHandler = try await ServiceHandler()
+            
             var users: [MyUserRecord]
             users = try await serviceHandler.listUsers()
             
@@ -40,6 +39,7 @@ struct ExampleCommand: ParsableCommand {
                 print("  \(user.name) (\(user.id))")
             }
         } catch {
+            print("ERROR: ListUsers runAsync:", dump(error))
             throw error
         }
     }

@@ -1,5 +1,5 @@
 ﻿// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
-// SPDX-License-Identifier:  Apache-2.0
+// SPDX-License-Identifier: Apache-2.0
 
 namespace PartiQL_Batch_Scenario.Tests
 {
@@ -11,12 +11,6 @@ namespace PartiQL_Batch_Scenario.Tests
         public PartiQLBatchMethodsTests()
         {
             _ = DynamoDBMethods.CreateMovieTableAsync(tableName);
-        }
-
-        [Fact(Skip = "Quarantined test.")]
-        public void Dispose()
-        {
-            _ = DynamoDBMethods.DeleteTableAsync(tableName);
         }
 
         [Fact(Skip = "Quarantined test."), TestPriority(1)]

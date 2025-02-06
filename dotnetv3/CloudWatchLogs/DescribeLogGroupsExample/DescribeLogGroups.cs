@@ -1,5 +1,5 @@
 ﻿// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
-// SPDX-License-Identifier:  Apache-2.0
+// SPDX-License-Identifier: Apache-2.0
 
 namespace DescribeLogGroupsExample
 {
@@ -11,8 +11,7 @@ namespace DescribeLogGroupsExample
 
     /// <summary>
     /// Retrieves information about existing Amazon CloudWatch Logs log groups
-    /// and displays the information on the console. The example was created
-    /// using the AWS SDK for .NET version 3.7 and .NET Core 5.0.
+    /// and displays the information on the console.
     /// </summary>
     public class DescribeLogGroups
     {
@@ -24,26 +23,42 @@ namespace DescribeLogGroupsExample
             // pass the AWS Region as a parameter to the client constructor.
             var client = new AmazonCloudWatchLogsClient();
 
+            bool done = false;
+            string newToken = null;
+
             var request = new DescribeLogGroupsRequest
             {
                 Limit = 5,
             };
 
-            var response = await client.DescribeLogGroupsAsync(request);
+            DescribeLogGroupsResponse response;
 
-            if (response.LogGroups.Count > 0)
+            do
             {
-                do
+                if (newToken is not null)
                 {
-                    response.LogGroups.ForEach(lg =>
-                    {
-                        Console.WriteLine($"{lg.LogGroupName} is associated with the key: {lg.KmsKeyId}.");
-                        Console.WriteLine($"Created on: {lg.CreationTime.Date.Date}");
-                        Console.WriteLine($"Date for this group will be stored for: {lg.RetentionInDays} days.\n");
-                    });
+                    request.NextToken = newToken;
                 }
-                while (response.NextToken is not null);
+
+                response = await client.DescribeLogGroupsAsync(request);
+
+                response.LogGroups.ForEach(lg =>
+                {
+                    Console.WriteLine($"{lg.LogGroupName} is associated with the key: {lg.KmsKeyId}.");
+                    Console.WriteLine($"Created on: {lg.CreationTime.Date.Date}");
+                    Console.WriteLine($"Date for this group will be stored for: {lg.RetentionInDays} days.\n");
+                });
+
+                if (response.NextToken is null)
+                {
+                    done = true;
+                }
+                else
+                {
+                    newToken = response.NextToken;
+                }
             }
+            while (!done);
         }
     }
 

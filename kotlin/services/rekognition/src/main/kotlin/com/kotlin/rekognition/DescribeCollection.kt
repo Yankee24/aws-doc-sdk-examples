@@ -1,10 +1,5 @@
-// snippet-sourcedescription:[DescribeCollection.kt demonstrates how to retrieve the description of an Amazon Rekognition collection.]
-// snippet-keyword:[AWS SDK for Kotlin]
-// snippet-service:[Amazon Rekognition]
-/*
-   Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
-   SPDX-License-Identifier: Apache-2.0
-*/
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 package com.kotlin.rekognition
 
 // snippet-start:[rekognition.kotlin.describe_collection.import]
@@ -22,7 +17,6 @@ https://docs.aws.amazon.com/sdk-for-kotlin/latest/developer-guide/setup.html
  */
 
 suspend fun main(args: Array<String>) {
-
     val usage = """
     Usage: 
         <collectionId> 
@@ -43,10 +37,10 @@ suspend fun main(args: Array<String>) {
 
 // snippet-start:[rekognition.kotlin.describe_collection.main]
 suspend fun describeColl(collectionName: String) {
-
-    val request = DescribeCollectionRequest {
-        collectionId = collectionName
-    }
+    val request =
+        DescribeCollectionRequest {
+            collectionId = collectionName
+        }
 
     RekognitionClient { region = "us-east-1" }.use { rekClient ->
         val response = rekClient.describeCollection(request)

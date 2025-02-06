@@ -1,7 +1,6 @@
-/*
-Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
-SPDX-License-Identifier: Apache-2.0
-*/
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
+
 /**
  * Before running this C++ code example, set up your development environment, including your credentials.
  *
@@ -13,24 +12,22 @@ SPDX-License-Identifier: Apache-2.0
  * https://docs.aws.amazon.com/sdk-for-cpp/v1/developer-guide/getting-started-code-examples.html.
  *
  **/
-//snippet-start:[ec2.cpp.delete_key_pair.inc]
-#include <aws/core/Aws.h>
+// snippet-start:[ec2.cpp.delete_key_pair.inc]
 #include <aws/ec2/EC2Client.h>
 #include <aws/ec2/model/DeleteKeyPairRequest.h>
 #include <iostream>
-//snippet-end:[ec2.cpp.delete_key_pair.inc]
+// snippet-end:[ec2.cpp.delete_key_pair.inc]
 #include "ec2_samples.h"
 
-
+// snippet-start:[cpp.example_code.ec2.DeleteKeyPair]
 //! Delete an Amazon Elastic Compute Cloud (Amazon EC2) instance key pair.
 /*!
-  \sa DeleteKeyPair()
   \param keyPairName: A name for a key pair.
   \param clientConfiguration: AWS client configuration.
   \return bool: Function succeeded.
  */
 
-bool AwsDoc::EC2::DeleteKeyPair(const Aws::String &keyPairName,
+bool AwsDoc::EC2::deleteKeyPair(const Aws::String &keyPairName,
                                 const Aws::Client::ClientConfiguration &clientConfiguration) {
     // snippet-start:[ec2.cpp.delete_key_pair.code]
     Aws::EC2::EC2Client ec2Client(clientConfiguration);
@@ -43,8 +40,7 @@ bool AwsDoc::EC2::DeleteKeyPair(const Aws::String &keyPairName,
     if (!outcome.IsSuccess()) {
         std::cerr << "Failed to delete key pair " << keyPairName <<
                   ":" << outcome.GetError().GetMessage() << std::endl;
-    }
-    else {
+    } else {
         std::cout << "Successfully deleted key pair named " << keyPairName <<
                   std::endl;
     }
@@ -52,6 +48,7 @@ bool AwsDoc::EC2::DeleteKeyPair(const Aws::String &keyPairName,
 
     return outcome.IsSuccess();
 }
+// snippet-end:[cpp.example_code.ec2.DeleteKeyPair]
 
 /*
  *  main function
@@ -78,7 +75,7 @@ int main(int argc, char **argv) {
         // Optional: Set to the AWS Region (overrides config file).
         // clientConfig.region = "us-east-1";
         Aws::String keyPairName = argv[1];
-        AwsDoc::EC2::DeleteKeyPair(keyPairName, clientConfig);
+        AwsDoc::EC2::deleteKeyPair(keyPairName, clientConfig);
     }
     Aws::ShutdownAPI(options);
     return 0;

@@ -1,9 +1,7 @@
-/**
- * Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
- * SPDX-License-Identifier: Apache-2.0
- */
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 import { it, describe, expect } from "vitest";
-import { getUniqueName, postfix, wrapText } from "../utils/util-string";
+import { getUniqueName, postfix } from "../utils/util-string";
 
 describe("util-string", () => {
   describe("getUniqueName", () => {
@@ -17,6 +15,12 @@ describe("util-string", () => {
       const u1 = getUniqueName(value);
       const u2 = getUniqueName(value);
       expect(u1).not.toEqual(u2);
+    });
+
+    it("should throw an error if a falsy value is passed in for the prefix", () => {
+      expect(() => getUniqueName()).toThrowError();
+      expect(() => getUniqueName("")).toThrowError();
+      expect(() => getUniqueName(0)).toThrowError();
     });
   });
 

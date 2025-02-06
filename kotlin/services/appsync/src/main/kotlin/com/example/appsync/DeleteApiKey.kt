@@ -1,11 +1,5 @@
-// snippet-sourcedescription:[DeleteApiKey.kt demonstrates how to delete a unique key.]
-// snippet-keyword:[AWS SDK for Kotlin]
-// snippet-service:[AWS AppSync]
-
-/*
-   Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
-   SPDX-License-Identifier: Apache-2.0
-*/
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 
 package com.example.appsync
 
@@ -24,7 +18,6 @@ import kotlin.system.exitProcess
  */
 
 suspend fun main(args: Array<String>) {
-
     val usage = """
         Usage:
             <apiId> <keyId>
@@ -44,12 +37,15 @@ suspend fun main(args: Array<String>) {
 }
 
 // snippet-start:[appsync.kotlin.del_key.main]
-suspend fun deleteKey(keyIdVal: String?, apiIdVal: String?) {
-
-    val apiKeyRequest = DeleteApiKeyRequest {
-        apiId = apiIdVal
-        id = keyIdVal
-    }
+suspend fun deleteKey(
+    keyIdVal: String?,
+    apiIdVal: String?,
+) {
+    val apiKeyRequest =
+        DeleteApiKeyRequest {
+            apiId = apiIdVal
+            id = keyIdVal
+        }
 
     AppSyncClient { region = "us-east-1" }.use { appClient ->
         appClient.deleteApiKey(apiKeyRequest)

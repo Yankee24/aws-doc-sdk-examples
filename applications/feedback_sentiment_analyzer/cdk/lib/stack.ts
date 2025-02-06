@@ -1,3 +1,5 @@
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 import { Stack, CfnOutput, RemovalPolicy, Duration } from "aws-cdk-lib";
 import { Construct } from "constructs";
 
@@ -103,6 +105,7 @@ export class AppStack extends Stack {
         "image/png",
         "binary/octet-stream",
         "audio/mp3",
+        "audio/mpeg",
       ],
       cloudWatchRole: true,
       deployOptions: {

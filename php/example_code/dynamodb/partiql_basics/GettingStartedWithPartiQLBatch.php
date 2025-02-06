@@ -1,5 +1,4 @@
 <?php
-
 # Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 # SPDX-License-Identifier: Apache-2.0
 
@@ -32,6 +31,7 @@ use Aws\DynamoDb\Marshaler;
 use DynamoDb;
 use DynamoDb\DynamoDBAttribute;
 
+use function AwsUtilities\loadMovieData;
 use function AwsUtilities\testable_readline;
 
 class GettingStartedWithPartiQLBatch

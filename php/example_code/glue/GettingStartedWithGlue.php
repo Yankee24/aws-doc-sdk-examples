@@ -1,5 +1,4 @@
 <?php
-
 # Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 # SPDX-License-Identifier: Apache-2.0
 
@@ -140,11 +139,11 @@ class GettingStartedWithGlue
             echo $object['Key'] . "\n";
         }
 
-        echo "Downloading " . $objects[2]['Key'] . "\n";
+        echo "Downloading " . $objects[1]['Key'] . "\n";
         /** @var Stream $downloadObject */
         $downloadObject = $s3client->getObject([
             'Bucket' => $bucketName,
-            'Key' => $objects[2]['Key'],
+            'Key' => $objects[1]['Key'],
         ])['Body']->getContents();
         echo "Here is the first 1000 characters in the object.";
         echo substr($downloadObject, 0, 1000);

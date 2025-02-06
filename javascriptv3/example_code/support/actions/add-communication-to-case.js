@@ -1,9 +1,7 @@
-/*
- * Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
- * SPDX-License-Identifier: Apache-2.0
- */
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 
-import { fileURLToPath } from "url";
+import { fileURLToPath } from "node:url";
 
 // snippet-start:[javascript.v3.support.actions.AddCommunicationToCase]
 import { AddCommunicationToCaseCommand } from "@aws-sdk/client-support";
@@ -22,7 +20,7 @@ export const main = async () => {
         caseId: "CASE_ID",
         // Optional. Set value to an existing attachment set id to add attachments to the case.
         attachmentSetId,
-      })
+      }),
     );
     console.log(response);
     return response;

@@ -1,7 +1,5 @@
-/**
- * Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
- * SPDX-License-Identifier: Apache-2.0
- */
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 
 import {
   VerifySoftwareTokenCommand,
@@ -17,7 +15,7 @@ const verifySoftwareToken = (totp) => {
 
   if (!session) {
     throw new Error(
-      "Missing a valid Session. Did you run 'admin-initiate-auth'?"
+      "Missing a valid Session. Did you run 'admin-initiate-auth'?",
     );
   }
 

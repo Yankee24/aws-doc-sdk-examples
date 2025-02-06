@@ -1,30 +1,8 @@
 <?php
-// snippet-sourcedescription:[MoviesItemOps03.php demonstrates how to ]
-// snippet-service:[dynamodb]
-// snippet-keyword:[PHP]
-// snippet-sourcesyntax:[php]
-// snippet-keyword:[Amazon DynamoDB]
-// snippet-keyword:[Code Sample]
-// snippet-keyword:[ ]
-// snippet-sourcetype:[full-example]
-// snippet-sourcedate:[ ]
-// snippet-sourceauthor:[AWS]
-// snippet-start:[dynamodb.php.codeexample.MoviesItemOps03] 
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 
-/**
- * Copyright 2010-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
- *
- * This file is licensed under the Apache License, Version 2.0 (the "License").
- * You may not use this file except in compliance with the License. A copy of
- * the License is located at
- *
- * http://aws.amazon.com/apache2.0/
- *
- * This file is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
- * CONDITIONS OF ANY KIND, either express or implied. See the License for the
- * specific language governing permissions and limitations under the License.
-*/
-
+// snippet-start:[dynamodb.php.codeexample.MoviesItemOps03]
 require 'vendor/autoload.php';
 
 date_default_timezone_set('UTC');
@@ -53,7 +31,6 @@ $key = $marshaler->marshalJson('
     }
 ');
 
- 
 $eav = $marshaler->marshalJson('
     {
         ":r": 5.5 ,
@@ -65,9 +42,9 @@ $eav = $marshaler->marshalJson('
 $params = [
     'TableName' => $tableName,
     'Key' => $key,
-    'UpdateExpression' => 
+    'UpdateExpression' =>
         'set info.rating = :r, info.plot=:p, info.actors=:a',
-    'ExpressionAttributeValues'=> $eav,
+    'ExpressionAttributeValues' => $eav,
     'ReturnValues' => 'UPDATED_NEW'
 ];
 
@@ -75,13 +52,9 @@ try {
     $result = $dynamodb->updateItem($params);
     echo "Updated item.\n";
     print_r($result['Attributes']);
-
 } catch (DynamoDbException $e) {
     echo "Unable to update item:\n";
     echo $e->getMessage() . "\n";
 }
 
-
-
-// snippet-end:[dynamodb.php.codeexample.MoviesItemOps03] 
-?>
+// snippet-end:[dynamodb.php.codeexample.MoviesItemOps03]

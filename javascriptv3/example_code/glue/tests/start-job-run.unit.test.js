@@ -1,19 +1,19 @@
-/*
- * Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
- * SPDX-License-Identifier: Apache-2.0
- */
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 
 import { describe, it, expect, vi } from "vitest";
 
 import { makeStartJobRunStep } from "../scenarios/basic/steps/start-job-run.js";
 import { mockPrompter } from "./mock-prompter.js";
 
-describe("start-job-run", async () => {
+describe("start-job-run", () => {
   it("should call startJobRun with the job name from the environment variables", async () => {
-    const startJobRun = vi.fn(async () => ({}));
-    const getJobRun = vi.fn(async () => ({
-      JobRun: { JobRunState: "SUCCEEDED" },
-    }));
+    const startJobRun = vi.fn(() => Promise.resolve({}));
+    const getJobRun = vi.fn(() =>
+      Promise.resolve({
+        JobRun: { JobRunState: "SUCCEEDED" },
+      }),
+    );
     const actions = { startJobRun, getJobRun };
 
     const context = { prompter: mockPrompter({ shouldOpen: false }) };
@@ -30,10 +30,12 @@ describe("start-job-run", async () => {
   });
 
   it("should call prompt the user about opening a browser if the job succeeds", async () => {
-    const startJobRun = vi.fn(async () => ({}));
-    const getJobRun = vi.fn(async () => ({
-      JobRun: { JobRunState: "SUCCEEDED" },
-    }));
+    const startJobRun = vi.fn(() => Promise.resolve({}));
+    const getJobRun = vi.fn(() =>
+      Promise.resolve({
+        JobRun: { JobRunState: "SUCCEEDED" },
+      }),
+    );
     const actions = { startJobRun, getJobRun };
     const prompter = mockPrompter({ shouldOpen: false });
     const context = { prompter };
@@ -48,11 +50,13 @@ describe("start-job-run", async () => {
     });
   });
 
-  it("should throw an error if the job run failed", async () => {
-    const startJobRun = vi.fn(async () => ({}));
-    const getJobRun = vi.fn(async () => ({
-      JobRun: { JobRunState: "FAILED", ErrorMessage: "Deliberate Failure" },
-    }));
+  it("should throw an error if the job run failed", () => {
+    const startJobRun = vi.fn(() => Promise.resolve({}));
+    const getJobRun = vi.fn(() =>
+      Promise.resolve({
+        JobRun: { JobRunState: "FAILED", ErrorMessage: "Deliberate Failure" },
+      }),
+    );
     const actions = { startJobRun, getJobRun };
 
     const context = { prompter: mockPrompter({ shouldOpen: false }) };
@@ -64,10 +68,12 @@ describe("start-job-run", async () => {
   });
 
   it("should return a context object", async () => {
-    const startJobRun = vi.fn(async () => ({}));
-    const getJobRun = vi.fn(async () => ({
-      JobRun: { JobRunState: "SUCCEEDED" },
-    }));
+    const startJobRun = vi.fn(() => Promise.resolve({}));
+    const getJobRun = vi.fn(() =>
+      Promise.resolve({
+        JobRun: { JobRunState: "SUCCEEDED" },
+      }),
+    );
     const actions = { startJobRun, getJobRun };
 
     const context = { prompter: mockPrompter({ shouldOpen: false }) };

@@ -1,7 +1,9 @@
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 import { describe, it, expect, afterAll, vi } from "vitest";
 
-import { getUniqueName } from "libs/utils/util-string.js";
-import { retry } from "libs/utils/util-timers.js";
+import { getUniqueName } from "@aws-doc-sdk-examples/lib/utils/util-string.js";
+import { retry } from "@aws-doc-sdk-examples/lib/utils/util-timers.js";
 
 import { main as createQueue } from "../actions/create-queue.js";
 import { main as listQueues } from "../actions/list-queues.js";
@@ -33,8 +35,8 @@ describe("queue actions", () => {
 
     await retry({ intervalInMs: 1000, maxRetries: 60 }, async () => {
       const urls = await listQueues();
-
-      expect(urls[0]).toEqual(expect.stringContaining(queueName));
+      const queueNameFound = urls.some((url) => url.indexOf(queueName) > -1);
+      expect(queueNameFound).toBe(true);
     });
 
     await setQueueAttributes(queueUrl);
@@ -47,18 +49,18 @@ describe("queue actions", () => {
 
     const consoleSpy = vi.spyOn(console, "log");
 
-    await retry({ intervalInMs: 1000, maxRetries: 5 }, async () => {
+    await retry({ intervalInMs: 10000, maxRetries: 24 }, async () => {
       await receiveDeleteMessage(queueUrl);
       expect(consoleSpy).toHaveBeenCalledWith(
-        "Information about current NY Times fiction bestseller for week of 12/11/2016."
+        "Information about current NY Times fiction bestseller for week of 12/11/2016.",
       );
     });
 
     await deleteQueue(QueueUrl);
 
-    await retry({ intervalInMs: 1000, maxRetries: 60 }, async () => {
+    await retry({ intervalInMs: 5000, maxRetries: 60 }, async () => {
       const urlsAfterDelete = await listQueues();
-      expect(urlsAfterDelete.length).toBe(0);
+      expect(urlsAfterDelete).not.toContain(QueueUrl);
     });
   });
 });

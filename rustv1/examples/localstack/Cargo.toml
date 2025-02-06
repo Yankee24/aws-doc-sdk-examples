@@ -1,0 +1,12 @@
+# snippet-start:[localstack.rust.use-localstack-cargo.toml]
+[package]
+name = "localstack-example"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+aws-config = { version = "1", features = ["behavior-version-latest"] }
+aws-sdk-s3 = { version = "1" }
+tokio = { version = "1", features = ["full"] }
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+# snippet-end:[localstack.rust.use-localstack-cargo.toml]

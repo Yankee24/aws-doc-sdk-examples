@@ -1,11 +1,5 @@
-// snippet-sourcedescription:[CreateCampaign.kt demonstrates how to create an Amazon Pinpoint campaign.]
-// snippet-keyword:[AWS SDK for Kotlin]
-// snippet-keyword:[Amazon Pinpoint]
-
-/*
-   Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
-   SPDX-License-Identifier: Apache-2.0
-*/
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 
 package com.kotlin.pinpoint
 
@@ -30,7 +24,6 @@ https://docs.aws.amazon.com/sdk-for-kotlin/latest/developer-guide/setup.html
  */
 
 suspend fun main(args: Array<String>) {
-
     val usage = """
     Usage: <appId> <segmentId>
 
@@ -50,37 +43,44 @@ suspend fun main(args: Array<String>) {
 }
 
 // snippet-start:[pinpoint.kotlin.createcampaign.main]
-suspend fun createPinCampaign(appId: String, segmentIdVal: String) {
+suspend fun createPinCampaign(
+    appId: String,
+    segmentIdVal: String,
+) {
+    val scheduleOb =
+        Schedule {
+            startTime = "IMMEDIATE"
+        }
 
-    val scheduleOb = Schedule {
-        startTime = "IMMEDIATE"
-    }
+    val defaultMessageOb =
+        Message {
+            action = Action.OpenApp
+            body = "My message body"
+            title = "My message title"
+        }
 
-    val defaultMessageOb = Message {
-        action = Action.OpenApp
-        body = "My message body"
-        title = "My message title"
-    }
+    val messageConfigurationOb =
+        MessageConfiguration {
+            defaultMessage = defaultMessageOb
+        }
 
-    val messageConfigurationOb = MessageConfiguration {
-        defaultMessage = defaultMessageOb
-    }
-
-    val writeCampaign = WriteCampaignRequest {
-        description = "My description"
-        schedule = scheduleOb
-        name = "MyCampaign"
-        segmentId = segmentIdVal
-        messageConfiguration = messageConfigurationOb
-    }
+    val writeCampaign =
+        WriteCampaignRequest {
+            description = "My description"
+            schedule = scheduleOb
+            name = "MyCampaign"
+            segmentId = segmentIdVal
+            messageConfiguration = messageConfigurationOb
+        }
 
     PinpointClient { region = "us-west-2" }.use { pinpoint ->
-        val result: CreateCampaignResponse = pinpoint.createCampaign(
-            CreateCampaignRequest {
-                applicationId = appId
-                writeCampaignRequest = writeCampaign
-            }
-        )
+        val result: CreateCampaignResponse =
+            pinpoint.createCampaign(
+                CreateCampaignRequest {
+                    applicationId = appId
+                    writeCampaignRequest = writeCampaign
+                },
+            )
         println("Campaign ID is ${result.campaignResponse?.id}")
     }
 }

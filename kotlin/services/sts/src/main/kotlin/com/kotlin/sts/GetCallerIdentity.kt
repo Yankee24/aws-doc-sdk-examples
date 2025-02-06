@@ -1,12 +1,5 @@
-// snippet-comment:[These are tags for the AWS doc team's sample catalog. Do not remove.]
-// snippet-sourcedescription:[GetCallerIdentity.kt demonstrates how to obtain details about the IAM user whose credentials are used to call the operation.]
-// snippet-keyword:[AWS SDK for Kotlin]
-// snippet-keyword:[AWS Security Token Service (AWS STS)]
-
-/*
-   Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
-   SPDX-License-Identifier: Apache-2.0
-*/
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 
 package com.kotlin.sts
 
@@ -28,7 +21,6 @@ suspend fun main() {
 
 // snippet-start:[sts.kotlin.get_call_id.main]
 suspend fun getCallerId() {
-
     StsClient { region = "us-east-1" }.use { stsClient ->
         val response = stsClient.getCallerIdentity(GetCallerIdentityRequest {})
         println("The user id is ${response.userId}")

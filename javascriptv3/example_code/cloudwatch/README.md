@@ -1,60 +1,109 @@
-# Cloudwatch examples for the AWS SDK for JavaScript (v3)
+# CloudWatch code examples for the SDK for JavaScript (v3)
 
 ## Overview
 
-These code examples demonstrate how to work with Amazon CloudWatch
-using the AWS SDK for JavaScript (v3).
+Shows how to use the AWS SDK for JavaScript (v3) to work with Amazon CloudWatch.
 
-Amazon CloudWatch provides a reliable, scalable, and flexible monitoring solution that you can start using within minutes.
-You no longer need to set up, manage, and scale your own monitoring systems and infrastructure.
+<!--custom.overview.start-->
+<!--custom.overview.end-->
 
-## ⚠️ Important
+_CloudWatch provides a reliable, scalable, and flexible monitoring solution that you can start using within minutes._
 
-- Running this code might result in charges to your AWS account.
-- Running the tests might result in charges to your AWS account.
-- We recommend that you grant your code least privilege. At most, grant only the minimum permissions required to perform the task. For more information, see [Grant least privilege](https://docs.aws.amazon.com/IAM/latest/UserGuide/best-practices.html#grant-least-privilege).
-- This code is not tested in every AWS Region. For more information, see [AWS Regional Services](https://aws.amazon.com/about-aws/global-infrastructure/regional-product-services).
+## ⚠ Important
+
+* Running this code might result in charges to your AWS account. For more details, see [AWS Pricing](https://aws.amazon.com/pricing/) and [Free Tier](https://aws.amazon.com/free/).
+* Running the tests might result in charges to your AWS account.
+* We recommend that you grant your code least privilege. At most, grant only the minimum permissions required to perform the task. For more information, see [Grant least privilege](https://docs.aws.amazon.com/IAM/latest/UserGuide/best-practices.html#grant-least-privilege).
+* This code is not tested in every AWS Region. For more information, see [AWS Regional Services](https://aws.amazon.com/about-aws/global-infrastructure/regional-product-services).
+
+<!--custom.important.start-->
+<!--custom.important.end-->
 
 ## Code examples
 
-### Single Actions
+### Prerequisites
 
-- [Create an alarm that watches a metric](actions/put-metric-alarm.js)
-- [Delete alarms](actions/delete-alarms.js)
-- [Describe alarms for a metric](actions/describe-alarms.js)
-- [Disable alarm actions](actions/disable-alarm-actions.js)
-- [Enable alarm actions](actions/enable-alarm-actions.js)
-- [List metrics](actions/list-metrics.js)
-- [Put data into a metric](actions/put-metric-data.js)
+For prerequisites, see the [README](../../README.md#Prerequisites) in the `javascriptv3` folder.
+
+
+<!--custom.prerequisites.start-->
+<!--custom.prerequisites.end-->
+
+### Single actions
+
+Code excerpts that show you how to call individual service functions.
+
+- [DeleteAlarms](actions/delete-alarms.js#L4)
+- [DescribeAlarmsForMetric](actions/describe-alarms.js#L4)
+- [DisableAlarmActions](actions/disable-alarm-actions.js#L4)
+- [EnableAlarmActions](actions/enable-alarm-actions.js#L4)
+- [ListMetrics](actions/list-metrics.js#L4)
+- [PutMetricAlarm](actions/put-metric-alarm.js#L4)
+- [PutMetricData](actions/put-metric-data.js#L4)
+
+
+<!--custom.examples.start-->
+<!--custom.examples.end-->
+
+## Run the examples
+
+### Instructions
 
 **Note**: All code examples are written in ECMAscript 6 (ES6). For guidelines on converting to CommonJS, see
 [JavaScript ES6/CommonJS syntax](https://docs.aws.amazon.com/sdk-for-javascript/v3/developer-guide/sdk-examples-javascript-syntax.html).
 
-## Run the examples
-
-### Prerequisites
-
-1. [Set up AWS SDK for JavaScript](../README.md).
-1. Run `npm i`.
-
-### Instructions
-
 **Run a single action**
-1. Run `node ./actions/<fileName>`.
-OR
-1. Import `./actions/fileName` into another module.
 
-## Tests
+```bash
+node ./actions/<fileName>
+```
 
-⚠️ Running the tests might result in charges to your AWS account.
+**Run a scenario**
 
-1. Run `npm i`.
-1. Run `npm run integration-test`.
+Most scenarios can be run with the following command:
+```bash
+node ./scenarios/<fileName>
+```
+
+**Run with options**
+
+Some actions and scenarios can be run with options from the command line:
+```bash
+node ./scenarios/<fileName> --option1 --option2
+```
+[util.parseArgs](https://nodejs.org/api/util.html#utilparseargsconfig) is used to configure
+these options. For the specific options available to each script, see the `parseArgs` usage
+for that file.
+
+<!--custom.instructions.start-->
+<!--custom.instructions.end-->
+
+
+
+### Tests
+
+⚠ Running tests might result in charges to your AWS account.
+
+
+To find instructions for running these tests, see the [README](../../README.md#Tests)
+in the `javascriptv3` folder.
+
+
+
+<!--custom.tests.start-->
+<!--custom.tests.end-->
 
 ## Additional resources
 
-- [Amazon CloudWatch User Guide](https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/WhatIsCloudWatch.html)
-- [Amazon CloudWatch API reference](https://docs.aws.amazon.com/AmazonCloudWatch/latest/APIReference/Welcome.html)
-- [Amazon CloudWatch Client - AWS SDK for JavaScript (v3)](https://docs.aws.amazon.com/AWSJavaScriptSDK/v3/latest/client/cloudwatch/index.html)
+- [CloudWatch User Guide](https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/WhatIsCloudWatch.html)
+- [CloudWatch API Reference](https://docs.aws.amazon.com/AmazonCloudWatch/latest/APIReference/Welcome.html)
+- [SDK for JavaScript (v3) CloudWatch reference](https://docs.aws.amazon.com/AWSJavaScriptSDK/v3/latest/client/cloudwatch)
 
-Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved. SPDX-License-Identifier: Apache-2.0
+<!--custom.resources.start-->
+<!--custom.resources.end-->
+
+---
+
+Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+
+SPDX-License-Identifier: Apache-2.0

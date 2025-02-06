@@ -1,7 +1,5 @@
-/*
- * Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
- * SPDX-License-Identifier: Apache-2.0
- */
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 
 import { describe, it, expect, beforeAll, afterAll } from "vitest";
 import {
@@ -22,18 +20,21 @@ import {
 import { subscribeQueueFiltered } from "../actions/subscribe-queue-filtered.js";
 
 describe("subscribeQueue", () => {
-  let topicArn, queueArn, queueUrl, subscriptionArn;
+  let topicArn;
+  let queueArn;
+  let queueUrl;
+  let subscriptionArn;
   const sqsClient = new SQSClient({});
   const affix = Math.floor(Math.random() * 1000000);
 
   beforeAll(async () => {
     const { TopicArn } = await snsClient.send(
-      new CreateTopicCommand({ Name: `subscribe-queue-test-${affix}` })
+      new CreateTopicCommand({ Name: `subscribe-queue-test-${affix}` }),
     );
     topicArn = TopicArn;
 
     const { QueueUrl } = await sqsClient.send(
-      new CreateQueueCommand({ QueueName: `subscribe-queue-test-${affix}` })
+      new CreateQueueCommand({ QueueName: `subscribe-queue-test-${affix}` }),
     );
 
     queueUrl = QueueUrl;
@@ -44,7 +45,7 @@ describe("subscribeQueue", () => {
       new GetQueueAttributesCommand({
         QueueUrl,
         AttributeNames: ["QueueArn"],
-      })
+      }),
     );
 
     queueArn = QueueArn;
@@ -52,7 +53,7 @@ describe("subscribeQueue", () => {
 
   afterAll(async () => {
     await snsClient.send(
-      new UnsubscribeCommand({ SubscriptionArn: subscriptionArn })
+      new UnsubscribeCommand({ SubscriptionArn: subscriptionArn }),
     );
     await snsClient.send(new DeleteTopicCommand({ TopicArn: topicArn }));
     await sqsClient.send(new DeleteQueueCommand({ QueueUrl: queueUrl }));
@@ -64,14 +65,14 @@ describe("subscribeQueue", () => {
 
     const paginator = paginateListSubscriptions(
       { client: snsClient },
-      { TopicArn: topicArn }
+      { TopicArn: topicArn },
     );
 
     const subscriptionArns = [];
 
     for await (const page of paginator) {
       subscriptionArns.push(
-        ...page.Subscriptions.map((s) => s.SubscriptionArn)
+        ...page.Subscriptions.map((s) => s.SubscriptionArn),
       );
     }
 
@@ -80,18 +81,21 @@ describe("subscribeQueue", () => {
 });
 
 describe("subscribeQueueFiltered", () => {
-  let topicArn, queueArn, queueUrl, subscriptionArn;
+  let topicArn;
+  let queueArn;
+  let queueUrl;
+  let subscriptionArn;
   const sqsClient = new SQSClient({});
   const affix = Math.floor(Math.random() * 1000000);
 
   beforeAll(async () => {
     const { TopicArn } = await snsClient.send(
-      new CreateTopicCommand({ Name: `subscribe-queue-test-${affix}` })
+      new CreateTopicCommand({ Name: `subscribe-queue-test-${affix}` }),
     );
     topicArn = TopicArn;
 
     const { QueueUrl } = await sqsClient.send(
-      new CreateQueueCommand({ QueueName: `subscribe-queue-test-${affix}` })
+      new CreateQueueCommand({ QueueName: `subscribe-queue-test-${affix}` }),
     );
 
     queueUrl = QueueUrl;
@@ -102,7 +106,7 @@ describe("subscribeQueueFiltered", () => {
       new GetQueueAttributesCommand({
         QueueUrl,
         AttributeNames: ["QueueArn"],
-      })
+      }),
     );
 
     queueArn = QueueArn;
@@ -110,26 +114,29 @@ describe("subscribeQueueFiltered", () => {
 
   afterAll(async () => {
     await snsClient.send(
-      new UnsubscribeCommand({ SubscriptionArn: subscriptionArn })
+      new UnsubscribeCommand({ SubscriptionArn: subscriptionArn }),
     );
     await snsClient.send(new DeleteTopicCommand({ TopicArn: topicArn }));
     await sqsClient.send(new DeleteQueueCommand({ QueueUrl: queueUrl }));
   });
 
   it("should subscribe a queue to an SNS topic", async () => {
-    const { SubscriptionArn } = await subscribeQueueFiltered(topicArn, queueArn);
+    const { SubscriptionArn } = await subscribeQueueFiltered(
+      topicArn,
+      queueArn,
+    );
     subscriptionArn = SubscriptionArn;
 
     const paginator = paginateListSubscriptions(
       { client: snsClient },
-      { TopicArn: topicArn }
+      { TopicArn: topicArn },
     );
 
     const subscriptionArns = [];
 
     for await (const page of paginator) {
       subscriptionArns.push(
-        ...page.Subscriptions.map((s) => s.SubscriptionArn)
+        ...page.Subscriptions.map((s) => s.SubscriptionArn),
       );
     }
 

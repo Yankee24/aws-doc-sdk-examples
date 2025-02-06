@@ -1,15 +1,5 @@
-//snippet-sourcedescription:[CreateRestApi.kt demonstrates how to create a new RestApi resource.]
-//snippet-keyword:[SDK for Kotlin]
-//snippet-keyword:[Code Sample]
-//snippet-service:[Amazon API Gateway]
-//snippet-sourcetype:[full-example]
-//snippet-sourcedate:[11/03/2021]
-//snippet-sourceauthor:[scmacdon - aws]
-
-/*
-   Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
-   SPDX-License-Identifier: Apache-2.0
-*/
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 
 package com.kotlin.gateway
 
@@ -19,8 +9,7 @@ import aws.sdk.kotlin.services.apigateway.model.CreateRestApiRequest
 import kotlin.system.exitProcess
 // snippet-end:[apigateway.kotlin.create_api.import]
 
-suspend fun main(args:Array<String>) {
-
+suspend fun main(args: Array<String>) {
     val usage = """
     Usage:
         <restApiId> 
@@ -41,7 +30,6 @@ suspend fun main(args:Array<String>) {
 
 // snippet-start:[apigateway.kotlin.create_api.main]
 suspend fun createAPI(restApiName: String?): String? {
-
     val request = CreateRestApiRequest {
         description = "Created using the Gateway Kotlin API"
         name = restApiName

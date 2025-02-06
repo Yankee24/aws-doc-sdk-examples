@@ -1,11 +1,5 @@
-// snippet-sourcedescription:[ListDataSetGroups.kt demonstrates how to list data set groups for the Amazon Forecast service.]
-// snippet-keyword:[AWS SDK for Kotlin]
-// snippet-service:[Amazon Forecast]
-
-/*
-   Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
-   SPDX-License-Identifier: Apache-2.0
-*/
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 
 package com.kotlin.forecast
 
@@ -28,10 +22,10 @@ suspend fun main() {
 
 // snippet-start:[forecast.kotlin.list_forecast_datasetgroups.main]
 suspend fun listDataGroups() {
-
-    val request = ListDatasetGroupsRequest {
-        maxResults = 10
-    }
+    val request =
+        ListDatasetGroupsRequest {
+            maxResults = 10
+        }
 
     ForecastClient { region = "us-west-2" }.use { forecast ->
         val response = forecast.listDatasetGroups(request)

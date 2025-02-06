@@ -1,11 +1,5 @@
-// snippet-sourcedescription:[ListUsers.kt demonstrates how to list all AWS Identity and Access Management (IAM) users.]
-// snippet-keyword:[AWS SDK for Kotlin]
-// snippet-service:[Identity and Access Management (IAM)]
-
-/*
-   Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
-   SPDX-License-Identifier: Apache-2.0
-*/
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 
 package com.kotlin.iam
 
@@ -28,14 +22,14 @@ suspend fun main() {
 
 // snippet-start:[iam.kotlin.list_users.main]
 suspend fun listAllUsers() {
-
     IamClient { region = "AWS_GLOBAL" }.use { iamClient ->
         val response = iamClient.listUsers(ListUsersRequest { })
         response.users?.forEach { user ->
             println("Retrieved user ${user.userName}")
             val permissionsBoundary = user.permissionsBoundary
-            if (permissionsBoundary != null)
+            if (permissionsBoundary != null) {
                 println("Permissions boundary details ${permissionsBoundary.permissionsBoundaryType}")
+            }
         }
     }
 }

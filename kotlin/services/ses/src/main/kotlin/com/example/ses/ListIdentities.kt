@@ -1,11 +1,5 @@
-// snippet-sourcedescription:[ListIdentities.kt demonstrates how to obtain a list of identities for your AWS account.]
-// snippet-keyword:[AWS SDK for Kotlin]
-// snippet-keyword:[Amazon Simple Email Service]
-
-/*
-   Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
-   SPDX-License-Identifier: Apache-2.0
-*/
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 
 package com.kotlin.ses
 
@@ -28,7 +22,6 @@ suspend fun main() {
 
 // snippet-start:[ses.kotlin.identities.main]
 suspend fun listSESIdentities() {
-
     SesClient { region = "us-east-1" }.use { sesClient ->
         val response = sesClient.listIdentities(ListIdentitiesRequest {})
         response.identities?.forEach { identity ->

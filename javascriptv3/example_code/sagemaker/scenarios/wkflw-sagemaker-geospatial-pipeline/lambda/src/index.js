@@ -1,7 +1,5 @@
-/*
- * Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
- * SPDX-License-Identifier: Apache-2.0
- */
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 
 // snippet-start:[javascript.v3.sagemaker.wkflw.pipeline.lambda.function]
 import {
@@ -57,11 +55,11 @@ export async function handler(event) {
         Arn: event.vej_arn,
         ExecutionRoleArn: event.role,
         OutputConfig: outputConfig,
-      })
+      }),
     );
     console.info(
       "ExportVectorEnrichmentJob response",
-      JSON.stringify(response)
+      JSON.stringify(response),
     );
     return {
       export_vej_status: response.ExportStatus,
@@ -79,7 +77,7 @@ export async function handler(event) {
       const { Status, ErrorDetails } = await sagemakerGeospatialClient.send(
         new GetVectorEnrichmentJobCommand({
           Arn: body.arguments.vej_arn,
-        })
+        }),
       );
 
       switch (Status) {
@@ -88,7 +86,7 @@ export async function handler(event) {
             new SendPipelineExecutionStepSuccessCommand({
               CallbackToken: body.token,
               OutputParameters: [{ Name: "export_status", Value: Status }],
-            })
+            }),
           );
           break;
         case VectorEnrichmentJobStatus.FAILED:
@@ -96,7 +94,7 @@ export async function handler(event) {
             new SendPipelineExecutionStepFailureCommand({
               CallbackToken: body.token,
               FailureReason: ErrorDetails.ErrorMessage,
-            })
+            }),
           );
           break;
         case VectorEnrichmentJobStatus.IN_PROGRESS:
@@ -118,7 +116,7 @@ export async function handler(event) {
  */
 async function startVectorEnrichmentJob(
   client,
-  { name, jobConfig, inputConfig, role }
+  { name, jobConfig, inputConfig, role },
 ) {
   const command = new StartVectorEnrichmentJobCommand({
     Name: name,

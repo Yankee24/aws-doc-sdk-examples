@@ -1,11 +1,5 @@
-// snippet-sourcedescription:[TranslateText.kt demonstrates how to translate text from one language to another.]
-// snippet-keyword:[SDK for Kotlin]
-// snippet-service:[Amazon Translate]
-
-/*
-   Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
-   SPDX-License-Identifier: Apache-2.0
-*/
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 
 package com.kotlin.translate
 
@@ -27,12 +21,12 @@ suspend fun main() {
 
 // snippet-start:[translate.kotlin._text.main]
 suspend fun textTranslate() {
-
-    val textRequest = TranslateTextRequest {
-        sourceLanguageCode = "en"
-        targetLanguageCode = "fr"
-        text = "Its a sunny day today"
-    }
+    val textRequest =
+        TranslateTextRequest {
+            sourceLanguageCode = "en"
+            targetLanguageCode = "fr"
+            text = "Its a sunny day today"
+        }
 
     TranslateClient { region = "us-west-2" }.use { translateClient ->
         val textResponse = translateClient.translateText(textRequest)

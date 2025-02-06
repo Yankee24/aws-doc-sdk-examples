@@ -1,6 +1,7 @@
-/* Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
-SPDX-License-Identifier: Apache-2.0
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 
+/*
 ABOUT THIS NODE.JS EXAMPLE: This example works with the AWS SDK for JavaScript version 3 (v3),
 which is available at https://github.com/aws/aws-sdk-js-v3. This example is in the 'AWS SDK for JavaScript v3 Developer Guide' at
 https://docs.aws.amazon.com/sdk-for-javascript/v3/developer-guide/cross-service-example-scan-and-publish-message.html.
@@ -23,10 +24,8 @@ node lambda-function-setup.js
 
 // snippet-start:[lambda.JavaScript.general-examples-dynamodb-lambda.LambdaFunctionSetUpV3]
 
-const {
-  CreateFunctionCommand,
-} = require("@aws-sdk/client-lambda");
-const {lambdaClient} = require ( "../libs/lambdaClient.js" );
+const { CreateFunctionCommand } = require("@aws-sdk/client-lambda");
+const { lambdaClient } = require("../libs/lambdaClient.js");
 
 const params = {
   Code: {
@@ -38,8 +37,8 @@ const params = {
   Role: "IAM_ROLE_ARN", // IAM_ROLE_ARN; e.g., arn:aws:iam::650138640062:role/v3-lambda-tutorial-lambda-role
   Runtime: "nodejs12.x",
   Description:
-      "Scans a DynamoDB table of employee details and using Amazon Simple Notification Service (Amazon SNS) to " +
-      "send employees an email on the anniversary of their start-date.",
+    "Scans a DynamoDB table of employee details and using Amazon Simple Notification Service (Amazon SNS) to " +
+    "send employees an email on the anniversary of their start-date.",
 };
 
 const run = async () => {
@@ -52,5 +51,3 @@ const run = async () => {
 };
 run();
 // snippet-end:[lambda.JavaScript.general-examples-dynamodb-lambda.LambdaFunctionSetUpV3]
-
-

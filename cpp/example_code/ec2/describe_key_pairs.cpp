@@ -1,7 +1,5 @@
-/*
-   Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
-   SPDX-License-Identifier: Apache-2.0
-*/
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 /**
  * Before running this C++ code example, set up your development environment, including your credentials.
  *
@@ -14,29 +12,28 @@
  *
  **/
 
-//snippet-start:[ec2.cpp.describe_key_pairs.inc]
-#include <aws/core/Aws.h>
+// snippet-start:[ec2.cpp.describe_key_pairs.inc]
 #include <aws/ec2/EC2Client.h>
 #include <aws/ec2/model/DescribeKeyPairsRequest.h>
 #include <aws/ec2/model/DescribeKeyPairsResponse.h>
 #include <iomanip>
 #include <iostream>
-//snippet-end:[ec2.cpp.describe_key_pairs.inc]
+// snippet-end:[ec2.cpp.describe_key_pairs.inc]
 #include "ec2_samples.h"
 
+// snippet-start:[cpp.example_code.ec2.DescribeKeyPairs]
 //! Describe all Amazon Elastic Compute Cloud (Amazon EC2) instance key pairs.
 /*!
-  \sa DescribeKeyPairs()
   \param clientConfiguration: AWS client configuration.
   \return bool: Function succeeded.
  */
-bool AwsDoc::EC2::DescribeKeyPairs(
+bool AwsDoc::EC2::describeKeyPairs(
         const Aws::Client::ClientConfiguration &clientConfiguration) {
     // snippet-start:[ec2.cpp.describe_key_pairs.code]
     Aws::EC2::EC2Client ec2Client(clientConfiguration);
     Aws::EC2::Model::DescribeKeyPairsRequest request;
 
-    auto outcome = ec2Client.DescribeKeyPairs(request);
+    Aws::EC2::Model::DescribeKeyPairsOutcome outcome = ec2Client.DescribeKeyPairs(request);
     if (outcome.IsSuccess()) {
         std::cout << std::left <<
                   std::setw(32) << "Name" <<
@@ -49,8 +46,7 @@ bool AwsDoc::EC2::DescribeKeyPairs(
                       std::setw(32) << key_pair.GetKeyName() <<
                       std::setw(64) << key_pair.GetKeyFingerprint() << std::endl;
         }
-    }
-    else {
+    } else {
         std::cerr << "Failed to describe key pairs:" <<
                   outcome.GetError().GetMessage() << std::endl;
     }
@@ -58,6 +54,7 @@ bool AwsDoc::EC2::DescribeKeyPairs(
 
     return outcome.IsSuccess();
 }
+// snippet-end:[cpp.example_code.ec2.DescribeKeyPairs]
 
 /*
  *
@@ -76,7 +73,7 @@ int main(int argc, char **argv) {
         Aws::Client::ClientConfiguration clientConfig;
         // Optional: Set to the AWS Region (overrides config file).
         // clientConfig.region = "us-east-1";
-        AwsDoc::EC2::DescribeKeyPairs(clientConfig);
+        AwsDoc::EC2::describeKeyPairs(clientConfig);
     }
     Aws::ShutdownAPI(options);
     return 0;

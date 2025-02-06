@@ -1,11 +1,5 @@
-// snippet-sourcedescription:[GetBots.kt demonstrates how to return information about Amazon Lex chatbots.]
-// snippet-keyword:[AWS SDK for Kotlin]
-// snippet-service:[Amazon Lex]
-
-/*
-   Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
-   SPDX-License-Identifier: Apache-2.0
-*/
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 
 package com.kotlin.lex
 
@@ -28,7 +22,6 @@ suspend fun main() {
 
 // snippet-start:[lex.kotlin.get_bots.main]
 suspend fun getAllBots() {
-
     LexModelBuildingClient { region = "us-west-2" }.use { lexClient ->
         val response = lexClient.getBots(GetBotsRequest {})
         response.bots?.forEach { bot ->

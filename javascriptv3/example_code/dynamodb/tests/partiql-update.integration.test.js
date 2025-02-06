@@ -1,3 +1,5 @@
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 import { describe, it, expect } from "vitest";
 import { DynamoDBClient, GetItemCommand } from "@aws-sdk/client-dynamodb";
 
@@ -19,7 +21,7 @@ describe("partiql-update", () => {
         AttributeType: "S",
       },
     ],
-    starterValues
+    starterValues,
   );
 
   it("should mark blue eyes as recessive", async () => {

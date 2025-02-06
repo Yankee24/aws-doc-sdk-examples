@@ -1,10 +1,5 @@
-// snippet-sourcedescription:[StockTradeGenerator.kt is a helper class]
-// snippet-keyword:[AWS SDK for Kotlin]
-// snippet-service:[Amazon Kinesis Data Firehose]
-/*
-   Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
-   SPDX-License-Identifier: Apache-2.0
-*/
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 package com.example.firehose
 
 import com.kotlin.firehose.StockTrade
@@ -87,5 +82,8 @@ class StockTradeGenerator {
             return StockTrade(stockPrice.tickerSymbol, tradeType, price, quantity, id.getAndIncrement())
         }
 
-    private class StockPrice(var tickerSymbol: String, var price: Double)
+    private class StockPrice(
+        var tickerSymbol: String,
+        var price: Double,
+    )
 }

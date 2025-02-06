@@ -1,5 +1,5 @@
 ﻿// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
-// SPDX-License-Identifier:  Apache-2.0
+// SPDX-License-Identifier: Apache-2.0
 
 namespace CreateExportTaskExample
 {
@@ -12,8 +12,7 @@ namespace CreateExportTaskExample
     /// <summary>
     /// Shows how to create an Export Task to export the contents of the Amazon
     /// CloudWatch Logs to the specified Amazon Simple Storage Service (Amazon S3)
-    /// bucket. The example was created with the AWS SDK for .NET version 3.7 and
-    /// .NET Core 5.0.
+    /// bucket.
     /// </summary>
     public class CreateExportTask
     {
@@ -26,7 +25,7 @@ namespace CreateExportTaskExample
             var client = new AmazonCloudWatchLogsClient();
             string taskName = "export-task-example";
             string logGroupName = "cloudwatchlogs-example-loggroup";
-            string destination = "doc-example-bucket";
+            string destination = "amzn-s3-demo-bucket";
             var fromTime = 1437584472382;
             var toTime = 1437584472833;
 

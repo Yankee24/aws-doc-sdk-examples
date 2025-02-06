@@ -1,11 +1,5 @@
-// snippet-sourcedescription:[FindReservedNodeOffer.kt demonstrates how to find additional Amazon Redshift nodes for purchase.]
-// snippet-keyword:[AWS SDK for Kotlin]
-// snippet-service:[Amazon Redshift]
-
-/*
-   Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
-   SPDX-License-Identifier: Apache-2.0
-*/
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 package com.kotlin.redshift
 
 // snippet-start:[redshift.kotlin._nodes.import]
@@ -24,14 +18,12 @@ For more information, see the following documentation topic:
 https://docs.aws.amazon.com/sdk-for-kotlin/latest/developer-guide/setup.html
  */
 suspend fun main() {
-
     listReservedNodes()
     findReservedNodeOffer()
 }
 
 // snippet-start:[redshift.kotlin._nodes.main]
 suspend fun listReservedNodes() {
-
     RedshiftClient { region = "us-west-2" }.use { redshiftClient ->
         val reservedNodesResponse = redshiftClient.describeReservedNodes(DescribeReservedNodesRequest {})
         println("Listing nodes already purchased.")
@@ -42,7 +34,6 @@ suspend fun listReservedNodes() {
 }
 
 suspend fun findReservedNodeOffer() {
-
     val nodeTypeToPurchase = "dc2.large"
     val fixedPriceLimit = 10000.00
     val matchingNodes = mutableListOf<ReservedNodeOffering>()
@@ -54,7 +45,7 @@ suspend fun findReservedNodeOffer() {
         response.reservedNodeOfferings?.forEach { offering ->
 
             if (offering.nodeType.equals(nodeTypeToPurchase)) {
-                if (offering.fixedPrice < fixedPriceLimit) {
+                if (offering.fixedPrice!! < fixedPriceLimit) {
                     matchingNodes.add(offering)
                     printOfferingDetails(offering)
                     count += 1
@@ -81,7 +72,6 @@ private fun printReservedNodeDetails(node: ReservedNode) {
 }
 
 private fun printOfferingDetails(offering: ReservedNodeOffering) {
-
     println("Offering Match:")
     println("Id: ${offering.reservedNodeOfferingId}")
     println("Node Type: ${offering.nodeType}")

@@ -1,11 +1,5 @@
-// snippet-sourcedescription:[DynamoDBScanItems.kt demonstrates how to return items from an Amazon DynamoDB table.]
-// snippet-keyword:[AWS SDK for Kotlin]
-// snippet-service:[Amazon DynamoDB]
-
-/*
-   Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
-   SPDX-License-Identifier: Apache-2.0
-*/
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 
 package com.kotlin.dynamodb
 
@@ -24,7 +18,6 @@ https://docs.aws.amazon.com/sdk-for-kotlin/latest/developer-guide/setup.html
 */
 
 suspend fun main(args: Array<String>) {
-
     val usage = """
     Usage:
         <tableName>
@@ -44,10 +37,10 @@ suspend fun main(args: Array<String>) {
 
 // snippet-start:[dynamodb.kotlin.scan_items.main]
 suspend fun scanItems(tableNameVal: String) {
-
-    val request = ScanRequest {
-        tableName = tableNameVal
-    }
+    val request =
+        ScanRequest {
+            tableName = tableNameVal
+        }
 
     DynamoDbClient { region = "us-east-1" }.use { ddb ->
         val response = ddb.scan(request)

@@ -1,7 +1,5 @@
-/*
- * Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
- * SPDX-License-Identifier: Apache-2.0
- */
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 
 import { describe, it, expect, vi } from "vitest";
 
@@ -35,7 +33,7 @@ describe("hello", () => {
 
     expect(logSpy).nthCalledWith(
       1,
-      "Hello, Amazon EC2! Let's list up to 10 of your security groups:"
+      "Hello, Amazon EC2! Let's list up to 10 of your security groups:",
     );
     expect(logSpy).nthCalledWith(2, " • groupId: groupName");
   });
@@ -43,13 +41,13 @@ describe("hello", () => {
   it("should log the error message", async () => {
     const logSpy = vi.spyOn(console, "error");
     send.mockRejectedValueOnce(
-      new Error("Failed to log the list of security groups")
+      new Error("Failed to log the list of security groups"),
     );
 
     await main();
 
     expect(logSpy).toHaveBeenCalledWith(
-      new Error("Failed to log the list of security groups")
+      new Error("Failed to log the list of security groups"),
     );
   });
 });

@@ -1,5 +1,5 @@
 ﻿// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
-// SPDX-License-Identifier:  Apache-2.0
+// SPDX-License-Identifier: Apache-2.0
 
 // snippet-start:[SageMaker.dotnetv3.SagemakerWrapper]
 
@@ -105,6 +105,7 @@ public class SageMakerWrapper
             }
         };
 
+#pragma warning disable SageMaker1002 // Property value does not match required pattern is allowed here to match the pipeline definition.
         var startExecutionResponse = await _amazonSageMaker.StartPipelineExecutionAsync(
             new StartPipelineExecutionRequest()
             {
@@ -119,6 +120,7 @@ public class SageMakerWrapper
                     new Parameter() { Name = "parameter_step_1_vej_config", Value = JsonSerializer.Serialize(jobConfig) }
                 }
             });
+#pragma warning restore SageMaker1002
         return startExecutionResponse.PipelineExecutionArn;
     }
     // snippet-end:[SageMaker.dotnetv3.ExecutePipeline]

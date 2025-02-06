@@ -1,8 +1,10 @@
-/* Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
-SPDX-License-Identifier: Apache-2.0
-*/
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 
-import { fileURLToPath } from "url";
+/*
+ */
+
+import { fileURLToPath } from "node:url";
 
 // snippet-start:[sqs.JavaScript.queues.createQueueV3]
 import { CreateQueueCommand, SQSClient } from "@aws-sdk/client-sqs";
@@ -12,10 +14,10 @@ const SQS_QUEUE_NAME = "test-queue";
 
 export const main = async (sqsQueueName = SQS_QUEUE_NAME) => {
   const command = new CreateQueueCommand({
-    QueueName: sqsQueueName, 
+    QueueName: sqsQueueName,
     Attributes: {
-      DelaySeconds: "60", 
-      MessageRetentionPeriod: "86400", 
+      DelaySeconds: "60",
+      MessageRetentionPeriod: "86400",
     },
   });
 

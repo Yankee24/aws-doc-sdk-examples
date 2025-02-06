@@ -1,3 +1,5 @@
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 import { describe, it, expect } from "vitest";
 import { paginateListTopics } from "@aws-sdk/client-sns";
 
@@ -28,7 +30,7 @@ describe("createTopic/deleteTopic", () => {
       {
         client: snsClient,
       },
-      {}
+      {},
     );
 
     for await (const page of paginator) {

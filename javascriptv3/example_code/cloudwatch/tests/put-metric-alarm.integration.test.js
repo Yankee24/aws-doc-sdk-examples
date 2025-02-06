@@ -1,7 +1,5 @@
-/*
- * Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
- * SPDX-License-Identifier: Apache-2.0
- */
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 
 import { describe, it, expect, beforeAll, afterAll } from "vitest";
 import { deleteAlarms, describeAlarm } from "../libs/cloudwatch-helper.js";
@@ -27,7 +25,7 @@ describe("put-metric-alarm", () => {
     await mod.default;
 
     const { AlarmName } = await describeAlarm(
-      process.env.CLOUDWATCH_ALARM_NAME
+      process.env.CLOUDWATCH_ALARM_NAME,
     );
 
     expect(AlarmName).toBe(process.env.CLOUDWATCH_ALARM_NAME);

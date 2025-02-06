@@ -1,13 +1,10 @@
-/**
- * Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
- * SPDX-License-Identifier: Apache-2.0
- */
-import { createInterface } from "readline";
-import { stdin as input, stdout as output } from "process";
-import { startsWith } from "ramda";
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
+import { createInterface } from "node:readline";
+import { stdin as input, stdout as output } from "node:process";
 
-import { readCommands } from "../../../libs/cmd-runner.js";
-import { log } from "../../../libs/utils/util-log.js";
+import { readCommands } from "@aws-doc-sdk-examples/lib/cmd-runner.js";
+import { startsWith } from "@aws-doc-sdk-examples/lib/utils/util-array.js";
 
 import { initializeHandler } from "./command-handlers/initialize-handler.js";
 import { createFunctionHandler } from "./command-handlers/create-function-handler.js";
@@ -51,7 +48,7 @@ usage: <command> [<args>]
 `;
 
 const handlers = [
-  [startsWith(["help"]), () => log(help)],
+  [startsWith(["help"]), () => console.log(help)],
   [startsWith(["initialize"]), initializeHandler],
   [startsWith(["create-function"]), createFunctionHandler],
   [startsWith(["update-function-code"]), updateFunctionHandler],

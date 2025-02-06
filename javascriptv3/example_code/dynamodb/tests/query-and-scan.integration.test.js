@@ -1,3 +1,5 @@
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
 
 import { main as query } from "../actions/query.js";
@@ -27,7 +29,7 @@ describe("query and scan", () => {
         CrustType: { S: "Pastry" },
         Description: { S: "An inferior variant." },
       },
-    ]
+    ],
   );
 
   it("should return a list of pies matching the query/scan", async () => {

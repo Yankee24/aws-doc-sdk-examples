@@ -1,11 +1,5 @@
-// snippet-sourcedescription:[RevokeGrant.kt demonstrates how to revoke a grant for the specified AWS Key Management Service (AWS KMS) key.]
-// snippet-keyword:[AWS SDK for Kotlin]
-// snippet-service:[AWS Key Management Service]
-
-/*
-   Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
-   SPDX-License-Identifier: Apache-2.0
-*/
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 
 package com.kotlin.kms
 
@@ -24,7 +18,6 @@ https://docs.aws.amazon.com/sdk-for-kotlin/latest/developer-guide/setup.html
  */
 
 suspend fun main(args: Array<String>) {
-
     val usage = """
         Usage:
             <aliasName>  
@@ -44,12 +37,15 @@ suspend fun main(args: Array<String>) {
 }
 
 // snippet-start:[kms.kotlin_revoke_grant.main]
-suspend fun revokeKeyGrant(keyIdVal: String?, grantIdVal: String?) {
-
-    val request = RevokeGrantRequest {
-        keyId = keyIdVal
-        grantId = grantIdVal
-    }
+suspend fun revokeKeyGrant(
+    keyIdVal: String?,
+    grantIdVal: String?,
+) {
+    val request =
+        RevokeGrantRequest {
+            keyId = keyIdVal
+            grantId = grantIdVal
+        }
 
     KmsClient { region = "us-west-2" }.use { kmsClient ->
         kmsClient.revokeGrant(request)

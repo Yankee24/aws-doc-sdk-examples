@@ -1,64 +1,153 @@
 # Amazon S3 code examples for the SDK for Swift
+
 ## Overview
-This folder contains code examples demonstrating how to use the AWS SDK for
-Swift to use the Amazon Simple Storage Service (`S3`). This README discusses how
-to run these examples.
 
-Amazon Simple Storage Service (`Amazon S3`) is storage for the internet. You can
-use Amazon S3 to store and retrieve any amount of data at any time, from
-anywhere on the web.
+Shows how to use the AWS SDK for Swift to work with Amazon Simple Storage Service (Amazon S3).
 
-## ⚠️ Important
-* Running this code might result in charges to your AWS account. 
+<!--custom.overview.start-->
+<!--custom.overview.end-->
+
+_Amazon S3 is storage for the internet. You can use Amazon S3 to store and retrieve any amount of data at any time, from anywhere on the web._
+
+## ⚠ Important
+
+* Running this code might result in charges to your AWS account. For more details, see [AWS Pricing](https://aws.amazon.com/pricing/) and [Free Tier](https://aws.amazon.com/free/).
 * Running the tests might result in charges to your AWS account.
-* We recommend that you grant your code least privilege. At most, grant only the minimum permissions required to perform the task. For more information, see [Grant least privilege](https://docs.aws.amazon.com/IAM/latest/UserGuide/best-practices.html#grant-least-privilege). 
+* We recommend that you grant your code least privilege. At most, grant only the minimum permissions required to perform the task. For more information, see [Grant least privilege](https://docs.aws.amazon.com/IAM/latest/UserGuide/best-practices.html#grant-least-privilege).
 * This code is not tested in every AWS Region. For more information, see [AWS Regional Services](https://aws.amazon.com/about-aws/global-infrastructure/regional-product-services).
+
+<!--custom.important.start-->
+<!--custom.important.end-->
 
 ## Code examples
 
+### Prerequisites
+
+For prerequisites, see the [README](../../README.md#Prerequisites) in the `swift` folder.
+
+
+<!--custom.prerequisites.start-->
+<!--custom.prerequisites.end-->
+
+### Basics
+
+Code examples that show you how to perform the essential operations within a service.
+
+- [Learn the basics](basics/Sources/ServiceHandler/ServiceHandler.swift)
+
+
 ### Single actions
+
 Code excerpts that show you how to call individual service functions.
-* [Copy an object](./basics/Sources/ServiceHandler/ServiceHandler.swift) (`CopyObject`)
-* [Create a bucket](./basics/Sources/ServiceHandler/ServiceHandler.swift) (`CreateBucket`)
-* [Delete a bucket](./basics/Sources/ServiceHandler/ServiceHandler.swift) (`DeleteBucket`)
-* [Delete an object](./basics/Sources/ServiceHandler/ServiceHandler.swift) (`DeleteObject`)
-* [Delete multiple objects](./DeleteObjects/Sources/ServiceHandler/ServiceHandler.swift)
-* [Get an object from a bucket](./basics/Sources/ServiceHandler/ServiceHandler.swift) (`GetObject`)
-* [List objects in a bucket](./basics/Sources/ServiceHandler/ServiceHandler.swift) (`ListObjectsV2`)
-* [Upload an object to a bucket](./basics/Sources/ServiceHandler/ServiceHandler.swift) (`PutObject`)
+
+- [CopyObject](basics/Sources/ServiceHandler/ServiceHandler.swift#L232)
+- [CreateBucket](basics/Sources/ServiceHandler/ServiceHandler.swift#L56)
+- [DeleteBucket](basics/Sources/ServiceHandler/ServiceHandler.swift#L87)
+- [DeleteObject](basics/Sources/ServiceHandler/ServiceHandler.swift#L257)
+- [DeleteObjects](DeleteObjects/Sources/ServiceHandler/ServiceHandler.swift#L59)
+- [GetObject](basics/Sources/ServiceHandler/ServiceHandler.swift#L163)
+- [ListBuckets](ListBuckets/Sources/ListBuckets/S3Session.swift#L106)
+- [ListObjectsV2](basics/Sources/ServiceHandler/ServiceHandler.swift#L280)
+- [PutObject](basics/Sources/ServiceHandler/ServiceHandler.swift#L107)
 
 ### Scenarios
-Code examples that show you how to accomplish a specific task by calling multiple functions within the same service.
-* [Amazon S3 basics](./basics/Sources/ServiceHandler/ServiceHandler.swift)
 
-<!-- ### Cross-service examples
-Sample applications that work across multiple AWS services.
-* [*Title of code example*](*relative link to code example*) --->
+Code examples that show you how to accomplish a specific task by calling multiple
+functions within the same service.
 
-## Running the examples
-To build any of these examples from a terminal window, navigate into its directory then use the command:
+- [Download stream of unknown size](binary-streaming/Sources/streamdown/streamdown.swift)
+- [Upload stream of unknown size](binary-streaming/Sources/streamup/streamup.swift)
+
+
+<!--custom.examples.start-->
+<!--custom.examples.end-->
+
+## Run the examples
+
+### Instructions
+
+To build any of these examples from a terminal window, navigate into its
+directory, then use the following command:
 
 ```
 $ swift build
 ```
 
 To build one of these examples in Xcode, navigate to the example's directory
-(such as the `DeleteObjects` directory, to build that example), then type
-`xed .` to open the example directory in Xcode. You can then use standard Xcode
-build and run commands.
+(such as the `ListUsers` directory, to build that example). Then type `xed.`
+to open the example directory in Xcode. You can then use standard Xcode build
+and run commands.
 
-### Prerequisites
-See the [Prerequisites](https://github.com/awsdocs/aws-doc-sdk-examples/tree/main/swift#Prerequisites) section in the README for the AWS SDK for Swift examples repository.
+<!--custom.instructions.start-->
+<!--custom.instructions.end-->
 
-## Tests
-⚠️ Running the tests might result in charges to your AWS account.
 
-To run the tests for an example, use the command `swift test` in the example's directory.
+#### Learn the basics
+
+This example shows you how to do the following:
+
+- Create a bucket and upload a file to it.
+- Download an object from a bucket.
+- Copy an object to a subfolder in a bucket.
+- List the objects in a bucket.
+- Delete the bucket objects and the bucket.
+
+<!--custom.basic_prereqs.s3_Scenario_GettingStarted.start-->
+<!--custom.basic_prereqs.s3_Scenario_GettingStarted.end-->
+
+
+<!--custom.basics.s3_Scenario_GettingStarted.start-->
+<!--custom.basics.s3_Scenario_GettingStarted.end-->
+
+
+#### Download stream of unknown size
+
+This example shows you how to download a stream of unknown size from an Amazon S3 object.
+
+
+<!--custom.scenario_prereqs.s3_Scenario_DownloadStream.start-->
+<!--custom.scenario_prereqs.s3_Scenario_DownloadStream.end-->
+
+
+<!--custom.scenarios.s3_Scenario_DownloadStream.start-->
+<!--custom.scenarios.s3_Scenario_DownloadStream.end-->
+
+#### Upload stream of unknown size
+
+This example shows you how to upload a stream of unknown size to an Amazon S3 object.
+
+
+<!--custom.scenario_prereqs.s3_Scenario_UploadStream.start-->
+<!--custom.scenario_prereqs.s3_Scenario_UploadStream.end-->
+
+
+<!--custom.scenarios.s3_Scenario_UploadStream.start-->
+<!--custom.scenarios.s3_Scenario_UploadStream.end-->
+
+### Tests
+
+⚠ Running tests might result in charges to your AWS account.
+
+
+To find instructions for running these tests, see the [README](../../README.md#Tests)
+in the `swift` folder.
+
+
+
+<!--custom.tests.start-->
+<!--custom.tests.end-->
 
 ## Additional resources
-* [Amazon S3 user guide](https://docs.aws.amazon.com/AmazonS3/latest/userguide)
-* [Amazon S3 API reference](https://docs.aws.amazon.com/AmazonS3/latest/API/Type_API_Reference.html)
-* [S3 developer guide for Swift](https://docs.aws.amazon.com/sdk-for-swift/latest/developer-guide)
-* [S3 API reference for Swift](https://awslabs.github.io/aws-sdk-swift/reference/0.x/AWSS3/Home)
 
-_Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved. SPDX-License-Identifier: Apache-2.0_
+- [Amazon S3 User Guide](https://docs.aws.amazon.com/AmazonS3/latest/userguide/Welcome.html)
+- [Amazon S3 API Reference](https://docs.aws.amazon.com/AmazonS3/latest/API/Welcome.html)
+- [SDK for Swift Amazon S3 reference](https://sdk.amazonaws.com/swift/api/awss3/latest/documentation/awss3)
+
+<!--custom.resources.start-->
+<!--custom.resources.end-->
+
+---
+
+Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+
+SPDX-License-Identifier: Apache-2.0

@@ -1,10 +1,5 @@
-// snippet-sourcedescription:[StockTrade.kt is a helper class.]
-// snippet-keyword:[AWS SDK for Kotlin]
-// snippet-keyword:[Amazon Kinesis]
-/*
-   Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
-   SPDX-License-Identifier: Apache-2.0
-*/
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 package com.kotlin.kinesis
 
 import com.fasterxml.jackson.databind.DeserializationFeature
@@ -19,13 +14,13 @@ import java.io.IOException
 class StockTrade {
     companion object {
         private val JSON = ObjectMapper()
-        fun fromJsonAsBytes(bytes: ByteArray?): StockTrade? {
-            return try {
+
+        fun fromJsonAsBytes(bytes: ByteArray?): StockTrade? =
+            try {
                 JSON.readValue(bytes, StockTrade::class.java)
             } catch (e: IOException) {
                 null
             }
-        }
 
         init {
             JSON.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
@@ -36,7 +31,8 @@ class StockTrade {
      * Represents the type of the stock trade, e.g. buy or sell.
      */
     enum class TradeType {
-        BUY, SELL
+        BUY,
+        SELL,
     }
 
     var tickerSymbol: String? = null
@@ -63,22 +59,22 @@ class StockTrade {
         this.id = id
     }
 
-    fun getTheTickerSymbol(): String {
-        return tickerSymbol!!
-    }
+    fun getTheTickerSymbol(): String = tickerSymbol!!
 
-    fun toJsonAsBytes(): ByteArray? {
-        return try {
+    fun toJsonAsBytes(): ByteArray? =
+        try {
             JSON.writeValueAsBytes(this)
         } catch (e: IOException) {
             null
         }
-    }
 
-    override fun toString(): String {
-        return String.format(
+    override fun toString(): String =
+        String.format(
             "ID %d: %s %d shares of %s for $%.02f",
-            id, tradeType, quantity, tickerSymbol, price
+            id,
+            tradeType,
+            quantity,
+            tickerSymbol,
+            price,
         )
-    }
 }

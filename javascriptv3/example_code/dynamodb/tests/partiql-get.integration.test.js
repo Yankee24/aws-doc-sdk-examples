@@ -1,3 +1,5 @@
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 import { describe, it, expect } from "vitest";
 
 import { main } from "../actions/partiql/partiql-get.js";
@@ -17,7 +19,7 @@ describe("partiql-get", () => {
     [
       { Name: { S: "Nimbus" }, IsStorm: { BOOL: "false" } },
       { Name: { S: "Cumulonimbus" }, IsStorm: { BOOL: "true" } },
-    ]
+    ],
   );
 
   it("should get only non-storm clouds from the database", async () => {

@@ -1,10 +1,5 @@
-// snippet-sourcedescription:[GetDatabases.kt demonstrates how to get databases.]
-// snippet-keyword:[AWS SDK for Kotlin]
-// snippet-keyword:[AWS Glue]
-/*
-   Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
-   SPDX-License-Identifier: Apache-2.0
-*/
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 
 package com.kotlin.glue
 
@@ -27,10 +22,10 @@ suspend fun main() {
 
 // snippet-start:[glue.kotlin.get_databases.main]
 suspend fun getAllDatabases() {
-
-    val request = GetDatabasesRequest {
-        maxResults = 10
-    }
+    val request =
+        GetDatabasesRequest {
+            maxResults = 10
+        }
 
     GlueClient { region = "us-east-1" }.use { glueClient ->
         val response = glueClient.getDatabases(request)

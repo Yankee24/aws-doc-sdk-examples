@@ -1,11 +1,6 @@
 ﻿// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
-// SPDX-License-Identifier:  Apache-2.0
+// SPDX-License-Identifier: Apache-2.0
 
-/// <summary>
-/// This example shows how to work with tags in Amazon Simple Storage
-/// Service (Amazon S3) objects. The example was created using the AWS SDK
-/// for .NET version 3.7 and .NET Core 5.0.
-/// </summary>
 namespace ObjectTagExample
 {
     // snippet-start:[S3.dotnetv3.ObjectTagExample]
@@ -16,11 +11,15 @@ namespace ObjectTagExample
     using Amazon.S3;
     using Amazon.S3.Model;
 
+    /// <summary>
+    /// This example shows how to work with tags in Amazon Simple Storage
+    /// Service (Amazon S3) objects.
+    /// </summary>
     public class ObjectTag
     {
         public static async Task Main()
         {
-            string bucketName = "doc-example-bucket";
+            string bucketName = "amzn-s3-demo-bucket";
             string keyName = "newobject.txt";
             string filePath = @"*** file path ***";
 
@@ -63,7 +62,7 @@ namespace ObjectTagExample
                 PutObjectResponse response = await client.PutObjectAsync(putRequest);
 
                 // Now retrieve the new object's tags.
-                GetObjectTaggingRequest getTagsRequest = new()
+                GetObjectTaggingRequest getTagsRequest = new GetObjectTaggingRequest()
                 {
                     BucketName = bucketName,
                     Key = keyName,
@@ -75,7 +74,7 @@ namespace ObjectTagExample
                 objectTags.Tagging
                     .ForEach(t => Console.WriteLine($"Key: {t.Key}, Value: {t.Value}"));
 
-                Tagging newTagSet = new()
+                Tagging newTagSet = new Tagging()
                 {
                     TagSet = new List<Tag>
                     {
@@ -84,7 +83,7 @@ namespace ObjectTagExample
                     },
                 };
 
-                PutObjectTaggingRequest putObjTagsRequest = new ()
+                PutObjectTaggingRequest putObjTagsRequest = new PutObjectTaggingRequest()
                 {
                     BucketName = bucketName,
                     Key = keyName,
@@ -94,7 +93,7 @@ namespace ObjectTagExample
                 PutObjectTaggingResponse response2 = await client.PutObjectTaggingAsync(putObjTagsRequest);
 
                 // Retrieve the tags again and show the values.
-                GetObjectTaggingRequest getTagsRequest2 = new()
+                GetObjectTaggingRequest getTagsRequest2 = new GetObjectTaggingRequest()
                 {
                     BucketName = bucketName,
                     Key = keyName,

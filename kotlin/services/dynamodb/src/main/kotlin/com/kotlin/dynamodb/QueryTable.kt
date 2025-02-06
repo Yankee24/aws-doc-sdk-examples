@@ -1,11 +1,5 @@
-// snippet-sourcedescription:[QueryTable.kt demonstrates how to query an Amazon DynamoDB table.]
-// snippet-keyword:[AWS SDK for Kotlin]
-// snippet-service:[Amazon DynamoDB]
-
-/*
-   Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
-   SPDX-License-Identifier: Apache-2.0
-*/
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 
 package com.kotlin.dynamodb
 
@@ -25,7 +19,6 @@ https://docs.aws.amazon.com/sdk-for-kotlin/latest/developer-guide/setup.html
 */
 
 suspend fun main(args: Array<String>) {
-
     val usage = """
     Usage:
         <tableName>
@@ -56,9 +49,8 @@ suspend fun queryDynTable(
     tableNameVal: String,
     partitionKeyName: String,
     partitionKeyVal: String,
-    partitionAlias: String
+    partitionAlias: String,
 ): Int {
-
     val attrNameAlias = mutableMapOf<String, String>()
     attrNameAlias[partitionAlias] = partitionKeyName
 
@@ -66,12 +58,13 @@ suspend fun queryDynTable(
     val attrValues = mutableMapOf<String, AttributeValue>()
     attrValues[":$partitionKeyName"] = AttributeValue.S(partitionKeyVal)
 
-    val request = QueryRequest {
-        tableName = tableNameVal
-        keyConditionExpression = "$partitionAlias = :$partitionKeyName"
-        expressionAttributeNames = attrNameAlias
-        this.expressionAttributeValues = attrValues
-    }
+    val request =
+        QueryRequest {
+            tableName = tableNameVal
+            keyConditionExpression = "$partitionAlias = :$partitionKeyName"
+            expressionAttributeNames = attrNameAlias
+            this.expressionAttributeValues = attrValues
+        }
 
     DynamoDbClient { region = "us-east-1" }.use { ddb ->
         val response = ddb.query(request)

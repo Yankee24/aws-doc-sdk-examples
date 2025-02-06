@@ -1,0 +1,28 @@
+# {{ service['short'] }} code examples for the {{ sdk['short'] }}
+{% import 'includes/macros.jinja2' as macs %}
+{% if unsupported %}
+
+> NOTE: Examples for this SDK are no longer supported.
+> These examples are for historical purposes only, and should not be relied upon.
+> Please migrate to the currently supported AWS SDK for this language.
+{% endif %}
+
+{% include 'includes/overview.jinja2' %}
+
+
+{% include 'includes/important.jinja2' %}
+
+
+{% include 'includes/code_examples.jinja2' %}
+
+
+## Run the examples
+
+{% include 'includes/run_instructions.jinja2' %}
+{% include 'includes/tests.jinja2' %}
+
+
+{% include 'includes/resources.jinja2' %}
+
+
+{% include 'includes/copyright.jinja2' %}

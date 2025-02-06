@@ -1,7 +1,5 @@
-/*
-   Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
-   SPDX-License-Identifier: Apache-2.0
-*/
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 
 package com.example.demo
 import aws.sdk.kotlin.services.ses.SesClient
@@ -18,7 +16,7 @@ class SendMessage {
 
     suspend fun send(
         recipient: String,
-        strValue: String?
+        strValue: String?,
     ) {
         val sesClient = SesClient { region = "us-east-1" }
         // The HTML body of the email.

@@ -1,7 +1,7 @@
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 
-/* Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
-SPDX-License-Identifier: Apache-2.0
-
+/*
 ABOUT THIS NODE.JS EXAMPLE: This example works with the AWS SDK for JavaScript version 3 (v3),
 which is available at https://github.com/aws/aws-sdk-js-v3. This example is in the 'AWS SDK for JavaScript v3 Developer Guide' at
 https://docs.aws.amazon.com/sdk-for-javascript/v3/developer-guide/invoke-lambda-functions-with-scheduled-events.html.
@@ -20,10 +20,8 @@ ts-node populate-table.t s
 */
 // snippet-start:[lambda.JavaScript.cross-service-examples.lambda-scheduled-events.CreateTableV3]
 // Load the required Amazon DynamoDB client and commands.
-const {
-  BatchWriteItemCommand
-} = require("@aws-sdk/client-dynamodb");
-const {dynamoClient} = require ( "../libs/dynamoClient.js" );
+const { BatchWriteItemCommand } = require("@aws-sdk/client-dynamodb");
+const { dynamoClient } = require("../libs/dynamoClient.js");
 
 // Set the parameters.
 const params = {

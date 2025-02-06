@@ -1,12 +1,5 @@
-// snippet-comment:[These are tags for the AWS doc team's sample catalog. Do not remove.]
-// snippet-sourcedescription:[PutEventSelectors.kt demonstrates how to configure an event selector for your trail.]
-// snippet-keyword:[AWS SDK for Kotlin]
-// snippet-service:[AWS CloudTrail]
-
-/*
-   Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
-   SPDX-License-Identifier: Apache-2.0
-*/
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 
 package com.kotlin.cloudtrail
 
@@ -19,7 +12,6 @@ import kotlin.system.exitProcess
 // snippet-end:[cloudtrail.kotlin._selectors.import]
 
 suspend fun main(args: Array<String>) {
-
     val usage = """
 
     Usage:
@@ -40,17 +32,17 @@ suspend fun main(args: Array<String>) {
 
 // snippet-start:[cloudtrail.kotlin._selectors.main]
 suspend fun setSelector(trailNameVal: String?) {
-
-    val selector = EventSelector {
-        readWriteType = ReadWriteType.fromValue("All")
-    }
+    val selector =
+        EventSelector {
+            readWriteType = ReadWriteType.fromValue("All")
+        }
 
     CloudTrailClient { region = "us-east-1" }.use { cloudTrail ->
         cloudTrail.putEventSelectors(
             PutEventSelectorsRequest {
                 trailName = trailNameVal
                 eventSelectors = listOf(selector)
-            }
+            },
         )
     }
 }

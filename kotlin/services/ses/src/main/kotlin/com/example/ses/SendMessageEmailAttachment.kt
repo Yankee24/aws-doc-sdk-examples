@@ -1,11 +1,5 @@
-// snippet-sourcedescription:[SendMessageAttachment.kt demonstrates how to send an email message with an attachment by using the Amazon Simple Email Service (Amazon SES).]
-// snippet-keyword:[AWS SDK for Kotlin]
-// snippet-keyword:[Amazon Simple Email Service]
-
-/*
-   Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
-   SPDX-License-Identifier: Apache-2.0
-*/
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 
 package com.kotlin.ses
 
@@ -38,7 +32,6 @@ For more information, see the following documentation topic:
 https://docs.aws.amazon.com/sdk-for-kotlin/latest/developer-guide/setup.html
  */
 suspend fun main(args: Array<String>) {
-
     val usage = """
 
     Usage:
@@ -81,9 +74,8 @@ suspend fun sendemailAttachment(
     subject: String,
     bodyText: String,
     bodyHTML: String,
-    fileLocation: String
+    fileLocation: String,
 ) {
-
     val theFile = File(fileLocation)
     val fileContent = Files.readAllBytes(theFile.toPath())
     val session = Session.getDefaultInstance(Properties())
@@ -143,13 +135,15 @@ suspend fun sendemailAttachment(
     val outputStream = ByteArrayOutputStream()
     message.writeTo(outputStream)
 
-    val rawMessageOb = RawMessage {
-        this.data = outputStream.toByteArray()
-    }
+    val rawMessageOb =
+        RawMessage {
+            this.data = outputStream.toByteArray()
+        }
 
-    val rawEmailRequest = SendRawEmailRequest {
-        rawMessage = rawMessageOb
-    }
+    val rawEmailRequest =
+        SendRawEmailRequest {
+            rawMessage = rawMessageOb
+        }
 
     SesClient { region = "us-east-1" }.use { sesClient ->
         sesClient.sendRawEmail(rawEmailRequest)

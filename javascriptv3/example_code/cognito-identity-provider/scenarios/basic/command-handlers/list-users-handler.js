@@ -1,10 +1,8 @@
-/**
- * Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
- * SPDX-License-Identifier: Apache-2.0
- */
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 
-import { getFirstEntry } from "libs/utils/util-csv.js";
-import { log } from "libs/utils/util-log.js";
+import { getFirstEntry } from "@aws-doc-sdk-examples/lib/utils/util-csv.js";
+import { logger } from "@aws-doc-sdk-examples/lib/utils/util-log.js";
 import { listUsers } from "../../../actions/list-users.js";
 import { FILE_USER_POOLS } from "./constants.js";
 
@@ -29,9 +27,9 @@ const listUsersHandler = async () => {
   try {
     const response = await getUsers();
 
-    log(formatUsers(response.Users));
+    logger.log(formatUsers(response.Users));
   } catch (err) {
-    log(err);
+    logger.error(err);
   }
 };
 

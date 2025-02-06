@@ -1,11 +1,10 @@
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 //
 // Swift Example: CreateRole
 //
 // An example showing how to use the Amazon Identity and Access Management (IAM)
 // `IAMClient` function `createRole()`.
-//
-// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
-// SPDX-License-Identifier: Apache-2.0.
 
 // snippet-start:[iam.swift.createrole.example]
 // snippet-start:[iam.swift.createrole.main.imports]
@@ -32,9 +31,9 @@ struct ExampleCommand: ParsableCommand {
     /// example.
     // snippet-start:[iam.swift.createrole.command.runasync]
     func runAsync() async throws {
-        let serviceHandler = await ServiceHandler()
-
         do {
+            let serviceHandler = try await ServiceHandler()
+                
             // Get information about the user running this example. This user
             // will be granted the new role.
             let user = try await serviceHandler.getUser(name: nil)
@@ -64,6 +63,7 @@ struct ExampleCommand: ParsableCommand {
             let roleID = try await serviceHandler.createRole(name: rolename, policyDocument: policyDocument)
             print("Created new role \(rolename) with ID \(roleID)")
         } catch {
+            print("ERROR: CreateRole runAsync:", dump(error))
             throw error
         }
     }

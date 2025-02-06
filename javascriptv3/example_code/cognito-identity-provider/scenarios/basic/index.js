@@ -1,13 +1,11 @@
-/**
- * Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
- * SPDX-License-Identifier: Apache-2.0
- */
-import { createInterface } from "readline";
-import { stdin as input, stdout as output } from "process";
-import { startsWith } from "ramda";
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
+import { createInterface } from "node:readline";
+import { stdin as input, stdout as output } from "node:process";
 
-import { readCommands } from "libs/cmd-runner.js";
-import { log } from "libs/utils/util-log.js";
+import { readCommands } from "@aws-doc-sdk-examples/lib/cmd-runner.js";
+import { startsWith } from "@aws-doc-sdk-examples/lib/utils/util-array.js";
+
 import { createUserPoolHandler } from "./command-handlers/create-user-pool-handler.js";
 import { cleanUpHandler } from "./command-handlers/clean-up-handler.js";
 import { signUpHandler } from "./command-handlers/sign-up-handler.js";
@@ -62,7 +60,7 @@ const help = `
  `;
 
 const handlers = [
-  [startsWith(["help"]), () => log(help)],
+  [startsWith(["help"]), () => console.log(help)],
   [startsWith(["create-user-pool"]), createUserPoolHandler],
   [startsWith(["sign-up"]), signUpHandler],
   [startsWith(["resend-confirmation-code"]), resendConfirmationCodeHandler],

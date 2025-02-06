@@ -1,3 +1,5 @@
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 import { describe, it, expect } from "vitest";
 
 import { main } from "../actions/document-client/delete.js";
@@ -17,7 +19,7 @@ describe("document-delete", () => {
       {
         Flavor: { S: "Cola" },
       },
-    ]
+    ],
   );
 
   it("should remove an item from a database", async () => {

@@ -1,11 +1,5 @@
-// snippet-sourcedescription:[CreateDBInstance.kt demonstrates how to create an Amazon Relational Database Service (RDS) instance and wait for it to be in an available state.]
-// snippet-keyword:[AWS SDK for Kotlin]
-// snippet-service:[Amazon Relational Database Service]
-
-/*
-   Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
-   SPDX-License-Identifier: Apache-2.0
-*/
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 
 package com.kotlin.rds
 
@@ -63,19 +57,20 @@ suspend fun createDatabaseInstance(
     dbInstanceIdentifierVal: String?,
     dbNamedbVal: String?,
     masterUsernameVal: String?,
-    masterUserPasswordVal: String?
+    masterUserPasswordVal: String?,
 ) {
-    val instanceRequest = CreateDbInstanceRequest {
-        dbInstanceIdentifier = dbInstanceIdentifierVal
-        allocatedStorage = 100
-        dbName = dbNamedbVal
-        engine = "mysql"
-        dbInstanceClass = "db.m4.large"
-        engineVersion = "8.0"
-        storageType = "standard"
-        masterUsername = masterUsernameVal
-        masterUserPassword = masterUserPasswordVal
-    }
+    val instanceRequest =
+        CreateDbInstanceRequest {
+            dbInstanceIdentifier = dbInstanceIdentifierVal
+            allocatedStorage = 100
+            dbName = dbNamedbVal
+            engine = "mysql"
+            dbInstanceClass = "db.t3.micro" // Use a supported instance class
+            engineVersion = "8.0.39" // Use a supported engine version
+            storageType = "gp2"
+            masterUsername = masterUsernameVal
+            masterUserPassword = masterUserPasswordVal
+        }
 
     RdsClient { region = "us-west-2" }.use { rdsClient ->
         val response = rdsClient.createDbInstance(instanceRequest)
@@ -87,12 +82,13 @@ suspend fun createDatabaseInstance(
 suspend fun waitForInstanceReady(dbInstanceIdentifierVal: String?) {
     val sleepTime: Long = 20
     var instanceReady = false
-    var instanceReadyStr = ""
+    var instanceReadyStr: String
     println("Waiting for instance to become available.")
 
-    val instanceRequest = DescribeDbInstancesRequest {
-        dbInstanceIdentifier = dbInstanceIdentifierVal
-    }
+    val instanceRequest =
+        DescribeDbInstancesRequest {
+            dbInstanceIdentifier = dbInstanceIdentifierVal
+        }
 
     RdsClient { region = "us-west-2" }.use { rdsClient ->
         while (!instanceReady) {

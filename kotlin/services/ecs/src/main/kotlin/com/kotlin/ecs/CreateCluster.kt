@@ -1,11 +1,5 @@
-// snippet-sourcedescription:[CreateCluster.kt demonstrates how to create a cluster for the Amazon Elastic Container Service (Amazon ECS) service.]
-// snippet-keyword:[AWS SDK for Kotlin]
-// snippet-service:[Amazon Elastic Container Service]
-
-/*
-   Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
-   SPDX-License-Identifier: Apache-2.0
-*/
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 
 package com.kotlin.ecs
 
@@ -27,7 +21,6 @@ https://docs.aws.amazon.com/sdk-for-kotlin/latest/developer-guide/setup.html
  */
 
 suspend fun main(args: Array<String>) {
-
     val usage = """
     
     Usage:
@@ -49,24 +42,25 @@ suspend fun main(args: Array<String>) {
 
 // snippet-start:[ecs.kotlin.create_cluster.main]
 suspend fun createGivenCluster(clusterNameVal: String?): String? {
+    val commandConfiguration =
+        ExecuteCommandConfiguration {
+            logging = ExecuteCommandLogging.Default
+        }
 
-    val commandConfiguration = ExecuteCommandConfiguration {
-        logging = ExecuteCommandLogging.Default
-    }
+    val clusterConfiguration =
+        ClusterConfiguration {
+            executeCommandConfiguration = commandConfiguration
+        }
 
-    val clusterConfiguration = ClusterConfiguration {
-        executeCommandConfiguration = commandConfiguration
-    }
-
-    val request = CreateClusterRequest {
-        clusterName = clusterNameVal
-        configuration = clusterConfiguration
-    }
+    val request =
+        CreateClusterRequest {
+            clusterName = clusterNameVal
+            configuration = clusterConfiguration
+        }
 
     EcsClient { region = "us-east-1" }.use { ecsClient ->
         val response = ecsClient.createCluster(request)
         return response.cluster?.clusterArn
     }
 }
-
 // snippet-end:[ecs.kotlin.create_cluster.main]

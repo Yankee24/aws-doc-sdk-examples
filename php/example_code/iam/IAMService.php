@@ -1,4 +1,6 @@
 <?php
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 
 namespace Iam;
 
@@ -135,6 +137,11 @@ class IAMService
     # snippet-end:[php.example_code.iam.service.createUserPolicy]
 
     # snippet-start:[php.example_code.iam.service.createPolicy]
+    /**
+     * @param string $policyName
+     * @param string $policyDocument
+     * @return array
+     */
     public function createPolicy(string $policyName, string $policyDocument)
     {
         $result = $this->customWaiter(function () use ($policyName, $policyDocument) {

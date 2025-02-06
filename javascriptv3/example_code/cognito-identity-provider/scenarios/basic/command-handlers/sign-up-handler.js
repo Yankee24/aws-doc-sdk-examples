@@ -1,18 +1,16 @@
-/**
- * Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
- * SPDX-License-Identifier: Apache-2.0
- */
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 
 /** snippet-start:[javascript.v3.cognito-idp.scenarios.basic.SignUpHandler] **/
-import { log } from "libs/utils/util-log.js";
+import { logger } from "@aws-doc-sdk-examples/lib/utils/util-log.js";
 import { signUp } from "../../../actions/sign-up.js";
 import { FILE_USER_POOLS } from "./constants.js";
-import { getSecondValuesFromEntries } from "libs/utils/util-csv.js";
+import { getSecondValuesFromEntries } from "@aws-doc-sdk-examples/lib/utils/util-csv.js";
 
 const validateClient = (clientId) => {
   if (!clientId) {
     throw new Error(
-      `App client id is missing. Did you run 'create-user-pool'?`
+      `App client id is missing. Did you run 'create-user-pool'?`,
     );
   }
 };
@@ -20,7 +18,7 @@ const validateClient = (clientId) => {
 const validateUser = (username, password, email) => {
   if (!(username && password && email)) {
     throw new Error(
-      `Username, password, and email must be provided as arguments to the 'sign-up' command.`
+      `Username, password, and email must be provided as arguments to the 'sign-up' command.`,
     );
   }
 };
@@ -36,12 +34,14 @@ const signUpHandler = async (commands) => {
     const values = getSecondValuesFromEntries(FILE_USER_POOLS);
     const clientId = values[0];
     validateClient(clientId);
-    log(`Signing up.`);
+    logger.log("Signing up.");
     await signUp({ clientId, username, password, email });
-    log(`Signed up. An confirmation email has been sent to: ${email}.`);
-    log(`Run 'confirm-sign-up ${username} <code>' to confirm your account.`);
+    logger.log(`Signed up. A confirmation email has been sent to: ${email}.`);
+    logger.log(
+      `Run 'confirm-sign-up ${username} <code>' to confirm your account.`,
+    );
   } catch (err) {
-    log(err);
+    logger.error(err);
   }
 };
 

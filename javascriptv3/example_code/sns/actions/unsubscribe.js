@@ -1,9 +1,7 @@
-/*
- * Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
- * SPDX-License-Identifier: Apache-2.0
- */
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 
-import { fileURLToPath } from "url";
+import { fileURLToPath } from "node:url";
 
 // snippet-start:[sns.JavaScript.subscriptions.unsubscribeV3]
 import { UnsubscribeCommand } from "@aws-sdk/client-sns";
@@ -13,12 +11,12 @@ import { snsClient } from "../libs/snsClient.js";
  * @param {string} subscriptionArn - The ARN of the subscription to cancel.
  */
 const unsubscribe = async (
-  subscriptionArn = "arn:aws:sns:us-east-1:xxxxxxxxxxxx:mytopic:xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+  subscriptionArn = "arn:aws:sns:us-east-1:xxxxxxxxxxxx:mytopic:xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
 ) => {
   const response = await snsClient.send(
     new UnsubscribeCommand({
       SubscriptionArn: subscriptionArn,
-    })
+    }),
   );
   console.log(response);
   // {

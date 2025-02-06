@@ -1,11 +1,5 @@
-// snippet-sourcedescription:[CreateQueue.kt demonstrates how to create an Amazon Simple Queue Service (Amazon SQS) queue.]
-// snippet-keyword:[AWS SDK for Kotlin]
-// snippet-service:[Amazon Simple Queue Service]
-
-/*
-   Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
-   SPDX-License-Identifier: Apache-2.0
-*/
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 
 package com.kotlin.sqs
 
@@ -24,7 +18,6 @@ For more information, see the following documentation topic:
 https://docs.aws.amazon.com/sdk-for-kotlin/latest/developer-guide/setup.html
  */
 suspend fun main(args: Array<String>) {
-
     val usage = """
         Usage: 
             <queueName> 
@@ -44,19 +37,20 @@ suspend fun main(args: Array<String>) {
 
 // snippet-start:[sqs.kotlin.create_queue.main]
 suspend fun createQueue(queueNameVal: String): String {
-
     println("Create Queue")
-    val createQueueRequest = CreateQueueRequest {
-        queueName = queueNameVal
-    }
+    val createQueueRequest =
+        CreateQueueRequest {
+            queueName = queueNameVal
+        }
 
     SqsClient { region = "us-east-1" }.use { sqsClient ->
         sqsClient.createQueue(createQueueRequest)
         println("Get queue url")
 
-        val getQueueUrlRequest = GetQueueUrlRequest {
-            queueName = queueNameVal
-        }
+        val getQueueUrlRequest =
+            GetQueueUrlRequest {
+                queueName = queueNameVal
+            }
 
         val getQueueUrlResponse = sqsClient.getQueueUrl(getQueueUrlRequest)
         return getQueueUrlResponse.queueUrl.toString()

@@ -1,7 +1,5 @@
-/*
-   Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
-   SPDX-License-Identifier: Apache-2.0
-*/
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 /*
  * Test types are indicated by the test label ending.
  *
@@ -23,8 +21,9 @@ namespace AwsDocTest {
         ASSERT_FALSE(instanceID.empty()) << preconditionError() << std::endl;
 
         Aws::String allocationID;
-        auto result = AwsDoc::EC2::AllocateAndAssociateAddress(instanceID,
-                                                               allocationID,
+        Aws::String publicIpAddress;
+        auto result = AwsDoc::EC2::allocateAndAssociateAddress(instanceID,
+                                                               publicIpAddress, allocationID,
                                                                *s_clientConfig);
         ASSERT_TRUE(result);
 

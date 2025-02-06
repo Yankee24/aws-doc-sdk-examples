@@ -1,3 +1,5 @@
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 import { describe, it, expect } from "vitest";
 import { DynamoDBClient, ScanCommand } from "@aws-sdk/client-dynamodb";
 
@@ -16,7 +18,7 @@ describe("partiql-delete", () => {
         AttributeType: "S",
       },
     ],
-    [{ Name: { S: "Purple" } }]
+    [{ Name: { S: "Purple" } }],
   );
 
   it("should delete all the contents of the database", async () => {

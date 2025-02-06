@@ -1,11 +1,6 @@
-﻿// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved
-// SPDX-License-Identifier:  Apache-2.0
+﻿// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 
-/// <summary>
-/// This example uses Amazon Simple Storage Service (Amazon S3) to
-/// configure a static website in an Amazon S3 bucket. The example was
-/// created using AWS SDK for .NET version 3.7 and .NET Core 5.0.
-/// </summary>
 namespace WebsiteConfigExample
 {
     // snippet-start:[S3.dotnetv3.WebsiteConfigExample]
@@ -15,6 +10,10 @@ namespace WebsiteConfigExample
     using Amazon.S3;
     using Amazon.S3.Model;
 
+    /// <summary>
+    /// This example uses Amazon Simple Storage Service (Amazon S3) to
+    /// configure a static website in an Amazon S3 bucket.
+    /// </summary>
     public class WebsiteConfig
     {
         /// <summary>
@@ -24,7 +23,7 @@ namespace WebsiteConfigExample
         /// </summary>
         public static async Task Main()
         {
-            const string bucketName = "doc-example-bucket";
+            const string bucketName = "amzn-s3-demo-bucket";
             const string indexDocumentSuffix = "index.html";
             const string errorDocument = "error.html";
 
@@ -67,6 +66,7 @@ namespace WebsiteConfigExample
                     },
                 };
                 PutBucketWebsiteResponse response = await client.PutBucketWebsiteAsync(putRequest);
+
                 // snippet-end:[S3.dotnetv3.PutWebsiteConfigExample]
 
                 // snippet-start:[S3.dotnetv3.GetWebsiteConfigExample]
@@ -78,6 +78,7 @@ namespace WebsiteConfigExample
                 GetBucketWebsiteResponse getResponse = await client.GetBucketWebsiteAsync(getRequest);
                 Console.WriteLine($"Index document: {getResponse.WebsiteConfiguration.IndexDocumentSuffix}");
                 Console.WriteLine($"Error document: {getResponse.WebsiteConfiguration.ErrorDocument}");
+
                 // snippet-end:[S3.dotnetv3.GetWebsiteConfigExample]
             }
             catch (AmazonS3Exception ex)

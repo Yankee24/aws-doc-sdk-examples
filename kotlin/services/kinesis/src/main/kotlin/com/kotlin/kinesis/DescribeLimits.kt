@@ -1,10 +1,5 @@
-// snippet-sourcedescription:[DescribeLimits.kt demonstrates how to display the shard limit and usage for a given account.]
-// snippet-keyword:[AWS SDK for Kotlin]
-// snippet-keyword:[Amazon Kinesis]
-/*
-   Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
-   SPDX-License-Identifier: Apache-2.0
-*/
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 
 package com.kotlin.kinesis
 
@@ -27,7 +22,6 @@ suspend fun main() {
 
 // snippet-start:[kinesis.kotlin.DescribeLimits.main]
 suspend fun describeKinLimits() {
-
     KinesisClient { region = "us-east-1" }.use { kinesisClient ->
         val response = kinesisClient.describeLimits(DescribeLimitsRequest {})
         println("Number of open shards is ${response.openShardCount}")

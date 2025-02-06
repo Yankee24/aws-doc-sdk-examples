@@ -1,9 +1,7 @@
-/*
- * Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
- * SPDX-License-Identifier: Apache-2.0
- */
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 
-import { fileURLToPath } from "url";
+import { fileURLToPath } from "node:url";
 
 // snippet-start:[sns.JavaScript.SMS.listPhoneNumbersOptedOutV3]
 import { ListPhoneNumbersOptedOutCommand } from "@aws-sdk/client-sns";
@@ -11,7 +9,7 @@ import { snsClient } from "../libs/snsClient.js";
 
 export const listPhoneNumbersOptedOut = async () => {
   const response = await snsClient.send(
-    new ListPhoneNumbersOptedOutCommand({})
+    new ListPhoneNumbersOptedOutCommand({}),
   );
   console.log(response);
   // {

@@ -1,11 +1,5 @@
-// snippet-sourcedescription:[DisableAlarmActions.kt demonstrates how to disable actions on an Amazon CloudWatch alarm.]
-// snippet-keyword:[AWS SDK for Kotlin]
-// snippet-service:[Amazon CloudWatch]
-
-/*
-   Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
-   SPDX-License-Identifier: Apache-2.0
-*/
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 
 package com.kotlin.cloudwatch
 
@@ -24,7 +18,6 @@ https://docs.aws.amazon.com/sdk-for-kotlin/latest/developer-guide/setup.html
  */
 
 suspend fun main(args: Array<String>) {
-
     val usage = """
 
     Usage:
@@ -45,10 +38,10 @@ suspend fun main(args: Array<String>) {
 
 // snippet-start:[cloudwatch.kotlin.disable_alarm_actions.main]
 suspend fun disableActions(alarmName: String) {
-
-    val request = DisableAlarmActionsRequest {
-        alarmNames = listOf(alarmName)
-    }
+    val request =
+        DisableAlarmActionsRequest {
+            alarmNames = listOf(alarmName)
+        }
     CloudWatchClient { region = "us-east-1" }.use { cwClient ->
         cwClient.disableAlarmActions(request)
         println("Successfully disabled actions on alarm $alarmName")

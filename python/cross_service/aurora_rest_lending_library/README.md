@@ -7,7 +7,7 @@ Service (Amazon RDS) API and AWS Chalice to create a REST API backed by an
 Amazon Aurora database. The web service is fully serverless and represents
 a simple lending library where patrons can borrow and return books. Learn how to:
 
-* Create and manage a serverless Amazon Aurora database cluster.
+* Create and manage a serverless Amazon Aurora database. This example uses Aurora Serverless v2.
 * Use AWS Secrets Manager to manage database credentials.
 * Implement a data storage layer that uses Amazon RDS Data Service to move data into
 and out of the database.  
@@ -19,7 +19,7 @@ and out of the database.
 - You must have an AWS account, and have your default credentials and AWS Region
   configured as described in the [AWS Tools and SDKs Shared Configuration and
   Credentials Reference Guide](https://docs.aws.amazon.com/credref/latest/refdocs/creds-config-files.html).
-- Python 3.7 or later
+- Python 3.9 or later
 
 ## Cautions
 
@@ -38,74 +38,80 @@ and out of the database.
 
 Install prerequisites by running the following at a command prompt.
 
-   ```
-   python -m pip install -r requirements.txt
-   ``` 
+```
+python -m pip install -r requirements.txt
+``` 
 
 This example contains two deployment steps, a REST demo, and a cleanup step that
 all must be run separately.
 
-1. Database deployment
+---
 
-    Creates an Amazon Aurora serverless data cluster and an AWS Secrets Manager 
-    secret to hold the database user credentials. It fills the database with example 
-    data pulled from the [Internet Archive's Open Library](https://openlibrary.org). 
+    Creates an Amazon Aurora cluster and associated Aurora Serverless v2 database instance.
+    Also creates an AWS Secrets Manager secret to hold the database user credentials.
+    It fills the database with example data pulled from the [Internet Archive's Open Library](https://openlibrary.org). 
     
-    Deploy and fill the database by running the following command at a command prompt.
+Fill the database with example data pulled from the [Internet Archive's Open Library](https://openlibrary.org). 
 
-    ```
-    py library_demo.py deploy_database
-    ``` 
+```
+python library_demo.py deploy_database
+``` 
 
-    The `lendinglibrary` database is now ready and can be accessed through the 
-    [AWS Console Query Editor](https://console.aws.amazon.com/rds/home?#query-editor:) 
-    or the Boto3 `rds-data` client. Or, run the next step to deploy the REST API.
+The database is now ready and can be accessed through the 
+[AWS Console Query Editor](https://console.aws.amazon.com/rds/home?#query-editor:) 
+or the Boto3 `rds-data` client. Or, run the next step to deploy the REST API.
 
-1. REST API deployment
+---
 
-    Uses Chalice and AWS CLI commands to deploy routing and data-handling layers 
-    to AWS Lambda, set up API Gateway to handle HTTP requests, and
-    establish AWS Identity and Access Management (IAM) roles and profiles to manage
-    permissions. 
+### 3. REST API deployment
+
+Uses Chalice and AWS CLI commands to deploy routing and data-handling layers 
+to AWS Lambda, set up API Gateway to handle HTTP requests, and
+establish AWS Identity and Access Management (IAM) roles and profiles to manage
+permissions. 
+
+Deploy the REST API by running the following command at a command 
+prompt.
+
+```
+python library_demo.py deploy_rest
+```
+
+The REST API is now deployed and can received HTTP requests. Try it yourself 
+using your favorite HTTP client or run the next step to see a demonstration
+of how to use the Requests package to call the web service.
+
+---
+
+### 4. REST API demonstration
+
+Uses the Requests package to send a series of HTTP requests to the web service to
+perform the following tasks.
+
+1. List the books in the library.
+1. Add a library patron.
+1. Lend a book to the new patron.
+1. Return the book from the patron.
+
+See the demo by running the following command at a command prompt.
+
+```
+python library_demo.py demo_rest
+```
+
+---
     
-    Deploy the REST API by running the following command at a command 
-    prompt.
+### 5. Cleanup
 
-    ```
-    py library_demo.py deploy_rest
-    ```
- 
-    The REST API is now deployed and can received HTTP requests. Try it yourself 
-    using your favorite HTTP client or run the next step to see a demonstration
-    of how to use the Requests package to call the web service.
+Remove all resources created during the demonstration by running the following 
+command at a command prompt.
 
-1. REST API demonstration
+```
+cdk destroy
+```
 
-    Uses the Requests package to send a series of HTTP requests to the web service to
-    perform the following tasks.
-    
-    1. List the books in the library.
-    1. Add a library patron.
-    1. Lend a book to the new patron.
-    1. Return the book from the patron.
-    
-    See the demo by running the following command at a command prompt.
-    
-    ```
-    py library_demo.py demo_rest
-    ```
-    
-1. Cleanup
-
-    Remove all resources created during the demonstration by running the following 
-    command at a command prompt.
-    
-    ```
-    py library_demo.py cleanup
-    ```
-    
-    Be sure to run cleanup after you're done to avoid additional charges to your 
-    account.    
+Be sure to run cleanup after you're done to avoid additional charges to your 
+account.
 
 ### Example structure
 
@@ -167,7 +173,7 @@ run the following in your
 folders.
 
 ```    
-py -m pytest
+python -m pytest
 ```
 
 The tests in the *test_library_api_app.py* script use the `chalice.test.Client`

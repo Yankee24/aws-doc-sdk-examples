@@ -1,9 +1,6 @@
-/**
- * Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
- * SPDX-License-Identifier: Apache-2.0
- */
-import {describe, it, beforeAll, afterAll, expect} from "vitest";
-import {andThen, compose, map, path, prop} from "ramda";
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
+import { describe, it, beforeAll, afterAll, expect } from "vitest";
 import {
   IAMClient,
   CreateRoleCommand,
@@ -13,26 +10,24 @@ import {
   waitUntilRoleExists,
 } from "@aws-sdk/client-iam";
 
-import {log} from "libs/utils/util-log.js";
-import {retry} from "libs/utils/util-timers.js";
-import {parseString} from "libs/ext-ramda.js";
-import {DEFAULT_REGION} from "libs/utils/util-aws-sdk.js";
+import { logger } from "@aws-doc-sdk-examples/lib/utils/util-log.js";
+import { retry } from "@aws-doc-sdk-examples/lib/utils/util-timers.js";
 
 import {
   waitForFunctionActive,
   waitForFunctionUpdated,
 } from "../../lambda/waiters/index.js";
-import {createFunction} from "../actions/create-function.js";
-import {deleteFunction} from "../actions/delete-function.js";
-import {getFunction} from "../actions/get-function.js";
-import {invoke} from "../actions/invoke.js";
-import {listFunctions} from "../actions/list-functions.js";
-import {updateFunctionCode} from "../actions/update-function-code.js";
-import {updateFunctionConfiguration} from "../actions/update-function-configuration.js";
-import {helloLambda} from "../hello.js";
+import { createFunction } from "../actions/create-function.js";
+import { deleteFunction } from "../actions/delete-function.js";
+import { getFunction } from "../actions/get-function.js";
+import { invoke } from "../actions/invoke.js";
+import { listFunctions } from "../actions/list-functions.js";
+import { updateFunctionCode } from "../actions/update-function-code.js";
+import { updateFunctionConfiguration } from "../actions/update-function-configuration.js";
+import { helloLambda } from "../hello.js";
 
 describe("Creating, getting, invoking, listing, updating, and deleting", () => {
-  const iamClient = new IAMClient({region: DEFAULT_REGION});
+  const iamClient = new IAMClient({});
   const roleName = "test-lambda-actions-role-name";
   const rolePolicyArn =
     "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole";
@@ -41,7 +36,7 @@ describe("Creating, getting, invoking, listing, updating, and deleting", () => {
 
   beforeAll(async () => {
     const createRoleCommand = new CreateRoleCommand({
-      AssumeRolePolicyDocument: parseString({
+      AssumeRolePolicyDocument: JSON.stringify({
         Version: "2012-10-17",
         Statement: [
           {
@@ -57,13 +52,13 @@ describe("Creating, getting, invoking, listing, updating, and deleting", () => {
     });
     try {
       const response = await iamClient.send(createRoleCommand);
-      roleArn = path(["Role", "Arn"], response);
+      roleArn = response.Role ? response.Role.Arn : null;
       await waitUntilRoleExists(
         {
           client: iamClient,
           maxWaitTime: 15,
         },
-        {RoleName: roleName}
+        { RoleName: roleName },
       );
       const attachRolePolicyCommand = new AttachRolePolicyCommand({
         PolicyArn: rolePolicyArn,
@@ -71,7 +66,7 @@ describe("Creating, getting, invoking, listing, updating, and deleting", () => {
       });
       await iamClient.send(attachRolePolicyCommand);
     } catch (err) {
-      log(err);
+      logger.error(err);
       throw err;
     }
   });
@@ -83,10 +78,10 @@ describe("Creating, getting, invoking, listing, updating, and deleting", () => {
         RoleName: roleName,
       });
       await iamClient.send(detachRolePolicyCommand);
-      const deleteRoleCommand = new DeleteRoleCommand({RoleName: roleName});
+      const deleteRoleCommand = new DeleteRoleCommand({ RoleName: roleName });
       await iamClient.send(deleteRoleCommand);
     } catch (err) {
-      log(err);
+      logger.error(err);
       throw err;
     }
 
@@ -95,21 +90,21 @@ describe("Creating, getting, invoking, listing, updating, and deleting", () => {
       // before the deletion step.
       await deleteFunction(funcName);
     } catch (err) {
-      log(err);
+      logger.error(err);
     }
   });
 
   const testCreateFunction = async () => {
     // A role goes into a busy state after attaching a policy
     // and there's no explicit waiter available for this.
-    await retry({intervalInMs: 2000, maxRetries: 15}, () =>
-      createFunction(funcName, roleArn)
+    await retry({ intervalInMs: 2000, maxRetries: 15 }, () =>
+      createFunction(funcName, roleArn),
     );
 
-    const response = await retry({intervalInMs: 2000, maxRetries: 15}, () =>
-      getFunction(funcName)
+    const response = await retry({ intervalInMs: 2000, maxRetries: 15 }, () =>
+      getFunction(funcName),
     );
-    expect(path(["Configuration", "FunctionName"], response)).toBe(funcName);
+    expect(response.Configuration.FunctionName).toBe(funcName);
   };
 
   const testHello = async () => {
@@ -119,7 +114,7 @@ describe("Creating, getting, invoking, listing, updating, and deleting", () => {
 
   const testInvokeFunction = async () => {
     // Verify 'invoke-function' works.
-    const {result} = await invoke(funcName, "1");
+    const { result } = await invoke(funcName, "1");
     expect(result).toBe("2");
   };
 
@@ -128,25 +123,24 @@ describe("Creating, getting, invoking, listing, updating, and deleting", () => {
       await deleteFunction(funcName);
       await getFunction(funcName);
     } catch (err) {
-      expect(prop("name", err)).toBe("ResourceNotFoundException");
+      expect(err.name).toBe("ResourceNotFoundException");
     }
   };
 
   const testListFunctions = async () => {
-    const getFunctionNames = compose(
-      andThen(map(prop("FunctionName"))),
-      andThen(prop("Functions")),
-      listFunctions
-    );
+    const getFunctionNames = async () => {
+      const response = await listFunctions();
+      return response.Functions.map((func) => func.FunctionName);
+    };
 
     const functionNames = await getFunctionNames();
-    expect(functionNames).toContainEqual(funcName);
+    expect(functionNames).toContain(funcName);
   };
 
   const testUpdateFunction = async () => {
     await updateFunctionCode(funcName, "func-update");
-    await waitForFunctionUpdated({FunctionName: funcName});
-    const {result} = await invoke(funcName, ["add", "1", "1"]);
+    await waitForFunctionUpdated({ FunctionName: funcName });
+    const { result } = await invoke(funcName, ["add", "1", "1"]);
     expect(result).toBe("2");
   };
 
@@ -155,10 +149,10 @@ describe("Creating, getting, invoking, listing, updating, and deleting", () => {
   // cost.
   it("are all handled by this one test", async () => {
     await testCreateFunction();
-    await waitForFunctionActive({FunctionName: funcName});
+    await waitForFunctionActive({ FunctionName: funcName });
     await testHello();
     await updateFunctionConfiguration(funcName);
-    await retry({intervalInMs: 2000, maxRetries: 15}, testInvokeFunction);
+    await retry({ intervalInMs: 2000, maxRetries: 15 }, testInvokeFunction);
     await testListFunctions();
     await testUpdateFunction();
     await testDeleteFunction();

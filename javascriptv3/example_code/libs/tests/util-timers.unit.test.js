@@ -1,3 +1,5 @@
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 import { describe, it, expect, vi } from "vitest";
 import { retry } from "../utils/util-timers";
 
@@ -11,7 +13,9 @@ describe("util-timers", () => {
 
     it("should call a function multiple times if that function fails", async () => {
       const fn = vi.fn(() => Promise.reject(new Error("Fail")));
-      await retry({ intervalInMs: 1, maxRetries: 3 }, fn).catch(() => Promise.resolve());
+      await retry({ intervalInMs: 1, maxRetries: 3 }, fn).catch(() =>
+        Promise.resolve(),
+      );
       expect(fn).toHaveBeenCalledTimes(4);
     });
 

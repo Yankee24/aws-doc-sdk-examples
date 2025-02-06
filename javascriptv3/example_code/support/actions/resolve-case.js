@@ -1,9 +1,7 @@
-/*
- * Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
- * SPDX-License-Identifier: Apache-2.0
- */
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 
-import { fileURLToPath } from "url";
+import { fileURLToPath } from "node:url";
 
 // snippet-start:[javascript.v3.support.actions.ResolveCase]
 import { ResolveCaseCommand } from "@aws-sdk/client-support";
@@ -15,7 +13,7 @@ const main = async () => {
     const response = await client.send(
       new ResolveCaseCommand({
         caseId: "CASE_ID",
-      })
+      }),
     );
 
     console.log(response.finalCaseStatus);

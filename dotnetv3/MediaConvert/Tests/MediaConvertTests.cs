@@ -1,7 +1,9 @@
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
+
 using Amazon.MediaConvert;
 using MediaConvertActions;
 using Microsoft.Extensions.Configuration;
-using Xunit.Extensions.Ordering;
 
 namespace MediaConvertTests;
 
@@ -26,13 +28,7 @@ public class MediaConvertTests
                 true) // Optionally load local settings.
             .Build();
 
-        var mediaConvertEndpoint = _configuration["mediaConvertEndpoint"];
-        AmazonMediaConvertConfig mcConfig = new AmazonMediaConvertConfig
-        {
-            ServiceURL = mediaConvertEndpoint,
-        };
-
-        AmazonMediaConvertClient mcClient = new AmazonMediaConvertClient(mcConfig);
+        AmazonMediaConvertClient mcClient = new AmazonMediaConvertClient();
 
         _mediaConvertWrapper = new MediaConvertWrapper(mcClient);
     }

@@ -1,11 +1,5 @@
-// snippet-sourcedescription:[DeleteTable.kt demonstrates how to delete an Amazon DynamoDB table.]
-// snippet-keyword:[Code Sample]
-// snippet-service:[Amazon DynamoDB]
-
-/*
-   Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
-   SPDX-License-Identifier: Apache-2.0
-*/
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 
 package com.kotlin.dynamodb
 
@@ -43,10 +37,10 @@ suspend fun main(args: Array<String>) {
 
 // snippet-start:[dynamodb.kotlin.delete_table.main]
 suspend fun deleteDynamoDBTable(tableNameVal: String) {
-
-    val request = DeleteTableRequest {
-        tableName = tableNameVal
-    }
+    val request =
+        DeleteTableRequest {
+            tableName = tableNameVal
+        }
 
     DynamoDbClient { region = "us-east-1" }.use { ddb ->
         ddb.deleteTable(request)

@@ -1,7 +1,5 @@
-/**
- * Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
- * SPDX-License-Identifier: Apache-2.0
- */
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 import { describe, it, expect } from "vitest";
 import { handler } from "../scenarios/lambda-triggers/functions/auth-challenge-verify.mjs";
 
@@ -15,7 +13,7 @@ describe("auth-challenge-verify", () => {
       response: {},
     });
     expect(result).toEqual(
-      expect.objectContaining({ response: { answerCorrect: true } })
+      expect.objectContaining({ response: { answerCorrect: true } }),
     );
   });
 
@@ -28,7 +26,7 @@ describe("auth-challenge-verify", () => {
       response: {},
     });
     expect(result).toEqual(
-      expect.objectContaining({ response: { answerCorrect: false } })
+      expect.objectContaining({ response: { answerCorrect: false } }),
     );
   });
 });

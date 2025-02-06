@@ -1,11 +1,5 @@
-// snippet-sourcedescription:[ListDataSourceSyncJobs.kt demonstrates how to get statistics about synchronizing Amazon Kendra with a data source.]
-// snippet-keyword:[SDK for Kotlin]
-// snippet-service:[Amazon Kendra]
-
-/*
-   Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
-   SPDX-License-Identifier: Apache-2.0
-*/
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 
 package com.example.kendra
 
@@ -24,7 +18,6 @@ https://docs.aws.amazon.com/sdk-for-kotlin/latest/developer-guide/setup.html
  */
 
 suspend fun main(args: Array<String>) {
-
     val usage = """
         Usage:
             <indexId> 
@@ -44,13 +37,16 @@ suspend fun main(args: Array<String>) {
 }
 
 // snippet-start:[kendra.kotlin.list.sync.main]
-suspend fun listSyncJobs(indexIdVal: String?, dataSourceId: String?) {
-
-    val jobsRequest = ListDataSourceSyncJobsRequest {
-        indexId = indexIdVal
-        maxResults = 10
-        id = dataSourceId
-    }
+suspend fun listSyncJobs(
+    indexIdVal: String?,
+    dataSourceId: String?,
+) {
+    val jobsRequest =
+        ListDataSourceSyncJobsRequest {
+            indexId = indexIdVal
+            maxResults = 10
+            id = dataSourceId
+        }
 
     KendraClient { region = "us-east-1" }.use { kendra ->
         val response = kendra.listDataSourceSyncJobs(jobsRequest)

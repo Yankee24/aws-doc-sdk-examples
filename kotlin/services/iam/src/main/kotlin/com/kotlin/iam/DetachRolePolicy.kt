@@ -1,11 +1,5 @@
-// snippet-sourcedescription:[DetachRolePolicy.kt demonstrates how to detach a policy from an AWS Identity and Access Management (IAM) role.]
-// snippet-keyword:[AWS SDK for Kotlin]
-// snippet-service:[Identity and Access Management (IAM)]
-
-/*
-   Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
-   SPDX-License-Identifier: Apache-2.0
-*/
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 
 package com.kotlin.iam
 
@@ -24,7 +18,6 @@ https://docs.aws.amazon.com/sdk-for-kotlin/latest/developer-guide/setup.html
 */
 
 suspend fun main(args: Array<String>) {
-
     val usage = """
         Usage:
             <roleName> <policyArn>
@@ -44,12 +37,15 @@ suspend fun main(args: Array<String>) {
 }
 
 // snippet-start:[iam.kotlin.detach_role_policy.main]
-suspend fun detachPolicy(roleNameVal: String, policyArnVal: String) {
-
-    val request = DetachRolePolicyRequest {
-        roleName = roleNameVal
-        policyArn = policyArnVal
-    }
+suspend fun detachPolicy(
+    roleNameVal: String,
+    policyArnVal: String,
+) {
+    val request =
+        DetachRolePolicyRequest {
+            roleName = roleNameVal
+            policyArn = policyArnVal
+        }
 
     IamClient { region = "AWS_GLOBAL" }.use { iamClient ->
         iamClient.detachRolePolicy(request)

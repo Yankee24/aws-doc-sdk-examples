@@ -1,4 +1,6 @@
-import { describe, it, expect } from "@jest/globals";
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
+import { describe, it, expect } from "vitest";
 import { buildStatementCommand } from "../src/statement-commands/command-helper.js";
 
 describe("command-helper", () => {
@@ -7,7 +9,7 @@ describe("command-helper", () => {
       const sql = "select * from some_table";
       const command = buildStatementCommand(sql);
       expect(command.constructor.name).toBe("ExecuteStatementCommand");
-      expect(command.input.sql).toBe(sql)
+      expect(command.input.sql).toBe(sql);
     });
   });
 });

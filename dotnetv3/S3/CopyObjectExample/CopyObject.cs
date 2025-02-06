@@ -1,5 +1,5 @@
 ﻿// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
-// SPDX - License - Identifier: Apache - 2.0
+// SPDX-License-Identifier: Apache-2.0
 
 /// <summary>
 /// This example copies an object from one Amazon Simple Storage Service
@@ -11,7 +11,6 @@ namespace CopyObject
     // snippet-start:[S3.dotnet35.CopyObject]
     using System;
     using System.Threading.Tasks;
-    using Amazon;
     using Amazon.S3;
     using Amazon.S3.Model;
 
@@ -24,8 +23,8 @@ namespace CopyObject
             IAmazonS3 s3Client = new AmazonS3Client();
 
             // Remember to change these values to refer to your Amazon S3 objects.
-            string sourceBucketName = "doc-example-bucket1";
-            string destinationBucketName = "doc-example-bucket2";
+            string sourceBucketName = "amzn-s3-demo-bucket1";
+            string destinationBucketName = "amzn-s3-demo-bucket2";
             string sourceObjectKey = "testfile.txt";
             string destinationObjectKey = "testfilecopy.txt";
 

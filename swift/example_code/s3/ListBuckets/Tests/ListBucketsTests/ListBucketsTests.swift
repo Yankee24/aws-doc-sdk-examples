@@ -1,9 +1,8 @@
-//
-// Tests for the `ListBuckets` example for Amazon Simple Storage Service
-// (Amazon S3) using the AWS SDK for Swift.
-//
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 // SPDX-License-Identifier: Apache-2.0
+
+// Tests for the `ListBuckets` example for Amazon Simple Storage Service
+// (Amazon S3) using the AWS SDK for Swift.
 //
 
 import XCTest
@@ -44,10 +43,10 @@ public struct MockS3Session: S3SessionProtocol {
     ///
     /// - Parameter input: The input to the `listBuckets()` function.
     ///
-    /// - Returns: A `ListBucketsOutputResponse` object containing the list of
+    /// - Returns: A `ListBucketsOutput` object containing the list of
     ///   buckets.
     public func listBuckets(input: ListBucketsInput) async throws
-            -> ListBucketsOutputResponse {
+            -> [S3ClientTypes.Bucket] {
         var bucketList: [S3ClientTypes.Bucket] = []
         let df = DateFormatter()
         df.dateFormat = "M/d/yy, h:mm:ss a z"
@@ -61,15 +60,8 @@ public struct MockS3Session: S3SessionProtocol {
             )
             bucketList.append(bucket)
         }
-        
-        // Create and return the `ListBucketsOutputResponse` object containing
-        // the results.
-
-        let response = ListBucketsOutputResponse(
-            buckets: bucketList,
-            owner: nil
-        )
-        return response
+ 
+        return bucketList
     }
 }
 
@@ -84,7 +76,6 @@ final class ListBucketsTests: XCTestCase {
     /// Perform one-time initialization before executing any tests.
     override class func setUp() {
         super.setUp()
-        SDKLoggingSystem.initialize(logLevel: .error)
     }
 
     /// Set up things that need to be done just before each
@@ -96,9 +87,9 @@ final class ListBucketsTests: XCTestCase {
         // non-breaking space Unicode character. This is what the
         // `DateFormatter` class uses.
         var testData: [BucketInfo] = []
-        testData.append(BucketInfo(name: "Testfile-1", date: "2/4/65, 1:23:45 AM UTC"))
-        testData.append(BucketInfo(name: "Another-file", date: "1/13/72, 4:43:21 PM UTC"))
-        testData.append(BucketInfo(name: "Very-foo-file", date: "8/17/47, 12:34:00 PM UTC"))
+        testData.append(BucketInfo(name: "Testfile-1", date: "2/4/65, 1:23:45 AM GMT"))
+        testData.append(BucketInfo(name: "Another-file", date: "1/13/72, 4:43:21 PM GMT"))
+        testData.append(BucketInfo(name: "Very-foo-file", date: "8/17/47, 12:34:00 PM GMT"))
 
         self.session = MockS3Session(data: testData)
         self.s3 = S3Manager(session: self.session!)
@@ -130,7 +121,7 @@ final class ListBucketsTests: XCTestCase {
     /// name and a date for which the string is known. Then compare the result
     /// to the expected value.
     func testBucketString() async throws {
-        let testDate = "1/23/45, 6:07:08 PM UTC"
+        let testDate = "1/23/45, 6:07:08 PM GMT"
         let testName = "test-bucket-name"
         let testString = "\(testName) (created \(testDate))"
 
@@ -152,7 +143,7 @@ final class ListBucketsTests: XCTestCase {
     /// object for which we know the expected string result.
     func testDateToString() async throws {
         let testDate = Date(timeIntervalSinceReferenceDate: -123456789.0)
-        let testString = "2/2/97, 2:26:51 AM UTC"
+        let testString = "2/2/97, 2:26:51 AM GMT"
 
         let ds = dateToString(testDate)
 

@@ -1,25 +1,5 @@
- 
-//snippet-sourcedescription:[describe_volumes.cpp demonstrates how to retrieve information about the Amazon Elastic Block Store volumes attached to an Amazon EC2 instance.]
-//snippet-keyword:[C++]
-//snippet-sourcesyntax:[cpp]
-//snippet-keyword:[Code Sample]
-//snippet-keyword:[Amazon Elastic Block Store]
-//snippet-service:[ebs]
-//snippet-sourcetype:[full-example]
-//snippet-sourcedate:[]
-//snippet-sourceauthor:[tapasweni-pathak]
-
-
-/*
-   Copyright 2010-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
-   This file is licensed under the Apache License, Version 2.0 (the "License").
-   You may not use this file except in compliance with the License. A copy of
-   the License is located at
-    http://aws.amazon.com/apache2.0/
-   This file is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
-   CONDITIONS OF ANY KIND, either express or implied. See the License for the
-   specific language governing permissions and limitations under the License.
-*/
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 
 #include <aws/core/Aws.h>
 #include <aws/ec2/EC2Client.h>
@@ -27,39 +7,49 @@
 #include <aws/ec2/model/DescribeVolumesResponse.h>
 #include <iostream>
 
-int main(int argc, char ** argv)
-{
-  if (argc != 1)
-  {
-    std::cout << "Usage: describe_volumes" << std::endl;
-    return 1;
-  }
-
-  Aws::SDKOptions options;
-  Aws::InitAPI(options);
-  {
-    Aws::EC2::EC2Client ec2;
-
-    Aws::EC2::Model::DescribeVolumesRequest dv_req;
-
-    auto dv_out = ec2.DescribeVolumes(dv_req);
-
-    if (dv_out.IsSuccess())
-    {
-      std::cout << "Successfully describing volumes as:";
-      for (auto val: dv_out.GetResult().GetVolumes())
-      {
-        std::cout << " " << val.GetVolumeId();
-      }
-      std::cout << std::endl;
+int main(int argc, char **argv) {
+    if (argc != 1) {
+        std::cout << "Usage: describe_volumes" << std::endl;
+        return 1;
     }
-    else
-    {
-      std::cout << "Error describing volumes" << dv_out.GetError().GetMessage()
-        << std::endl;
-    }
-  }
 
-  Aws::ShutdownAPI(options);
-  return 0;
+    Aws::SDKOptions options;
+    Aws::InitAPI(options);
+    {
+        Aws::EC2::EC2Client ec2;
+
+        Aws::EC2::Model::DescribeVolumesRequest dv_req;
+
+        Aws::Vector<Aws::EC2::Model::Volume> all_volumes;
+        Aws::String next_token;
+
+        do {
+            if (!next_token.empty()) {
+                dv_req.SetNextToken(next_token);
+            }
+            auto dv_out = ec2.DescribeVolumes(dv_req);
+
+            if (dv_out.IsSuccess()) {
+                const auto &volumes = dv_out.GetResult().GetVolumes();
+                all_volumes.insert(all_volumes.end(), volumes.begin(), volumes.end());
+
+                next_token = dv_out.GetResult().GetNextToken();
+            }
+            else {
+                std::cout << "Error describing volumes"
+                          << dv_out.GetError().GetMessage()
+                          << std::endl;
+                break;
+            }
+        } while (!next_token.empty());
+
+        std::cout << all_volumes.size() << " volume(s) found:" << std::endl;
+        for (auto val: all_volumes) {
+            std::cout << " " << val.GetVolumeId() << std::endl;
+        }
+        std::cout << std::endl;
+    }
+
+    Aws::ShutdownAPI(options);
+    return 0;
 }

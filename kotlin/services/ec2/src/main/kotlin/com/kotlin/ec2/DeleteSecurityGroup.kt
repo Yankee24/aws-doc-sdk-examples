@@ -1,11 +1,5 @@
-// snippet-sourcedescription:[DeleteSecurityGroup.kt demonstrates how to delete an Amazon Elastic Compute Cloud (Amazon EC2) Security Group.]
-// snippet-keyword:[AWS SDK for Kotlin]
-// snippet-service:[Amazon EC2]
-
-/*
-   Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
-   SPDX-License-Identifier: Apache-2.0
-*/
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 package com.kotlin.ec2
 
 // snippet-start:[ec2.kotlin.delete_security_group.import]
@@ -23,7 +17,6 @@ https://docs.aws.amazon.com/sdk-for-kotlin/latest/developer-guide/setup.html
  */
 
 suspend fun main(args: Array<String>) {
-
     val usage = """
         Usage:
             <groupId> 
@@ -43,10 +36,10 @@ suspend fun main(args: Array<String>) {
 
 // snippet-start:[ec2.kotlin.delete_security_group.main]
 suspend fun deleteEC2SecGroup(groupIdVal: String) {
-
-    val request = DeleteSecurityGroupRequest {
-        groupId = groupIdVal
-    }
+    val request =
+        DeleteSecurityGroupRequest {
+            groupId = groupIdVal
+        }
 
     Ec2Client { region = "us-west-2" }.use { ec2 ->
         ec2.deleteSecurityGroup(request)

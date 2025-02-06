@@ -1,12 +1,5 @@
-// snippet-comment:[These are tags for the AWS doc team's sample catalog. Do not remove.]
-// snippet-sourcedescription:[DeleteStack.kt demonstrates how to delete an existing stack.]
-// snippet-keyword:[AWS SDK for Kotlin]
-// snippet-service:[AWS CloudFormation]
-
-/*
-   Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
-   SPDX-License-Identifier: Apache-2.0
-*/
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 
 package com.kotlin.cloudformation
 
@@ -17,7 +10,6 @@ import kotlin.system.exitProcess
 // snippet-end:[cf.kotlin.delete_stack.import]
 
 suspend fun main(args: Array<String>) {
-
     val usage = """
     Usage:
         <stackName>
@@ -37,10 +29,10 @@ suspend fun main(args: Array<String>) {
 
 // snippet-start:[cf.kotlin.delete_stack.main]
 suspend fun deleteSpecificTemplate(stackNameVal: String?) {
-
-    val request = DeleteStackRequest {
-        stackName = stackNameVal
-    }
+    val request =
+        DeleteStackRequest {
+            stackName = stackNameVal
+        }
 
     CloudFormationClient { region = "us-east-1" }.use { cfClient ->
         cfClient.deleteStack(request)

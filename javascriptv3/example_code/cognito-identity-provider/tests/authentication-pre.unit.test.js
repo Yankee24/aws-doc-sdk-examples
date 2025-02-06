@@ -1,7 +1,5 @@
-/**
- * Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
- * SPDX-License-Identifier: Apache-2.0
- */
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 import { describe, it, expect } from "vitest";
 import { handler } from "../scenarios/lambda-triggers/functions/authentication-pre.mjs";
 
@@ -11,7 +9,7 @@ describe("authentication-pre", () => {
     return expect(
       handler({
         callerContext: { clientId: "user-pool-app-client-id-to-be-blocked" },
-      })
+      }),
     ).rejects.toBeTruthy();
   });
 
@@ -20,7 +18,7 @@ describe("authentication-pre", () => {
     return expect(
       handler({
         callerContext: { clientId: "any-other-client-id" },
-      })
+      }),
     ).resolves.toBeTruthy();
   });
 });

@@ -1,7 +1,5 @@
-/*
-   Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
-   SPDX-License-Identifier: Apache-2.0
-*/
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 
 #pragma once
 #ifndef S3_EXAMPLES_S3_GTESTS_H
@@ -39,9 +37,6 @@ namespace AwsDocTest {
         // s_clientConfig must be a pointer because the client config must be initialized
         // after InitAPI.
         static std::unique_ptr<Aws::Client::ClientConfiguration> s_clientConfig;
-
-        // This endpoint cache must be created in SetUp to make sure that mocks work correctly.
-        void createEndpointCache();
 
     private:
 

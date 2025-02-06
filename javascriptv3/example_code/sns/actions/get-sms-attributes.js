@@ -1,9 +1,7 @@
-/*
- * Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
- * SPDX-License-Identifier: Apache-2.0
- */
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 
-import { fileURLToPath } from "url";
+import { fileURLToPath } from "node:url";
 
 // snippet-start:[sns.JavaScript.SMS.getSMSAttributesV3]
 import { GetSMSAttributesCommand } from "@aws-sdk/client-sns";
@@ -14,7 +12,7 @@ export const getSmsAttributes = async () => {
     // If you have not modified the account-level mobile settings of SNS,
     // the DefaultSMSType is undefined. For this example, it was set to
     // Transactional.
-    new GetSMSAttributesCommand({ attributes: ["DefaultSMSType"] })
+    new GetSMSAttributesCommand({ attributes: ["DefaultSMSType"] }),
   );
 
   console.log(response);

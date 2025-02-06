@@ -1,5 +1,5 @@
 {
-  "name": "example-javascriptv3-support",
+  "name": "@aws-doc-sdk-examples/example-javascriptv3-support",
   "version": "1.0.0",
   "description": "Examples demonstrating how to use the AWS SDK for JavaScript (v3) to interact with AWS Support.",
   "scripts": {
@@ -9,11 +9,11 @@
   "license": "Apache-2.0",
   "type": "module",
   "dependencies": {
+    "@aws-doc-sdk-examples/lib": "^1.0.1",
     "@aws-sdk/client-support": "^3.245.0",
-    "inquirer": "^9.1.4",
-    "libs": "*"
+    "@inquirer/prompts": "^5.0.1"
   },
   "devDependencies": {
-    "vitest": "^0.27.0"
+    "vitest": "^1.6.0"
   }
 }

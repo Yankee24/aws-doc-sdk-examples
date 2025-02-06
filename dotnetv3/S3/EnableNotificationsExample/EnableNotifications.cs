@@ -1,11 +1,6 @@
 ﻿// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
-// SPDX-License-Identifier:  Apache-2.0
+// SPDX-License-Identifier: Apache-2.0
 
-/// <summary>
-/// This example shows how to enable notifications for an Amazon Simple
-/// Storage Service (Amazon S3) bucket. The examples use the AWS SDK for
-/// .NET version 3.7, and .NET Core 5.0.
-/// </summary>
 namespace EnableNotificationsExample
 {
     // snippet-start:[S3.dotnetv3.EnableNotificationsExample]
@@ -15,11 +10,15 @@ namespace EnableNotificationsExample
     using Amazon.S3;
     using Amazon.S3.Model;
 
+    /// <summary>
+    /// This example shows how to enable notifications for an Amazon Simple
+    /// Storage Service (Amazon S3) bucket.
+    /// </summary>
     public class EnableNotifications
     {
         public static async Task Main()
         {
-            const string bucketName = "doc-example-bucket1";
+            const string bucketName = "amzn-s3-demo-bucket1";
             const string snsTopic = "arn:aws:sns:us-east-2:0123456789ab:bucket-notify";
             const string sqsQueue = "arn:aws:sqs:us-east-2:0123456789ab:Example_Queue";
 

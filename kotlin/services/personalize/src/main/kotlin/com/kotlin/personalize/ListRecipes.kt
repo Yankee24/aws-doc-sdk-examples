@@ -1,11 +1,5 @@
-// snippet-sourcedescription:[ListRecipes.kt demonstrates how to list Amazon Personalize recipes.]
-// snippet-keyword:[AWS SDK for Kotlin]
-// snippet-service:[Amazon Personalize]
-
-/*
-   Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
-   SPDX-License-Identifier: Apache-2.0
-*/
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 
 package com.kotlin.personalize
 
@@ -28,10 +22,10 @@ suspend fun main() {
 
 // snippet-start:[personalize.kotlin.list_recipes.main]
 suspend fun listAllRecipes() {
-
-    val request = ListRecipesRequest {
-        maxResults = 15
-    }
+    val request =
+        ListRecipesRequest {
+            maxResults = 15
+        }
     PersonalizeClient { region = "us-east-1" }.use { personalizeClient ->
         val response = personalizeClient.listRecipes(request)
         response.recipes?.forEach { recipe ->

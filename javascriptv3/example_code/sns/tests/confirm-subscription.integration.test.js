@@ -1,3 +1,5 @@
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 import { describe, it, expect } from "vitest";
 import { confirmSubscription } from "../actions/confirm-subscription.js";
 
@@ -7,7 +9,7 @@ describe("confirmSubscription", () => {
       await confirmSubscription();
     } catch (err) {
       expect(err.message).toEqual(
-        "Invalid parameter: TopicArn Reason: An ARN must have at least 6 elements, not 1"
+        "Invalid parameter: TopicArn Reason: An ARN must have at least 6 elements, not 1",
       );
     }
   });

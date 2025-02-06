@@ -1,29 +1,108 @@
-# Amazon Kinesis JavaScript SDK v3 code examples
-Amazon Kinesis makes it easy to collect, process, and analyze real-time, streaming data so you can get timely insights and react quickly to new information.
+# Kinesis code examples for the SDK for JavaScript (v3)
+
+## Overview
+
+Shows how to use the AWS SDK for JavaScript (v3) to work with Amazon Kinesis.
+
+<!--custom.overview.start-->
+<!--custom.overview.end-->
+
+_Kinesis makes it easy to collect, process, and analyze video and data streams in real time._
+
+## ⚠ Important
+
+* Running this code might result in charges to your AWS account. For more details, see [AWS Pricing](https://aws.amazon.com/pricing/) and [Free Tier](https://aws.amazon.com/free/).
+* Running the tests might result in charges to your AWS account.
+* We recommend that you grant your code least privilege. At most, grant only the minimum permissions required to perform the task. For more information, see [Grant least privilege](https://docs.aws.amazon.com/IAM/latest/UserGuide/best-practices.html#grant-least-privilege).
+* This code is not tested in every AWS Region. For more information, see [AWS Regional Services](https://aws.amazon.com/about-aws/global-infrastructure/regional-product-services).
+
+<!--custom.important.start-->
+<!--custom.important.end-->
 
 ## Code examples
-This is a workspace where you can find the following AWS SDK for JavaScript version 3 (v3) Amazon Kinesis examples:
-- Tutorial demonstrating how to capture browser user event data and send it to Amazon Kenesis. See [documentation](https://docs.aws.amazon.com/sdk-for-javascript/v3/developer-guide/kinesis-examples.html).
 
-**Note**: All code examples are written in ECMAscript 6 (ES6). For guidelines on converting to CommonJS, see 
-[JavaScript ES6/CommonJS syntax](https://docs.aws.amazon.com/sdk-for-javascript/v3/developer-guide/sdk-example-javascript-syntax.html).
+### Prerequisites
 
-## Getting started
+For prerequisites, see the [README](../../README.md#Prerequisites) in the `javascriptv3` folder.
 
-1. Clone the [AWS SDK Code Samples repo](https://github.com/awsdocs/aws-doc-sdk-examples) to your local environment. See [the Github documentation](https://docs.github.com/en/github/creating-cloning-and-archiving-repositories/cloning-a-repository) for instructions.
 
-1. Install the dependencies listed in the package.json.
+<!--custom.prerequisites.start-->
+This service folder contains AWS Cloud Development Kit (CDK) code that will set up the necessary resources required to run the
+examples. It also contains a `stack.yaml` with the AWS CloudFormation (CFN) template generated from the CDK.
 
-**Note**: These include the client module for the AWS services required in these example, 
-which is *@aws-sdk/client-kinesis*.
+Create resources with the CDK using [`cdk deploy`](https://docs.aws.amazon.com/cdk/v2/guide/ref-cli-cmd-deploy.html) or
+with CFN using [`aws cloudformation create-stack`](https://awscli.amazonaws.com/v2/documentation/api/latest/reference/cloudformation/create-stack.html).
+<!--custom.prerequisites.end-->
+
+### Single actions
+
+Code excerpts that show you how to call individual service functions.
+
+- [PutRecords](actions/put-records.js)
+
+
+<!--custom.examples.start-->
+<!--custom.examples.end-->
+
+## Run the examples
+
+### Instructions
+
+**Note**: All code examples are written in ECMAscript 6 (ES6). For guidelines on converting to CommonJS, see
+[JavaScript ES6/CommonJS syntax](https://docs.aws.amazon.com/sdk-for-javascript/v3/developer-guide/sdk-examples-javascript-syntax.html).
+
+**Run a single action**
+
+```bash
+node ./actions/<fileName>
 ```
-npm install node -g
-cd javascriptv3/example_code/kinesis
-npm install
-```
-4. To run this code, follow the instructions for this example in the [Capturing Web Page Scroll Progress with Amazon Kinesis](https://docs.aws.amazon.com/sdk-for-javascript/v3/developer-guide/kinesis-examples-capturing-page-scrolling.html).
 
-## Resources
-- [AWS SDK for JavaScript v3](https://github.com/aws/aws-sdk-js-v3) 
-- [Amazon Kinesis Example](https://docs.aws.amazon.com/sdk-for-javascript/v3/developer-guide/kinesis-examples.html) 
-- [AWS SDK for JavaScript v3 API Reference Guide](https://docs.aws.amazon.com/AWSJavaScriptSDK/v3/latest/client/kinesis/index.html) 
+**Run a scenario**
+
+Most scenarios can be run with the following command:
+```bash
+node ./scenarios/<fileName>
+```
+
+**Run with options**
+
+Some actions and scenarios can be run with options from the command line:
+```bash
+node ./scenarios/<fileName> --option1 --option2
+```
+[util.parseArgs](https://nodejs.org/api/util.html#utilparseargsconfig) is used to configure
+these options. For the specific options available to each script, see the `parseArgs` usage
+for that file.
+
+<!--custom.instructions.start-->
+<!--custom.instructions.end-->
+
+
+
+### Tests
+
+⚠ Running tests might result in charges to your AWS account.
+
+
+To find instructions for running these tests, see the [README](../../README.md#Tests)
+in the `javascriptv3` folder.
+
+
+
+<!--custom.tests.start-->
+<!--custom.tests.end-->
+
+## Additional resources
+
+- [Kinesis Developer Guide](https://docs.aws.amazon.com/streams/latest/dev/introduction.html)
+- [Kinesis API Reference](https://docs.aws.amazon.com/kinesis/latest/APIReference/Welcome.html)
+- [SDK for JavaScript (v3) Kinesis reference](https://docs.aws.amazon.com/AWSJavaScriptSDK/v3/latest/client/kinesis)
+
+<!--custom.resources.start-->
+<!--custom.resources.end-->
+
+---
+
+Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+
+SPDX-License-Identifier: Apache-2.0

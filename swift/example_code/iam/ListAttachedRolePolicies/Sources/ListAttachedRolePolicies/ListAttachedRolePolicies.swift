@@ -1,11 +1,10 @@
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 //
 // Swift Example: ListAttachedRolePolicies
 //
 // An example showing how to use the Amazon Identity and Access Management (IAM)
 // `IAMClient` function `listAttachedRolePolicies()`.
-//
-// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
-// SPDX-License-Identifier: Apache-2.0.
 
 // snippet-start:[iam.swift.listattachedrolepolicies.example]
 // snippet-start:[iam.swift.listattachedrolepolicies.main.imports]
@@ -32,9 +31,10 @@ struct ExampleCommand: ParsableCommand {
     /// example.
     // snippet-start:[iam.swift.listattachedrolepolicies.command.runasync]
     func runAsync() async throws {
-        let serviceHandler = await ServiceHandler()
+        
 
         do {
+            let serviceHandler = try await ServiceHandler()
             let attachedPolicies = try await serviceHandler.listAttachedRolePolicies(role: rolename)
 
             print("Found \(attachedPolicies.count) policies attached to role \(rolename)")
@@ -42,6 +42,7 @@ struct ExampleCommand: ParsableCommand {
                 print("  \(policy.policyName ?? "<unnamed>")")
             }
         } catch {
+            print("ERROR: ListAttachedRolePolicies runAsync:", dump(error))
             throw error
         }
     }

@@ -1,11 +1,5 @@
-// snippet-sourcedescription:[DeleteCluster.kt demonstrates how to delete an Amazon Redshift cluster.]
-// snippet-keyword:[AWS SDK for Kotlin]
-// snippet-service:[Amazon Redshift]
-
-/*
-   Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
-   SPDX-License-Identifier: Apache-2.0
-*/
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 package com.kotlin.redshift
 
 // snippet-start:[redshift.kotlin.delete_cluster.import]
@@ -22,7 +16,6 @@ For more information, see the following documentation topic:
 https://docs.aws.amazon.com/sdk-for-kotlin/latest/developer-guide/setup.html
  */
 suspend fun main(args: Array<String>) {
-
     val usage = """
     Usage:
         <clusterId>  
@@ -44,11 +37,11 @@ suspend fun main(args: Array<String>) {
 
 // snippet-start:[redshift.kotlin.delete_cluster.main]
 suspend fun deleteRedshiftCluster(clusterId: String?) {
-
-    val request = DeleteClusterRequest {
-        clusterIdentifier = clusterId
-        skipFinalClusterSnapshot = true
-    }
+    val request =
+        DeleteClusterRequest {
+            clusterIdentifier = clusterId
+            skipFinalClusterSnapshot = true
+        }
 
     RedshiftClient { region = "us-west-2" }.use { redshiftClient ->
         val response = redshiftClient.deleteCluster(request)

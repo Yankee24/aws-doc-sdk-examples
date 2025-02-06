@@ -1,9 +1,7 @@
-//NOTE!! This example only works on Linux and Mac. It does not work on Windows.
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 
-/*
-   Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
-   SPDX-License-Identifier: Apache-2.0
-*/
+//NOTE!! This example only works on Linux and Mac. It does not work on Windows.
 
 #include <iostream>
 #include <aws/core/Aws.h>
@@ -12,7 +10,7 @@
 #include <aws/core/client/ClientConfiguration.h>
 #include <aws/core/http/curl/CurlHttpClient.h>  //This example is for Linux only. See top.
 #include <aws/s3/S3Client.h>
-#include "awsdoc/s3/s3_examples.h"
+#include "s3_examples.h"
 
 using namespace Aws;
 using namespace Aws::Http;
@@ -90,11 +88,10 @@ class MyHttpClientFactory : public Aws::Http::HttpClientFactory {
 
 //! Routine which demonstrates configuring a website for an S3 bucket.
 /*!
-  \sa ListBucketDisablingDnsCache()
-  \param clientConfig Aws client configuration.
+  \param clientConfig: Aws client configuration.
+  \return bool: Function succeeded.
 */
-
-bool AwsDoc::S3::ListBucketDisablingDnsCache(const Aws::Client::ClientConfiguration &clientConfig) {
+bool AwsDoc::S3::listBucketDisablingDnsCache(const Aws::S3::S3ClientConfiguration &clientConfig) {
     SetHttpClientFactory(Aws::MakeShared<MyHttpClientFactory>(ALLOCATION_TAG));
 
     Aws::S3::S3Client s3Client(clientConfig);
@@ -102,8 +99,7 @@ bool AwsDoc::S3::ListBucketDisablingDnsCache(const Aws::Client::ClientConfigurat
     if (!listBucketsOutcome.IsSuccess()) {
         std::cerr << "Failed to list buckets. Error details:" << std::endl;
         std::cerr << listBucketsOutcome.GetError() << std::endl;
-    }
-    else {
+    } else {
         std::cout << "Found " << listBucketsOutcome.GetResult().GetBuckets().size() << " buckets" << std::endl;
         for (auto &&bucket: listBucketsOutcome.GetResult().GetBuckets()) {
             std::cout << "  " << bucket.GetName() << std::endl;
@@ -121,14 +117,14 @@ bool AwsDoc::S3::ListBucketDisablingDnsCache(const Aws::Client::ClientConfigurat
  *
 */
 
-#ifndef TESTING_BUILD
+#ifndef EXCLUDE_MAIN_FUNCTION
 
 int main(int argc, char *argv[]) {
     SDKOptions options;
     InitAPI(options);
 
     {
-        Aws::Client::ClientConfiguration clientConfig;
+        Aws::S3::S3ClientConfiguration clientConfig;
         // Optional: Set to the AWS Region in which the bucket was created (overrides config file).
         // clientConfig.region = "us-east-1";
 #ifdef _WIN32
@@ -141,11 +137,11 @@ int main(int argc, char *argv[]) {
         clientConfig.caFile = "C:/curl/bin/cacert.pem";
 #endif
 
-        AwsDoc::S3::ListBucketDisablingDnsCache(clientConfig);
+        AwsDoc::S3::listBucketDisablingDnsCache(clientConfig);
     }
 
     ShutdownAPI(options);
     return 0;
 }
 
-#endif // TESTING_BUILD
+#endif // EXCLUDE_MAIN_FUNCTION

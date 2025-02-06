@@ -1,11 +1,5 @@
-// snippet-sourcedescription:[ListDatasetGroups.kt demonstrates how to list Amazon Personalize data set groups.]
-// snippet-keyword:[AWS SDK for Kotlin]
-// snippet-service:[Amazon Personalize]
-
-/*
-   Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
-   SPDX-License-Identifier: Apache-2.0
-*/
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 
 package com.kotlin.personalize
 
@@ -28,10 +22,10 @@ suspend fun main() {
 
 // snippet-start:[personalize.kotlin.list_dsgroups.main]
 suspend fun listDSGroups() {
-
-    val request = ListDatasetGroupsRequest {
-        maxResults = 15
-    }
+    val request =
+        ListDatasetGroupsRequest {
+            maxResults = 15
+        }
     PersonalizeClient { region = "us-east-1" }.use { personalizeClient ->
         val response = personalizeClient.listDatasetGroups(request)
         response.datasetGroups?.forEach { group ->

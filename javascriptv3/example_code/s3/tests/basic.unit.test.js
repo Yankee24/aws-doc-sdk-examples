@@ -1,7 +1,5 @@
-/*
- * Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
- * SPDX-License-Identifier: Apache-2.0
- */
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 
 import { describe, it, expect, vi, beforeEach } from "vitest";
 
@@ -26,11 +24,13 @@ vi.doMock("fs", async () => {
   };
 });
 
-vi.doMock("libs/utils/util-io.js", async () => {
-  const actual = await vi.importActual("libs/utils/util-io.js");
+vi.doMock("@aws-doc-sdk-examples/lib/prompter.js", () => {
   return {
-    ...actual,
-    promptForText: () => Promise.resolve("my-bucket"),
+    Prompter: class MockPrompter {
+      input() {
+        return Promise.resolve("name");
+      }
+    },
   };
 });
 
@@ -53,7 +53,7 @@ describe("S3 basic scenario", () => {
     it("should log a success message", async () => {
       send.mockResolvedValueOnce({});
 
-      await createBucket("my-bucket");
+      await createBucket("amzn-s3-demo-bucket");
 
       expect(logSpy).toHaveBeenCalledWith("Bucket created successfully.\n");
     });
@@ -63,23 +63,29 @@ describe("S3 basic scenario", () => {
     it("should send the files to s3", async () => {
       send.mockResolvedValueOnce({});
 
-      await uploadFilesToBucket({ bucketName: "my-bucket", folderPath: "" });
+      await uploadFilesToBucket({
+        bucketName: "amzn-s3-demo-bucket",
+        folderPath: "",
+      });
 
       expect(send).toHaveBeenCalledWith(
         expect.objectContaining({
           input: expect.objectContaining({
-            Bucket: "my-bucket",
+            Bucket: "amzn-s3-demo-bucket",
             Key: "file1.txt",
             Body: "file content",
           }),
-        })
+        }),
       );
     });
 
     it("should log the files that were found and uploaded", async () => {
       send.mockResolvedValueOnce({});
 
-      await uploadFilesToBucket({ bucketName: "my-bucket", folderPath: "" });
+      await uploadFilesToBucket({
+        bucketName: "amzn-s3-demo-bucket",
+        folderPath: "",
+      });
 
       expect(logSpy).toHaveBeenCalledWith("file1.txt uploaded successfully.");
     });
@@ -91,9 +97,12 @@ describe("S3 basic scenario", () => {
         Contents: [{ Key: "file1" }, { Key: "file2" }],
       });
 
-      await listFilesInBucket({ bucketName: "my-bucket", folderPath: "" });
+      await listFilesInBucket({
+        bucketName: "amzn-s3-demo-bucket",
+        folderPath: "",
+      });
 
-      expect(logSpy).toHaveBeenCalledWith(` • file1\n • file2\n`);
+      expect(logSpy).toHaveBeenCalledWith(" • file1\n • file2\n");
     });
   });
 
@@ -103,18 +112,18 @@ describe("S3 basic scenario", () => {
         Contents: [{ Key: "file1" }, { Key: "file2" }],
       });
 
-      await emptyBucket({ bucketName: "my-bucket", folderPath: "" });
+      await emptyBucket({ bucketName: "amzn-s3-demo-bucket", folderPath: "" });
 
       expect(send).toHaveBeenNthCalledWith(
         2,
         expect.objectContaining({
           input: expect.objectContaining({
-            Bucket: "my-bucket",
+            Bucket: "amzn-s3-demo-bucket",
             Delete: {
               Objects: [{ Key: "file1" }, { Key: "file2" }],
             },
           }),
-        })
+        }),
       );
     });
   });
@@ -123,14 +132,14 @@ describe("S3 basic scenario", () => {
     it("should call 'send' with the provided bucket name", async () => {
       send.mockResolvedValueOnce({});
 
-      await deleteBucket({ bucketName: "my-bucket" });
+      await deleteBucket({ bucketName: "amzn-s3-demo-bucket" });
 
       expect(send).toHaveBeenCalledWith(
         expect.objectContaining({
           input: expect.objectContaining({
-            Bucket: "my-bucket",
+            Bucket: "amzn-s3-demo-bucket",
           }),
-        })
+        }),
       );
     });
   });

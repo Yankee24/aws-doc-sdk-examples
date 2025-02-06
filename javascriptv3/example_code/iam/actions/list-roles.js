@@ -1,9 +1,7 @@
-/*
- * Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
- * SPDX-License-Identifier: Apache-2.0
- */
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 
-import { fileURLToPath } from "url";
+import { fileURLToPath } from "node:url";
 
 // snippet-start:[iam.JavaScript.listrolesV3]
 import { ListRolesCommand, IAMClient } from "@aws-sdk/client-iam";
@@ -34,7 +32,7 @@ export async function* listRoles() {
       response = await client.send(
         new ListRolesCommand({
           Marker: response.Marker,
-        })
+        }),
       );
     } else {
       break;

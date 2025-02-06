@@ -1,16 +1,16 @@
-/*
- * Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
- * SPDX-License-Identifier: Apache-2.0
- */
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 
 import { describe, it, expect, vi } from "vitest";
 
 import { makeStartCrawlerStep } from "../scenarios/basic/steps/start-crawler.js";
 
-describe("start-crawler", async () => {
+describe("start-crawler", () => {
   it("should call startCrawler with the crawler name from the environment variables", async () => {
-    const startCrawler = vi.fn(async () => ({}));
-    const getCrawler = vi.fn(async () => ({ Crawler: { State: "READY" } }));
+    const startCrawler = vi.fn(() => Promise.resolve({}));
+    const getCrawler = vi.fn(() =>
+      Promise.resolve({ Crawler: { State: "READY" } }),
+    );
     const actions = { startCrawler, getCrawler };
 
     const context = {};
@@ -23,8 +23,10 @@ describe("start-crawler", async () => {
   });
 
   it("should return a context object", async () => {
-    const startCrawler = vi.fn(async () => ({}));
-    const getCrawler = vi.fn(async () => ({ Crawler: { State: "READY" } }));
+    const startCrawler = vi.fn(() => Promise.resolve({}));
+    const getCrawler = vi.fn(() =>
+      Promise.resolve({ Crawler: { State: "READY" } }),
+    );
     const actions = { startCrawler, getCrawler };
 
     const context = {};

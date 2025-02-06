@@ -1,7 +1,5 @@
-/*
-   Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
-   SPDX-License-Identifier: Apache-2.0
-*/
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 
 #pragma once
 #ifndef S3_EXAMPLES_S3_GTESTS_H
@@ -62,7 +60,11 @@ namespace AwsDocTest {
 
         static bool deleteSecurityGroup(const Aws::String &groupID);
 
+        static bool dissociateAddress(const Aws::String &associationID);
+
         static Aws::String getVpcID();
+
+        static Aws::String getCachedSecurityGroupID();
 
         // s_clientConfig must be a pointer because the client config must be initialized
         // after InitAPI.
@@ -70,7 +72,7 @@ namespace AwsDocTest {
 
     private:
 
-        bool suppressStdOut();
+        static bool suppressStdOut();
 
         static Aws::SDKOptions s_options;
 
@@ -82,6 +84,7 @@ namespace AwsDocTest {
 
         static Aws::String s_instanceID;
         static Aws::String s_vpcID;
+        static Aws::String s_securityGroupID;
     }; // EC2_GTests
 } // AwsDocTest
 

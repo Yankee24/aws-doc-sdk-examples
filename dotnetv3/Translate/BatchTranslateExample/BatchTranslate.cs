@@ -1,12 +1,5 @@
 ﻿// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
-// SPDX-License-Identifier:  Apache-2.0
-
-/// <summary>
-/// This example shows how to use Amazon Translate to process the files in
-/// an Amazon Simple Storage Service (Amazon S3) bucket. The translated results
-/// will also be stored in an Amazon S3 bucket. The example was created using
-/// the AWS SDK for .NET version 3.7 and .NET Core 5.0.
-/// </summary>
+// SPDX-License-Identifier: Apache-2.0
 
 namespace BatchTranslateExample
 {
@@ -17,6 +10,11 @@ namespace BatchTranslateExample
     using Amazon.Translate;
     using Amazon.Translate.Model;
 
+    /// <summary>
+    /// This example shows how to use Amazon Translate to process the files in
+    /// an Amazon Simple Storage Service (Amazon S3) bucket. The translated results
+    /// will also be stored in an Amazon S3 bucket.
+    /// </summary>
     public class BatchTranslate
     {
         public static async Task Main()
@@ -25,8 +23,8 @@ namespace BatchTranslateExample
 
             // Set this variable to an S3 bucket location with a folder."
             // Input files must be in a folder and not at the bucket root."
-            var s3InputUri = "s3://DOC-EXAMPLE-BUCKET1/FOLDER/";
-            var s3OutputUri = "s3://DOC-EXAMPLE-BUCKET2/";
+            var s3InputUri = "s3://amzn-s3-demo-bucket1/FOLDER/";
+            var s3OutputUri = "s3://amzn-s3-demo-bucket2/";
 
             // This role must have permissions to read the source bucket and to read and
             // write to the destination bucket where the translated text will be stored.

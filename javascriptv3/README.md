@@ -39,100 +39,46 @@ Cross-service examples are located in the [_cross-services folder_](./example_co
 
 You can run tests for a specific service, or for every service in this repository. Choose whether to run unit tests, integration tests, or both.
 
-- To run both unit and integration tests for all services, run the following from this directory:
+- To run unit tests, use the following command:
 
   `npm test`
 
-- To run only unit tests, set the `TEST_SCOPE` variable to `unit`:
+- To run integration tests, use the following command:
 
-  `TEST_SCOPE=unit npm test`
-
-- To run only integration tests, set the `TEST_SCOPE` variable to `integration`:
-
-  `TEST_SCOPE=integration npm test`
+  `npm run integration-test`
 
 - To run tests for a specific service, follow the instructions in the service's README.
 
+### Output
+
+If you run tests using the preceding commands, output will be stored in `unit_test.log` or `integration_test.log`. Errors are still logged to the console.
+
+## Linting
+You can run Biome to statically check for errors.
+
+To run Biome, use the following command:
+  `npm run ci-lint`
+
 ## Docker image (Beta)
 
-This example is available in a container image
-hosted on [Amazon Elastic Container Registry (ECR)](https://docs.aws.amazon.com/AmazonECR/latest/userguide/what-is-ecr.html). This image will be pre-loaded
-with all JavaScript v3 examples with dependencies pre-resolved, allowing you to explore
-these examples in an isolated environment.
+This example is available in a container image hosted on [Amazon Elastic Container Registry (ECR)](https://docs.aws.amazon.com/AmazonECR/latest/userguide/what-is-ecr.html). This image will be pre-loaded with all JavaScript v3 examples with dependencies pre-resolved. It is used for running tests.
 
 - [SDK for JavaScript v3 image](https://gallery.ecr.aws/b4v4v1s0/javascriptv3)
 
 ### Build the Docker image
 
 1. Install and run Docker on your machine.
-2. Navigate to the same directory as this readme.
-3. Run `docker build -t <image_name> .` and replace `image_name` with a name for the image.
+2. Navigate to the root directory of this repository.
+3. Run `docker build -t <image_name> -f javascriptv3/Dockerfile .` and replace `<image_name>` with a name for the image.
 
 ### Launch the Docker container
 
-1. Run `docker run -it -v ~/.aws/credentials:/root/.aws/credentials <image_name>`. `-it` launches an
-   interactive terminal. `-v ~/.aws...` is optional but recommended. It will mount your local credentials
-   file to the container.
-2. The terminal initiates a bash instance at the root of the container. Run `cd javascriptv3` and then you
-   can run tests from here by following the steps in the [Tests](#tests) section. Run examples by navigating
-   to a service folder and following the README instructions there.
+1. Run `docker run -it -v /Users/corepyle/.aws/credentials:/home/automation/.aws/credentials <image_name>`. `-it` launches an interactive terminal. `-v ~/.aws...` is optional but recommended. It will mount your local credentials file to the container.
+2. The Dockerfile is configured to automatically run integration tests when the container is run.
 
 ## Contribute
 
-Contributions are welcome. To increase the likelihood of your contribution
-being accepted, adhere to the following guidelines.
-
-### Maintain directory structure
-
-- `javascriptv3` is considered the project root.
-- All examples exist under `example_code`.
-- Each directory under `example_code` corresponds to an AWS service.
-- Directory names should be lowercase with underscores.
-- File names should be lowercase with dashes.
-- `cross-services` is a special directory for examples that use multiple services.
-- A service directory has the following structure:
-  - ```
-    actions/
-      {action-name}.js
-    scenarios/
-      web/
-        {web-scenario-name}/
-      {scenario-name}.js
-    tests/
-      {integ-test-name}.integration.test.js
-      {unit-test-name}.unit.test.js
-    client.js
-    package.json
-    README.md
-    vite.config.js
-    ```
-
-### Create runnable actions and scenarios
-
-Place the following code at the bottom of each example
-to make it runnable from the command line.
-
-```
-// Invoke main function if this file was run directly.
-if (process.argv[1] === fileURLToPath(import.meta.url)) {
-  functionName();
-}
-```
-
-### Create testable actions and scenarios
-
-Export one primary function from each example. Do not create examples
-that require input or cannot run without human intervention.
-
-Create function names that match the action name. `CreateUserCommand` becomes
-`createUser`.
-
-```
-export const createUser = (name) => {
-  const command = new CreateUserCommand({ UserName: name });
-  return client.send(command);
-};
-```
+Contributions are welcome. To increase the likelihood of your contribution being accepted, please adhere to the [JavaScript standards](https://github.com/awsdocs/aws-doc-sdk-examples/wiki/JavaScript-code-example-standards)
 
 ### Create tests
 
@@ -141,13 +87,9 @@ run the example and verify that it ran correctly.
 
 ## Configure Visual Studio Code (VS Code)
 
-### ESLint
+### Biome
 
-To configure ESLint in VS Code, add the following to `settings.json`:
-
-```
-  "eslint.workingDirectories": ["javascriptv3/example_code/reactnative/ReactNativeApp", "javascriptv3"],
-```
+To configure Biome in VS Code, follow the instructions here: https://biomejs.dev/guides/getting-started/
 
 ## Additional resources
 

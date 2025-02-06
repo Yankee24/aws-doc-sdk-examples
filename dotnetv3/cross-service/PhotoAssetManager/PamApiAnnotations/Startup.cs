@@ -1,3 +1,6 @@
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
+
 using Amazon;
 using Amazon.DynamoDBv2;
 using Amazon.DynamoDBv2.DataModel;
@@ -5,8 +8,6 @@ using Amazon.Rekognition;
 using Amazon.S3;
 using Amazon.SimpleNotificationService;
 using Amazon.Util;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
 using PamServices;
 
 namespace PamApiAnnotations;
@@ -20,7 +21,7 @@ public class Startup
     }
 
     /// <summary>
-    /// Services for AWS Lambda functions can be registered in the services dependency injection container in this method. 
+    /// Services for AWS Lambda functions can be registered in the services dependency injection container in this method.
     ///
     /// The services can be injected into the Lambda function through the containing type's constructor or as a
     /// parameter in the Lambda function using the FromService attribute. Services injected for the constructor have

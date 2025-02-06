@@ -1,7 +1,5 @@
-/*
-   Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
-   SPDX-License-Identifier: Apache-2.0
-*/
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 
 package com.aws.photo
 
@@ -13,8 +11,7 @@ import org.springframework.stereotype.Component
 @Component
 class AnalyzePhotos {
 
-    suspend fun DetectLabels(bytesVal: ByteArray?, key: String?): MutableList<WorkItem>? {
-
+    suspend fun detectLabels(bytesVal: ByteArray?, key: String?): MutableList<WorkItem>? {
         // Create an Image object for the source image.
         val souImage = Image {
             bytes = bytesVal

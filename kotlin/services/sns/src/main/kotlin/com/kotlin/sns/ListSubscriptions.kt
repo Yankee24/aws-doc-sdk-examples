@@ -1,10 +1,5 @@
-// snippet-sourcedescription:[ListSubscriptions.kt demonstrates how to list existing Amazon Simple Notification Service (Amazon SNS) subscriptions.]
-// snippet-keyword:[AWS SDK for Kotlin]
-// snippet-keyword:[Amazon Simple Notification Service]
-/*
-   Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
-   SPDX-License-Identifier: Apache-2.0
-*/
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 
 package com.kotlin.sns
 
@@ -26,7 +21,6 @@ suspend fun main() {
 
 // snippet-start:[sns.kotlin.ListSubscriptions.main]
 suspend fun listSNSSubscriptions() {
-
     SnsClient { region = "us-east-1" }.use { snsClient ->
         val response = snsClient.listSubscriptions(ListSubscriptionsRequest {})
         response.subscriptions?.forEach { sub ->

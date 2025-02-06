@@ -1,11 +1,5 @@
-// snippet-sourcedescription:[ListDomainNames.kt demonstrates how to list Amazon OpenSearch Service domains.]
-// snippet-keyword:[AWS SDK for Kotlin]
-// snippet-service:[Amazon OpenSearch Service]
-
-/*
-   Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
-   SPDX-License-Identifier: Apache-2.0
-*/
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 
 package com.example.search
 
@@ -28,7 +22,6 @@ suspend fun main() {
 
 // snippet-start:[opensearch.kotlin.list_domains.main]
 suspend fun listAllDomains() {
-
     OpenSearchClient { region = "us-east-1" }.use { searchClient ->
         val response: ListDomainNamesResponse = searchClient.listDomainNames(ListDomainNamesRequest {})
         response.domainNames?.forEach { domain ->

@@ -1,5 +1,5 @@
 ﻿// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
-// SPDX-License-Identifier:  Apache-2.0
+// SPDX-License-Identifier: Apache-2.0
 
 namespace SNSExample.Controllers
 {
@@ -8,6 +8,7 @@ namespace SNSExample.Controllers
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Logging;
     using SNSExample.Models;
+    using SubscribePublishTranslate.Controllers;
 
     public class HomeController : Controller
     {

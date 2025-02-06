@@ -1,7 +1,5 @@
-/*
-   Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
-   SPDX-License-Identifier: Apache-2.0
-*/
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 import XCTest
 import Foundation
 import AWSS3
@@ -24,7 +22,6 @@ final class DeleteObjectsTests: XCTestCase {
     ///
     /// This function sets up the following:
     ///
-    ///     Configures AWS SDK log system to only log errors.
     ///     Initializes the service handler, which is used to call
     ///     Amazon S3 functions.
     ///     Initializes the demo cleanup handler, which is used to
@@ -33,10 +30,9 @@ final class DeleteObjectsTests: XCTestCase {
     override class func setUp() {
         let tdSem = TestWaiter(name: "Setup")
         super.setUp()
-        SDKLoggingSystem.initialize(logLevel: .info)
 
         Task() {
-            DeleteObjectsTests.serviceHandler = await ServiceHandler()
+            DeleteObjectsTests.serviceHandler = try await ServiceHandler()
             DeleteObjectsTests.demoCleanup = await S3DemoCleanup()
             tdSem.signal()
         }

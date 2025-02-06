@@ -1,5 +1,5 @@
 ﻿// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
-// SPDX-License-Identifier:  Apache-2.0
+// SPDX-License-Identifier: Apache-2.0
 
 // snippet-start:[Keyspaces.dotnetv3.KeyspacesScenario]
 namespace KeyspacesBasics;
@@ -63,7 +63,7 @@ public class KeyspacesBasics
                 Console.Write(". ");
             } while (getKeyspaceArn != keyspaceArn);
         }
-        catch (ResourceNotFoundException ex)
+        catch (ResourceNotFoundException)
         {
             Console.WriteLine("Waiting for keyspace to be created.");
         }
@@ -108,7 +108,7 @@ public class KeyspacesBasics
                     resp = await keyspacesWrapper.GetTable(keyspaceName, tableName);
                     Console.Write(".");
                 }
-                catch (ResourceNotFoundException ex)
+                catch (ResourceNotFoundException)
                 {
                     Console.Write(".");
                 }
@@ -239,7 +239,7 @@ public class KeyspacesBasics
                     wasRestored = (resp.Status == TableStatus.ACTIVE);
                 } while (!wasRestored);
             }
-            catch (ResourceNotFoundException ex)
+            catch (ResourceNotFoundException)
             {
                 // If the restored table raised an error, it isn't
                 // ready yet.

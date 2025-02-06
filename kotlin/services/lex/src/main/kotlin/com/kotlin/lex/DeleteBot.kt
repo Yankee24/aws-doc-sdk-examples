@@ -1,11 +1,5 @@
-// snippet-sourcedescription:[DeleteBot.kt demonstrates how to delete an Amazon Lex conversational bot.]
-// snippet-keyword:[AWS SDK for Kotlin]
-// snippet-service:[Amazon Lex]
-
-/*
-   Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
-   SPDX-License-Identifier: Apache-2.0
-*/
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 
 package com.kotlin.lex
 
@@ -24,7 +18,6 @@ https://docs.aws.amazon.com/sdk-for-kotlin/latest/developer-guide/setup.html
  */
 
 suspend fun main(args: Array<String>) {
-
     val usage = """
     
         Usage: 
@@ -45,10 +38,10 @@ suspend fun main(args: Array<String>) {
 
 // snippet-start:[lex.kotlin.delete_bot.main]
 suspend fun deleteSpecificBot(botName: String) {
-
-    val request = DeleteBotRequest {
-        name = botName
-    }
+    val request =
+        DeleteBotRequest {
+            name = botName
+        }
 
     LexModelBuildingClient { region = "us-west-2" }.use { lexClient ->
         lexClient.deleteBot(request)

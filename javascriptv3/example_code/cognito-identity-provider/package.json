@@ -1,5 +1,5 @@
 {
-  "name": "example-javascriptv3-cognito",
+  "name": "@aws-doc-sdk-examples/example-javascriptv3-cognito",
   "version": "1.0.0",
   "description": "Code samples for interacting with Cognito via the AWS SDK for JavaScript (v3)",
   "main": "index.js",
@@ -8,19 +8,19 @@
   "type": "module",
   "scripts": {
     "test": "vitest run **/*.unit.test.js",
-    "integration-test": "vitest run **/*.integration.test.js"
+    "integration-test": "vitest run **/*.integration.test.js --reporter=junit --outputFile=test_results/$npm_package_name.junit.xml"
   },
   "dependencies": {
-    "@aws-sdk/client-cognito-identity-provider": "^3.183.0",
-    "@aws-sdk/client-ses": "^3.183.0",
+    "@aws-doc-sdk-examples/lib": "^1.0.0",
+    "@aws-sdk/client-cognito-identity-provider": "^3.423.0",
+    "@aws-sdk/client-ses": "^3.423.0",
     "@types/qrcode-terminal": "^0.12.0",
-    "amazon-cognito-identity-js": "^5.2.10",
-    "aws-amplify": "^4.3.37",
-    "crypto-js": "^4.1.1",
-    "qrcode-terminal": "^0.12.0",
-    "ramda": "^0.28.0"
+    "amazon-cognito-identity-js": "^6.3.6",
+    "aws-amplify": "^5.3.11",
+    "crypto-js": "^4.2.0",
+    "qrcode-terminal": "^0.12.0"
   },
   "devDependencies": {
-    "vitest": "^0.26.2"
+    "vitest": "^1.6.0"
   }
 }

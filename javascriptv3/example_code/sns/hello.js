@@ -1,9 +1,7 @@
-/*
- * Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
- * SPDX-License-Identifier: Apache-2.0
- */
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 
-import { fileURLToPath } from "url";
+import { fileURLToPath } from "node:url";
 
 // snippet-start:[javascript.v3.sns.hello]
 import { SNSClient, paginateListTopics } from "@aws-sdk/client-sns";
@@ -28,7 +26,7 @@ export const helloSns = async () => {
   const suffix = topics.length === 1 ? "" : "s";
 
   console.log(
-    `Hello, Amazon SNS! You have ${topics.length} topic${suffix} in your account.`
+    `Hello, Amazon SNS! You have ${topics.length} topic${suffix} in your account.`,
   );
   console.log(topics.map((t) => `  * ${t.TopicArn}`).join("\n"));
 };

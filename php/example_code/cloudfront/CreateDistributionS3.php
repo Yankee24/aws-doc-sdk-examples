@@ -1,27 +1,25 @@
 <?php
-/*
-Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
-SPDX-License-Identifier: Apache-2.0
-*/
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 
 // snippet-start:[cloudfront.php.creates3distribution.complete]
 // snippet-start:[cloudfront.php.creates3distribution.import]
 require 'vendor/autoload.php';
 
-use Aws\CloudFront\CloudFrontClient; 
 use Aws\Exception\AwsException;
+
 // snippet-end:[cloudfront.php.creates3distribution.import]
 
 /* ////////////////////////////////////////////////////////////////////////////
  * Purpose: Creates a distribution in Amazon CloudFront.
  *
  * Inputs:
- * - $cloudFrontClient: An initialized AWS SDK for PHP SDK client 
+ * - $cloudFrontClient: An initialized AWS SDK for PHP SDK client
  *   for CloudFront.
- * - $distribution: A collection of settings for the distribution to 
+ * - $distribution: A collection of settings for the distribution to
  *   be created.
  *
- * Returns: Information about the distribution that was created; 
+ * Returns: Information about the distribution that was created;
  * otherwise, the error message.
  * ///////////////////////////////////////////////////////////////////////// */
 
@@ -35,13 +33,12 @@ function createS3Distribution($cloudFrontClient, $distribution)
 
         $message = '';
 
-        if (isset($result['Distribution']['Id']))
-        {
+        if (isset($result['Distribution']['Id'])) {
             $message = 'Distribution created with the ID of ' .
                 $result['Distribution']['Id'];
         }
-        
-        $message .= ' and an effective URI of ' . 
+
+        $message .= ' and an effective URI of ' .
             $result['@metadata']['effectiveUri'] . '.';
 
         return $message;
@@ -111,13 +108,13 @@ function createsTheS3Distribution()
         'Enabled' => $enabled,
         'Origins' => $origin
     ];
-    
+
     $cloudFrontClient = new Aws\CloudFront\CloudFrontClient([
         'profile' => 'default',
         'version' => '2018-06-18',
         'region' => 'us-east-1'
     ]);
-    
+
     echo createS3Distribution($cloudFrontClient, $distribution);
 }
 
@@ -125,14 +122,4 @@ function createsTheS3Distribution()
 // createsTheS3Distribution();
 // snippet-end:[cloudfront.php.creates3distribution.main]
 // snippet-end:[cloudfront.php.creates3distribution.complete]
-// snippet-sourcedescription:[CreateDistributionS3.php demonstrates how to create an Amazon CloudFront distribution for an Amazon S3 Bucket.]
-// snippet-keyword:[PHP]
-// snippet-sourcesyntax:[php]
-// snippet-keyword:[AWS SDK for PHP v3]
-// snippet-keyword:[Code Sample]
-// snippet-keyword:[createDistribution]
-// snippet-keyword:[Amazon CloudFront]
-// snippet-service:[cloudfront]
-// snippet-sourcetype:[full-example]
-// snippet-sourcedate:[2020-04-13]
 // snippet-sourceauthor:[pccornel (AWS)]

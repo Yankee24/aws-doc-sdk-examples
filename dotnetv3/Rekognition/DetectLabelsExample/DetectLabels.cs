@@ -1,5 +1,5 @@
 ﻿// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
-// SPDX-License-Identifier:  Apache-2.0
+// SPDX-License-Identifier: Apache-2.0
 
 namespace DetectLabelsExample
 {
@@ -11,15 +11,14 @@ namespace DetectLabelsExample
 
     /// <summary>
     /// Uses the Amazon Rekognition Service to detect labels within an image
-    /// stored in an Amazon Simple Storage Service (Amazon S3) bucket. This
-    /// example was created using the AWS SDK for .NET and .NET Core 5.0.
+    /// stored in an Amazon Simple Storage Service (Amazon S3) bucket.
     /// </summary>
     public class DetectLabels
     {
         public static async Task Main()
         {
             string photo = "del_river_02092020_01.jpg"; // "input.jpg";
-            string bucket = "igsmiths3photos"; // "bucket";
+            string bucket = "amzn-s3-demo-bucket"; // "bucket";
 
             var rekognitionClient = new AmazonRekognitionClient();
 

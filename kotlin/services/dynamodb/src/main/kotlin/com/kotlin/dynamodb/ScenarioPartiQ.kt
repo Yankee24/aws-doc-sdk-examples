@@ -1,11 +1,5 @@
-// snippet-sourcedescription:[ScenarioPartiQ.kt demonstrates how to work with PartiQL for Amazon DynamoDB.]
-// snippet-keyword:[AWS SDK for Kotlin]
-// snippet-service:[Amazon DynamoDB]
-
-/*
-   Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
-   SPDX-License-Identifier: Apache-2.0
-*/
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 
 package com.kotlin.dynamodb
 
@@ -40,13 +34,12 @@ import kotlin.system.exitProcess
 
 // snippet-start:[dynamodb.kotlin.scenario.partiql.main]
 suspend fun main(args: Array<String>) {
-
     val usage = """
         Usage:
           <fileName>
 
         Where:
-           fileName - The path to the moviedata.json you can download from the Amazon DynamoDB Developer Guide.
+           fileName - The path to the moviedata.json file You can download from the Amazon DynamoDB Developer Guide.
     """
 
     if (args.size != 1) {
@@ -79,48 +72,61 @@ suspend fun main(args: Array<String>) {
     deleteTablePartiQL(tableName)
 }
 
-suspend fun createTablePartiQL(ddb: DynamoDbClient, tableNameVal: String, key: String) {
+suspend fun createTablePartiQL(
+    ddb: DynamoDbClient,
+    tableNameVal: String,
+    key: String,
+) {
+    val attDef =
+        AttributeDefinition {
+            attributeName = key
+            attributeType = ScalarAttributeType.N
+        }
 
-    val attDef = AttributeDefinition {
-        attributeName = key
-        attributeType = ScalarAttributeType.N
-    }
+    val attDef1 =
+        AttributeDefinition {
+            attributeName = "title"
+            attributeType = ScalarAttributeType.S
+        }
 
-    val attDef1 = AttributeDefinition {
-        attributeName = "title"
-        attributeType = ScalarAttributeType.S
-    }
+    val keySchemaVal =
+        KeySchemaElement {
+            attributeName = key
+            keyType = KeyType.Hash
+        }
 
-    val keySchemaVal = KeySchemaElement {
-        attributeName = key
-        keyType = KeyType.Hash
-    }
+    val keySchemaVal1 =
+        KeySchemaElement {
+            attributeName = "title"
+            keyType = KeyType.Range
+        }
 
-    val keySchemaVal1 = KeySchemaElement {
-        attributeName = "title"
-        keyType = KeyType.Range
-    }
+    val provisionedVal =
+        ProvisionedThroughput {
+            readCapacityUnits = 10
+            writeCapacityUnits = 10
+        }
 
-    val provisionedVal = ProvisionedThroughput {
-        readCapacityUnits = 10
-        writeCapacityUnits = 10
-    }
-
-    val request = CreateTableRequest {
-        attributeDefinitions = listOf(attDef, attDef1)
-        keySchema = listOf(keySchemaVal, keySchemaVal1)
-        provisionedThroughput = provisionedVal
-        tableName = tableNameVal
-    }
+    val request =
+        CreateTableRequest {
+            attributeDefinitions = listOf(attDef, attDef1)
+            keySchema = listOf(keySchemaVal, keySchemaVal1)
+            provisionedThroughput = provisionedVal
+            tableName = tableNameVal
+        }
 
     val response = ddb.createTable(request)
-    ddb.waitUntilTableExists { // suspend call
+    ddb.waitUntilTableExists {
+        // suspend call
         tableName = tableNameVal
     }
     println("The table was successfully created ${response.tableDescription?.tableArn}")
 }
 
-suspend fun loadDataPartiQL(ddb: DynamoDbClient, fileName: String) {
+suspend fun loadDataPartiQL(
+    ddb: DynamoDbClient,
+    fileName: String,
+) {
     val sqlStatement = "INSERT INTO MoviesPartiQ VALUE {'year':?, 'title' : ?, 'info' : ?}"
     val parser = JsonFactory().createParser(File(fileName))
     val rootNode = ObjectMapper().readTree<JsonNode>(parser)
@@ -129,9 +135,9 @@ suspend fun loadDataPartiQL(ddb: DynamoDbClient, fileName: String) {
     var t = 0
 
     while (iter.hasNext()) {
-
-        if (t == 200)
+        if (t == 200) {
             break
+        }
 
         currentNode = iter.next() as ObjectNode
         val year = currentNode.path("year").asInt()
@@ -160,7 +166,6 @@ suspend fun getMoviePartiQL(ddb: DynamoDbClient) {
 }
 
 suspend fun putRecordPartiQL(ddb: DynamoDbClient) {
-
     val sqlStatement = "INSERT INTO MoviesPartiQ VALUE {'year':?, 'title' : ?, 'info' : ?}"
     val parameters: MutableList<AttributeValue> = java.util.ArrayList()
     parameters.add(AttributeValue.N("2020"))
@@ -182,7 +187,6 @@ suspend fun updateTableItemPartiQL(ddb: DynamoDbClient) {
 // Query the table where the year is 2013.
 suspend fun queryTablePartiQL(ddb: DynamoDbClient) {
     val sqlStatement = "SELECT * FROM MoviesPartiQ where year = ?"
-
     val parameters: MutableList<AttributeValue> = java.util.ArrayList()
     parameters.add(AttributeValue.N("2013"))
     val response = executeStatementPartiQL(ddb, sqlStatement, parameters)
@@ -190,10 +194,10 @@ suspend fun queryTablePartiQL(ddb: DynamoDbClient) {
 }
 
 suspend fun deleteTablePartiQL(tableNameVal: String) {
-
-    val request = DeleteTableRequest {
-        tableName = tableNameVal
-    }
+    val request =
+        DeleteTableRequest {
+            tableName = tableNameVal
+        }
 
     DynamoDbClient { region = "us-east-1" }.use { ddb ->
         ddb.deleteTable(request)
@@ -204,13 +208,13 @@ suspend fun deleteTablePartiQL(tableNameVal: String) {
 suspend fun executeStatementPartiQL(
     ddb: DynamoDbClient,
     statementVal: String,
-    parametersVal: List<AttributeValue>
+    parametersVal: List<AttributeValue>,
 ): ExecuteStatementResponse {
-
-    val request = ExecuteStatementRequest {
-        statement = statementVal
-        parameters = parametersVal
-    }
+    val request =
+        ExecuteStatementRequest {
+            statement = statementVal
+            parameters = parametersVal
+        }
 
     return ddb.executeStatement(request)
 }

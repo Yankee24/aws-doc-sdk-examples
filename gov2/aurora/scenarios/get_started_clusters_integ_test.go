@@ -1,7 +1,8 @@
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 //go:build integration
 // +build integration
 
-// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 // SPDX-License-Identifier: Apache-2.0
 
 package scenarios
@@ -52,7 +53,8 @@ func TestRunGetStartedClustersScenario_Integration(t *testing.T) {
 		},
 	}
 
-	sdkConfig, err := config.LoadDefaultConfig(context.TODO())
+	ctx := context.Background()
+	sdkConfig, err := config.LoadDefaultConfig(ctx)
 	if err != nil {
 		log.Fatalf("unable to load SDK config, %v", err)
 	}
@@ -64,6 +66,7 @@ func TestRunGetStartedClustersScenario_Integration(t *testing.T) {
 	scenario := NewGetStartedClusters(sdkConfig, mockQuestioner, &helper)
 	testId := time.Now().Unix()
 	scenario.Run(
+		ctx,
 		"aurora-mysql",
 		fmt.Sprintf("doc-example-cluster-parameter-group-%v", testId),
 		fmt.Sprintf("doc-example-aurora-%v", testId),

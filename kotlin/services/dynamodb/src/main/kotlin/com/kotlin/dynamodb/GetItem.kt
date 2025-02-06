@@ -1,11 +1,5 @@
-// snippet-sourcedescription:[GetItem.kt demonstrates how to retrieve an item from an Amazon DynamoDB table.]
-// snippet-keyword:[AWS SDK for Kotlin]
-// snippet-service:[Amazon DynamoDB]
-
-/*
-   Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
-   SPDX-License-Identifier: Apache-2.0
-*/
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 
 package com.kotlin.dynamodb
 
@@ -25,7 +19,6 @@ https://docs.aws.amazon.com/sdk-for-kotlin/latest/developer-guide/setup.html
 */
 
 suspend fun main(args: Array<String>) {
-
     val usage = """
     Usage:
         <tableName> <key> <keyVal>
@@ -48,15 +41,19 @@ suspend fun main(args: Array<String>) {
 }
 
 // snippet-start:[dynamodb.kotlin.get_item.main]
-suspend fun getSpecificItem(tableNameVal: String, keyName: String, keyVal: String) {
-
+suspend fun getSpecificItem(
+    tableNameVal: String,
+    keyName: String,
+    keyVal: String,
+) {
     val keyToGet = mutableMapOf<String, AttributeValue>()
     keyToGet[keyName] = AttributeValue.S(keyVal)
 
-    val request = GetItemRequest {
-        key = keyToGet
-        tableName = tableNameVal
-    }
+    val request =
+        GetItemRequest {
+            key = keyToGet
+            tableName = tableNameVal
+        }
 
     DynamoDbClient { region = "us-east-1" }.use { ddb ->
         val returnedItem = ddb.getItem(request)

@@ -1,14 +1,5 @@
-// snippet-sourcedescription:[ListQueryExecutionsExample.kt demonstrates how to obtain a list of query execution Id values.]
-// snippet-keyword:[AWS SDK for Kotlin]
-// snippet-keyword:[Code Sample]
-// snippet-keyword:[Amazon Athena]
-// snippet-sourcetype:[full-example]
-// snippet-sourcedate:[05/25/2022]
-
-/*
-   Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
-   SPDX-License-Identifier: Apache-2.0
-*/
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 
 package com.kotlin.athena
 
@@ -23,7 +14,6 @@ suspend fun main() {
 
 // snippet-start:[athena.kotlin.ListNamedQueryExecutionsExample.main]
 suspend fun listQueryIds() {
-
     val request = ListQueryExecutionsRequest {
         maxResults = 10
     }

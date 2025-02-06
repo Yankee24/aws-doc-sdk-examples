@@ -1,25 +1,5 @@
- 
-//snippet-sourcedescription:[create_trail.cpp demonstrates how to create an AWS CloudTrail resource using command-line input.]
-//snippet-keyword:[C++]
-//snippet-sourcesyntax:[cpp]
-//snippet-keyword:[Code Sample]
-//snippet-keyword:[AWS CloudTrail]
-//snippet-service:[cloudtrail]
-//snippet-sourcetype:[full-example]
-//snippet-sourcedate:[]
-//snippet-sourceauthor:[tapasweni-pathak]
-
-
-/*
-   Copyright 2010-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
-   This file is licensed under the Apache License, Version 2.0 (the "License").
-   You may not use this file except in compliance with the License. A copy of
-   the License is located at
-    http://aws.amazon.com/apache2.0/
-   This file is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
-   CONDITIONS OF ANY KIND, either express or implied. See the License for the
-   specific language governing permissions and limitations under the License.
-*/
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 
 #include <aws/core/Aws.h>
 #include <aws/core/utils/Outcome.h>
@@ -27,44 +7,82 @@
 #include <aws/cloudtrail/model/CreateTrailRequest.h>
 #include <aws/cloudtrail/model/CreateTrailResult.h>
 #include <iostream>
+#include "cloudtrail_samples.h"
 
 /**
- * Creates a cloud trail on command line input
- */
+ * Before running this C++ code example, set up your development environment, including your credentials.
+ *
+ * For more information, see the following documentation topic:
+ *
+ * https://docs.aws.amazon.com/sdk-for-cpp/v1/developer-guide/getting-started.html
+ *
+ * For information on the structure of the code examples and how to build and run the examples, see
+ * https://docs.aws.amazon.com/sdk-for-cpp/v1/developer-guide/getting-started-code-examples.html.
+ *
+ **/
 
-int main(int argc, char **argv)
-{
-  if (argc != 3)
-  {
-    std::cout << "Usage: create_trail <trail_name> <bucket_name>";
-    return 1;
-  }
-  Aws::SDKOptions options;
-  Aws::InitAPI(options);
-  {
-    Aws::String trail_name(argv[1]);
-    Aws::String bucket_name(argv[2]);
+// snippet-start:[cpp.example_code.cloudtrail.CreateTrail]
+// Routine which creates an AWS CloudTrail trail.
+/*!
+  \param trailName: The name of the CloudTrail trail.
+  \param bucketName: The Amazon S3 bucket designate for publishing logs.
+  \param clientConfig: Aws client configuration.
+  \return bool: Function succeeded.
+*/
+bool AwsDoc::CloudTrail::createTrail(const Aws::String trailName,
+                                     const Aws::String bucketName,
+                                     const Aws::Client::ClientConfiguration &clientConfig) {
+    Aws::CloudTrail::CloudTrailClient trailClient(clientConfig);
+    Aws::CloudTrail::Model::CreateTrailRequest request;
+    request.SetName(trailName);
+    request.SetS3BucketName(bucketName);
 
-    Aws::CloudTrail::CloudTrailClient ct;
-
-    Aws::CloudTrail::Model::CreateTrailRequest ct_req;
-    ct_req.SetName(trail_name);
-    ct_req.SetS3BucketName(bucket_name);
-
-    auto ct_out = ct.CreateTrail(ct_req);
-
-    if (ct_out.IsSuccess())
-    {
-      std::cout << "Successfully created cloud trail" << std::endl;
+    Aws::CloudTrail::Model::CreateTrailOutcome outcome = trailClient.CreateTrail(
+            request);
+    if (outcome.IsSuccess()) {
+        std::cout << "Successfully created trail " << trailName << std::endl;
+    }
+    else {
+        std::cerr << "Failed to create trail " << trailName <<
+                  ": " << outcome.GetError().GetMessage() << std::endl;
     }
 
-    else
-    {
-      std::cout << "Error creating cloud trail " << ct_out.GetError().GetMessage()
-        << std::endl;
-    }
-  }
-
-  Aws::ShutdownAPI(options);
-  return 0;
+    return outcome.IsSuccess();
 }
+// snippet-end:[cpp.example_code.cloudtrail.CreateTrail]
+
+/*
+*
+*  main function
+*
+*  Usage: 'run_create_trail <trail_name> <bucket_name>'
+*
+*  Prerequisites: An existing Amazon S3 bucket.
+*
+*/
+
+#ifndef TESTING_BUILD
+
+int main(int argc, char **argv) {
+    if (argc != 3) {
+        std::cout << "Usage: 'run_create_trail <trail_name> <bucket_name>'";
+        return 1;
+    }
+    Aws::SDKOptions options;
+    Aws::InitAPI(options);
+    {
+        Aws::String trailName(argv[1]);
+        Aws::String bucketName(argv[2]);
+
+        Aws::Client::ClientConfiguration clientConfig;
+        // Optional: Set to the AWS Region (overrides config file).
+        // clientConfig.region = "us-east-1";
+
+        AwsDoc::CloudTrail::createTrail(trailName, bucketName, clientConfig);
+    }
+
+    Aws::ShutdownAPI(options);
+    return 0;
+}
+
+#endif // TESTING_BUILD

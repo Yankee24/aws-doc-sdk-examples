@@ -1,3 +1,5 @@
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 import { describe, it, expect } from "vitest";
 
 import { main } from "../actions/batch-get-item.js";
@@ -12,17 +14,17 @@ describe("batch-get-item", () => {
     [
       { PageName: { S: "Home" }, PageViews: { N: "10" } },
       { PageName: { S: "About" }, PageViews: { N: "2" } },
-    ]
+    ],
   );
 
   it("should return a list of items", async () => {
     const { Responses } = await main();
-    const pageAnalytics = Responses["PageAnalytics"];
+    const pageAnalytics = Responses.PageAnalytics;
     expect(pageAnalytics).toEqual(
       expect.arrayContaining([
         { PageViews: { N: "10" }, PageName: { S: "Home" } },
         { PageViews: { N: "2" }, PageName: { S: "About" } },
-      ])
+      ]),
     );
   });
 });

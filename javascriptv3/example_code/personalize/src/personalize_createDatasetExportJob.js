@@ -1,5 +1,7 @@
-/* Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
-SPDX-License-Identifier: Apache-2.0
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
+
+/*
 ABOUT THIS NODE.JS EXAMPLE: This example works with the AWS SDK for JavaScript version 3 (v3),
 which is available at https://github.com/aws/aws-sdk-js-v3.
 
@@ -21,8 +23,7 @@ node createDatasetExportJob.js
 
 // snippet-start:[personalize.JavaScript.createDatasetExportJobV3]
 // Get service clients module and commands using ES6 syntax.
-import { CreateDatasetExportJobCommand } from
-  "@aws-sdk/client-personalize";
+import { CreateDatasetExportJobCommand } from "@aws-sdk/client-personalize";
 import { personalizeClient } from "./libs/personalizeClients.js";
 
 // Or, create the client here.
@@ -30,20 +31,22 @@ import { personalizeClient } from "./libs/personalizeClients.js";
 
 // Set the export job parameters.
 export const datasetExportJobParam = {
-  datasetArn: 'DATASET_ARN', /* required */
+  datasetArn: "DATASET_ARN" /* required */,
   jobOutput: {
     s3DataDestination: {
-        path: 'S3_DESTINATION_PATH' /* required */
-        //kmsKeyArn: 'ARN'  /* include if your bucket uses AWS KMS for encryption
-    } 
+      path: "S3_DESTINATION_PATH" /* required */,
+      //kmsKeyArn: 'ARN'  /* include if your bucket uses AWS KMS for encryption
+    },
   },
-  jobName: 'NAME',/* required */
-  roleArn: 'ROLE_ARN' /* required */
-}
+  jobName: "NAME" /* required */,
+  roleArn: "ROLE_ARN" /* required */,
+};
 
 export const run = async () => {
   try {
-    const response = await personalizeClient.send(new CreateDatasetExportJobCommand(datasetExportJobParam));
+    const response = await personalizeClient.send(
+      new CreateDatasetExportJobCommand(datasetExportJobParam),
+    );
     console.log("Success", response);
     return response; // For unit tests.
   } catch (err) {

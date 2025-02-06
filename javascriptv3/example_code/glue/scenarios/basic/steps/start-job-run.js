@@ -1,14 +1,16 @@
-/*
- * Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
- * SPDX-License-Identifier: Apache-2.0
- */
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 import open from "open";
 
-import { DEFAULT_REGION } from "../../../../libs/utils/util-aws-sdk.js";
-import { wait } from "../../../../libs/utils/util-timers.js";
+import { wait } from "@aws-doc-sdk-examples/lib/utils/util-timers.js";
 import { log } from "../log.js";
 
 /** snippet-start:[javascript.v3.glue.scenarios.basic.StartJobRunStep] */
+/**
+ * @param {(name: string, runId: string) => Promise<import('@aws-sdk/client-glue').GetJobRunCommandOutput> }  getJobRun
+ * @param {string} jobName
+ * @param {string} jobRunId
+ */
 const waitForJobRun = async (getJobRun, jobName, jobRunId) => {
   const waitTimeInSeconds = 30;
   const { JobRun } = await getJobRun(jobName, jobRunId);
@@ -19,27 +21,28 @@ const waitForJobRun = async (getJobRun, jobName, jobRunId) => {
 
   switch (JobRun.JobRunState) {
     case "FAILED":
-    case "STOPPED":
     case "TIMEOUT":
     case "STOPPED":
+    case "ERROR":
       throw new Error(
-        `Job ${JobRun.JobRunState}. Error: ${JobRun.ErrorMessage}`
+        `Job ${JobRun.JobRunState}. Error: ${JobRun.ErrorMessage}`,
       );
-    case "RUNNING":
-      break;
     case "SUCCEEDED":
       return;
     default:
-      throw new Error(`Unknown job run state: ${JobRun.JobRunState}`);
+      break;
   }
 
   log(
-    `Job ${JobRun.JobRunState}. Waiting ${waitTimeInSeconds} more seconds...`
+    `Job ${JobRun.JobRunState}. Waiting ${waitTimeInSeconds} more seconds...`,
   );
   await wait(waitTimeInSeconds);
   return waitForJobRun(getJobRun, jobName, jobRunId);
 };
 
+/**
+ * @param {{ prompter: { prompt: () => Promise<{ shouldOpen: boolean }>} }} context
+ */
 const promptToOpen = async (context) => {
   const { shouldOpen } = await context.prompter.prompt({
     name: "shouldOpen",
@@ -49,7 +52,7 @@ const promptToOpen = async (context) => {
 
   if (shouldOpen) {
     return open(
-      `https://s3.console.aws.amazon.com/s3/buckets/${process.env.BUCKET_NAME}?region=${DEFAULT_REGION}&tab=objects to view the output.`
+      `https://s3.console.aws.amazon.com/s3/buckets/${process.env.BUCKET_NAME} to view the output.`,
     );
   }
 };
@@ -62,7 +65,7 @@ const makeStartJobRunStep =
       process.env.JOB_NAME,
       process.env.DATABASE_NAME,
       process.env.TABLE_NAME,
-      process.env.BUCKET_NAME
+      process.env.BUCKET_NAME,
     );
     log("Job started.", { type: "success" });
 

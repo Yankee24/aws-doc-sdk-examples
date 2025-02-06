@@ -1,11 +1,10 @@
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 //
 // Swift Example: AttachRolePolicy
 //
 // An example showing how to use the Amazon Identity and Access Management (IAM)
 // `IamClient` function `attachRolePolicy()`.
-//
-// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
-// SPDX-License-Identifier: Apache-2.0.
 
 // snippet-start:[iam.swift.attachrolepolicy.example]
 // snippet-start:[iam.swift.attachrolepolicy.main.imports]
@@ -35,11 +34,12 @@ struct ExampleCommand: ParsableCommand {
     /// example.
     // snippet-start:[iam.swift.attachrolepolicy.command.runasync]
     func runAsync() async throws {
-        let serviceHandler = await ServiceHandler()
-
         do {
+            let serviceHandler = try await ServiceHandler()
+            
             _ = try await serviceHandler.attachRolePolicy(role: rolename, policyArn: policyArn)
         } catch {
+            print("ERROR: runAsync:", dump(error))
             throw error
         }
     }

@@ -5,7 +5,7 @@
 Purpose
 
 Shows how to use the Amazon RDS Data Service to interact with an Amazon Aurora
-database.
+PostgreSQL-compatible database.
 
 This file is deployed to AWS Lambda as part of the Chalice deployment.
 """
@@ -13,13 +13,25 @@ This file is deployed to AWS Lambda as part of the Chalice deployment.
 import datetime
 import logging
 import os
+
 import boto3
 from botocore.exceptions import ClientError
-from .mysql_helper import Table, Column, ForeignKey
-from .mysql_helper import (
-    create_table, insert, update, query, unpack_query_results, unpack_insert_results,
-    delete)
 
+from .postgresql_helper import (
+    Column,
+    ForeignKey,
+    Table,
+    create_table,
+    delete,
+    insert,
+    insert_returning,
+    insert_without_batch,
+    query,
+    unpack_insert_results,
+    unpack_insert_results_v2,
+    unpack_query_results,
+    update,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -32,11 +44,12 @@ class Storage:
     """
     Wraps calls to the Amazon RDS Data Service.
     """
+
     def __init__(self, cluster, secret, db_name, rdsdata_client):
         """
         Initialize the storage object.
 
-        Also initializes all of the definitions of the library tables.
+        Also initializes all the definitions of the library tables.
 
         :param cluster: The Amazon Aurora cluster that contains the library database.
         :param secret: The AWS Secrets Manager secret that contains credentials used
@@ -49,46 +62,83 @@ class Storage:
         self._db_name = db_name
         self._rdsdata_client = rdsdata_client
         self._tables = {
-            'Authors': Table('Authors', [
-                Column('AuthorID', int, nullable=False, auto_increment=True,
-                       primary_key=True),
-                Column('FirstName', str, nullable=False),
-                Column('LastName', str, nullable=False)
-            ]),
-            'Books': Table('Books', [
-                Column('BookID', int, nullable=False, auto_increment=True,
-                       primary_key=True),
-                Column('Title', str, nullable=False),
-                Column('AuthorID', int, foreign_key=ForeignKey('Authors', 'AuthorID'))
-            ]),
-            'Patrons': Table('Patrons', [
-                Column('PatronID', int, nullable=False, auto_increment=True,
-                       primary_key=True),
-                Column('FirstName', str, nullable=False),
-                Column('LastName', str, nullable=False),
-            ]),
-            'Lending': Table('Lending', [
-                Column('LendingID', int, nullable=False, auto_increment=True,
-                       primary_key=True),
-                Column('BookID', int, foreign_key=ForeignKey('Books', 'BookID')),
-                Column('PatronID', int, foreign_key=ForeignKey('Patrons', 'PatronID')),
-                Column('Lent', datetime.date, nullable=False),
-                Column('Returned', datetime.date)
-            ])}
+            "Authors": Table(
+                "Authors",
+                [
+                    Column(
+                        "AuthorID",
+                        int,
+                        nullable=False,
+                        auto_increment=True,
+                        primary_key=True,
+                    ),
+                    Column("FirstName", str, nullable=False),
+                    Column("LastName", str, nullable=False),
+                ],
+            ),
+            "Books": Table(
+                "Books",
+                [
+                    Column(
+                        "BookID",
+                        int,
+                        nullable=False,
+                        auto_increment=True,
+                        primary_key=True,
+                    ),
+                    Column("Title", str, nullable=False),
+                    Column(
+                        "AuthorID", int, foreign_key=ForeignKey("Authors", "AuthorID")
+                    ),
+                ],
+            ),
+            "Patrons": Table(
+                "Patrons",
+                [
+                    Column(
+                        "PatronID",
+                        int,
+                        nullable=False,
+                        auto_increment=True,
+                        primary_key=True,
+                    ),
+                    Column("FirstName", str, nullable=False),
+                    Column("LastName", str, nullable=False),
+                ],
+            ),
+            "Lending": Table(
+                "Lending",
+                [
+                    Column(
+                        "LendingID",
+                        int,
+                        nullable=False,
+                        auto_increment=True,
+                        primary_key=True,
+                    ),
+                    Column("BookID", int, foreign_key=ForeignKey("Books", "BookID")),
+                    Column(
+                        "PatronID", int, foreign_key=ForeignKey("Patrons", "PatronID")
+                    ),
+                    Column("Lent", datetime.date, nullable=False),
+                    Column("Returned", datetime.date),
+                ],
+            ),
+        }
 
     @classmethod
     def from_env(cls):
         """
         Creates a storage object based on environment variables.
         """
-        cluster_name = os.environ.get('CLUSTER_NAME', '')
-        secret_name = os.environ.get('SECRET_NAME', '')
-        db_name = os.environ.get('DATABASE_NAME', '')
-        cluster = boto3.client('rds').describe_db_clusters(
-            DBClusterIdentifier=cluster_name)['DBClusters'][0]
-        secret = boto3.client('secretsmanager').describe_secret(
-            SecretId=secret_name)
-        rdsdata_client = boto3.client('rds-data')
+        cluster_name = os.environ.get("CLUSTER_NAME", "")
+        secret_name = os.environ.get("SECRET_NAME", "")
+        db_name = os.environ.get("DATABASE_NAME", "")
+        cluster = boto3.client("rds").describe_db_clusters(
+            DBClusterIdentifier=cluster_name
+        )["DBClusters"][0]
+        secret = boto3.client("secretsmanager").describe_secret(SecretId=secret_name)
+        rdsdata_client = boto3.client("rds-data")
         return cls(cluster, secret, db_name, rdsdata_client)
 
     def _begin_transaction(self):
@@ -99,9 +149,10 @@ class Storage:
         """
         result = self._rdsdata_client.begin_transaction(
             database=self._db_name,
-            resourceArn=self._cluster['DBClusterArn'],
-            secretArn=self._secret['ARN'])
-        return result['transactionId']
+            resourceArn=self._cluster["DBClusterArn"],
+            secretArn=self._secret["ARN"],
+        )
+        return result["transactionId"]
 
     def _commit_transaction(self, transaction_id):
         """
@@ -110,10 +161,11 @@ class Storage:
         :return: The result of committing the transaction.
         """
         result = self._rdsdata_client.commit_transaction(
-            resourceArn=self._cluster['DBClusterArn'],
-            secretArn=self._secret['ARN'],
-            transactionId=transaction_id)
-        return result['transactionStatus']
+            resourceArn=self._cluster["DBClusterArn"],
+            secretArn=self._secret["ARN"],
+            transactionId=transaction_id,
+        )
+        return result["transactionStatus"]
 
     def _rollback_transaction(self, transaction_id):
         """
@@ -122,10 +174,11 @@ class Storage:
         :return: The result of rolling back the transaction.
         """
         result = self._rdsdata_client.rollback_transaction(
-            resourceArn=self._cluster['DBClusterArn'],
-            secretArn=self._secret['ARN'],
-            transactionId=transaction_id)
-        return result['transactionStatus']
+            resourceArn=self._cluster["DBClusterArn"],
+            secretArn=self._secret["ARN"],
+            transactionId=transaction_id,
+        )
+        return result["transactionStatus"]
 
     def _run_statement(self, sql, sql_params=None, transaction_id=None):
         """
@@ -138,26 +191,31 @@ class Storage:
         """
         try:
             run_args = {
-                'database': self._db_name,
-                'resourceArn': self._cluster['DBClusterArn'],
-                'secretArn': self._secret['ARN'],
-                'sql': sql
+                "database": self._db_name,
+                "resourceArn": self._cluster["DBClusterArn"],
+                "secretArn": self._secret["ARN"],
+                "sql": sql,
             }
             if sql_params is not None:
-                run_args['parameters'] = sql_params
+                run_args["parameters"] = sql_params
             if transaction_id is not None:
-                run_args['transactionId'] = transaction_id
+                run_args["transactionId"] = transaction_id
             result = self._rdsdata_client.execute_statement(**run_args)
             logger.info("Ran statement on %s.", self._db_name)
         except ClientError as error:
-            if (error.response['Error']['Code'] == 'BadRequestException'
-                    and 'Communications link failure'
-                    in error.response['Error']['Message']):
+            if (
+                error.response["Error"]["Code"] == "BadRequestException"
+                and "Communications link failure" in error.response["Error"]["Message"]
+            ):
                 raise DataServiceNotReadyException(
-                    'The Aurora Data Service is not ready, probably because it entered '
-                    'pause mode after five minutes of inactivity. Wait a minute for '
-                    'your cluster to resume and try your request again.') from error
+                    "The Aurora Data Service is not ready."
+                ) from error
             logger.exception("Run statement on %s failed.", self._db_name)
+            raise
+        except Exception as err:
+            logger.exception(
+                f"Error calling execute_statement() with that SQL statement: {str(err)}"
+            )
             raise
         else:
             return result
@@ -173,11 +231,11 @@ class Storage:
         """
         try:
             run_args = {
-                'database': self._db_name,
-                'resourceArn': self._cluster['DBClusterArn'],
-                'secretArn': self._secret['ARN'],
-                'sql': sql,
-                'parameterSets': sql_param_sets
+                "database": self._db_name,
+                "resourceArn": self._cluster["DBClusterArn"],
+                "secretArn": self._secret["ARN"],
+                "sql": sql,
+                "parameterSets": sql_param_sets,
             }
             result = self._rdsdata_client.batch_execute_statement(**run_args)
             logger.info("Ran batch statement on %s.", self._db_name)
@@ -199,34 +257,78 @@ class Storage:
     def add_books(self, books):
         """
         Adds a list of books and their authors to the database. The list of authors
-        is first processed to remove duplicates.
+        is first processed to remove duplicates. The data is set up with a foreign
+        key relationship. The author information is added to the Authors table, including
+        an auto-generated author ID. The book information and the corresponding author ID
+        is added to the Books table.
 
         :param books: The list of books and their authors to add to the database.
         :return: The counts of authors and books added to the database.
         """
         authors = {
-            book['author']: {
-                'FirstName': ' '.join(book['author'].split(' ')[:-1]),
-                'LastName': book['author'].split(' ')[-1]
-            } for book in books
+            book["author"]: {
+                "FirstName": " ".join(book["author"].split(" ")[:-1]),
+                "LastName": book["author"].split(" ")[-1],
+            }
+            for book in books
         }
-        sql, sql_param_sets = insert(
-            self._tables['Authors'], authors.values())
-        result = self._run_batch_statement(sql, sql_param_sets)
-        author_count = len(result['updateResults'])
-        logger.info("Added %s authors to the database.", author_count)
 
-        auth_ids = [field['generatedFields'][0]['longValue']
-                    for field in result['updateResults']]
+        # Construct a list of '(FirstName, LastName)' strings to be substituted into
+        # the VALUES clause of the INSERT statement.
+        authors_plain = [
+            """($first$%s$first$, $last$%s$last$)"""
+            % (" ".join(book["author"].split(" ")[:-1]), book["author"].split(" ")[-1])
+            for book in books
+        ]
+        values_clause = ", ".join(authors_plain)
+
+        sql = insert_without_batch(self._tables["Authors"], values_clause)
+
+        #        result = self._run_batch_statement(sql, sql_param_sets)
+        # Format the parameter set into a big string '''("John", "Smith"), ("Jane", "Jones") ...etc...'''
+        # that can be substituted straight into the VALUES clause of the INSERT statement.
+        result = self._run_statement(sql)
+
+        try:
+            author_count = len(result["updateResults"])
+            logger.info(
+                "Added %s authors to the database. Result set included updateResults field.",
+                author_count,
+            )
+        except Exception:
+            pass
+        try:
+            author_count = len(result["records"])
+            logger.info(
+                "Added %s authors to the database. Result set included records field.",
+                author_count,
+            )
+        except Exception:
+            pass
+
+        auth_ids = [
+            # generatedFields is blank in Data API v2. But that might not be a permanent limitation.
+            # So preserve the ability to switch back to it instead of reformatting the INSERT into a
+            # query and getting the generated IDs out of the 'records' fields.
+            #            field["generatedFields"][0]["longValue"]
+            #            for field in result["updateResults"]
+            field[0]["longValue"]
+            for field in result["records"]
+        ]
         for auth, auth_id in zip(authors.values(), auth_ids):
-            auth['author_id'] = auth_id
+            auth["author_id"] = auth_id
         sql, sql_param_sets = insert(
-            self._tables['Books'], [{
-                'Title': book['title'],
-                'AuthorID': authors[book['author']]['author_id']
-            } for book in books])
+            self._tables["Books"],
+            [
+                {
+                    "Title": book["title"],
+                    "AuthorID": authors[book["author"]]["author_id"],
+                }
+                for book in books
+            ],
+        )
         result = self._run_batch_statement(sql, sql_param_sets)
-        book_count = len(result['updateResults'])
+        book_count = len(result["updateResults"])
         logger.info("Added %s books to the database.", book_count)
         return author_count, book_count
 
@@ -239,10 +341,19 @@ class Storage:
         :returns: The list of books.
         """
         logger.info("Listing by author %s.", "All" if author_id is None else author_id)
-        where_clauses = None if author_id is None else [{
-            'table': 'Authors', 'column': 'AuthorID', 'op': '=',
-            'value': author_id}]
-        sql, columns, params = query('Books', self._tables, where_clauses)
+        where_clauses = (
+            None
+            if author_id is None
+            else [
+                {
+                    "table": "Authors",
+                    "column": "AuthorID",
+                    "op": "=",
+                    "value": author_id,
+                }
+            ]
+        )
+        sql, columns, params = query("Books", self._tables, where_clauses)
         results = self._run_statement(sql, sql_params=params)
         output = unpack_query_results(columns, results)
         return output
@@ -258,37 +369,50 @@ class Storage:
         :return: The IDs of the added author and book.
         """
         logger.info("Adding book %s to the library.", book)
-        auth_sql, auth_sql_param_sets = insert(self._tables['Authors'], [{
-            'FirstName': book['Authors.FirstName'],
-            'LastName': book['Authors.LastName']
-        }])
+        auth_sql, auth_sql_param_sets = insert(
+            self._tables["Authors"],
+            [
+                {
+                    "FirstName": book["Authors.FirstName"],
+                    "LastName": book["Authors.LastName"],
+                }
+            ],
+        )
         results = None
         transaction_id = self._begin_transaction()
         try:
             logger.info("Started transaction %s.", transaction_id)
             auth_results = self._run_statement(
-                auth_sql, sql_params=auth_sql_param_sets[0],
-                transaction_id=transaction_id)
+                auth_sql,
+                sql_params=auth_sql_param_sets[0],
+                transaction_id=transaction_id,
+            )
             author_id = unpack_insert_results(auth_results)
             book_sql, book_sql_param_sets = insert(
-                self._tables['Books'], [{
-                    'Title': book['Books.Title'],
-                    'AuthorID': author_id}])
+                self._tables["Books"],
+                [{"Title": book["Books.Title"], "AuthorID": author_id}],
+            )
             book_results = self._run_statement(
-                book_sql, sql_params=book_sql_param_sets[0],
-                transaction_id=transaction_id)
+                book_sql,
+                sql_params=book_sql_param_sets[0],
+                transaction_id=transaction_id,
+            )
             book_id = unpack_insert_results(book_results)
             results = author_id, book_id
         except Exception:
             transaction_status = self._rollback_transaction(transaction_id)
             logger.warning(
-                "Transaction %s rolled back with status %s.", transaction_id,
-                transaction_status)
+                "Transaction %s rolled back with status %s.",
+                transaction_id,
+                transaction_status,
+            )
         else:
             transaction_status = self._commit_transaction(transaction_id)
             logger.info(
-                "Transaction %s commited with status %s.", transaction_id,
-                transaction_status)
+                "Transaction %s commited with status %s.",
+                transaction_id,
+                transaction_status,
+            )
 
         return results
 
@@ -299,7 +423,7 @@ class Storage:
         :return: The authors in the database.
         """
         logger.info("Listing all authors.")
-        sql, columns, _ = query('Authors', self._tables)
+        sql, columns, _ = query("Authors", self._tables)
         results = self._run_statement(sql)
         output = unpack_query_results(columns, results)
         return output
@@ -311,7 +435,7 @@ class Storage:
         :return: The patrons in the database.
         """
         logger.info("Listing all patrons.")
-        sql, columns, _ = query('Patrons', self._tables)
+        sql, columns, _ = query("Patrons", self._tables)
         results = self._run_statement(sql)
         output = unpack_query_results(columns, results)
         return output
@@ -323,9 +447,10 @@ class Storage:
         :return: The ID of the added patron.
         """
         logger.info("Adding patron %s.", patron)
-        sql, sql_param_sets = insert(self._tables['Patrons'], [patron])
+        sql, sql_param_sets = insert_returning(self._tables["Patrons"], [patron])
         results = self._run_statement(sql, sql_params=sql_param_sets[0])
-        return unpack_insert_results(results)
+        new_id = unpack_insert_results_v2(results)
+        return new_id
 
     def delete_patron(self, patron_id):
         """
@@ -334,9 +459,13 @@ class Storage:
         :param patron_id: The ID of the patron to delete.
         """
         logger.info("Deleting patron %s.", patron_id)
-        sql, sql_param_sets = delete(
-            self._tables['Patrons'], [{'PatronID': patron_id}])
-        self._run_statement(sql, sql_params=sql_param_sets[0])
+        sql, sql_param_sets = delete(self._tables["Patrons"], [{"PatronID": patron_id}])
+        try:
+            self._run_statement(sql, sql_params=sql_param_sets[0])
+        except Exception as err:
+            logger.exception(f"Error running SQL statement: {sql}")
+            logger.exception(f"Error details: {str(err)}")
+            raise
 
     def get_borrowed_books(self):
         """
@@ -347,14 +476,54 @@ class Storage:
         :return: The list of currently borrowed books.
         """
         logger.info("Listing all currently borrowed books.")
-        sql, columns, params = query('Lending', self._tables, [{
-            'table': 'Lending', 'column': 'Lent', 'op': '>=',
-            'value': str(datetime.date.today())
-        }, {
-            'table': 'Lending', 'column': 'Returned', 'op': 'IS', 'value': None
-        }])
-        results = self._run_statement(sql, sql_params=params)
-        return unpack_query_results(columns, results)
+        try:
+            sql, columns, params = query(
+                "Lending",
+                self._tables,
+                [
+                    {
+                        "table": "Lending",
+                        "column": "Lent",
+                        "op": ">=",
+                        "value": datetime.date.today(),
+                    },
+                    {
+                        "table": "Lending",
+                        "column": "Returned",
+                        "op": "IS NOT DISTINCT FROM",
+                        "value": None,
+                    },
+                ],
+            )
+        except Exception:
+            logger.exception(
+                "Couldn't call query() to construct the query for the Lending table."
+            )
+            raise
+        try:
+            logger.exception(
+                f"Running this query to get list of currently borrowed books: {sql}"
+            )
+            logger.exception(
+                f"Parameters for query to get list of currently borrowed books: {str(params)}"
+            )
+            results = self._run_statement(sql, sql_params=params)
+        except Exception as err:
+            logger.exception(
+                f"Error running SQL statement for get_borrowed_books(): {str(err)}"
+            )
+            raise
+        try:
+            logger.exception(
+                f"Response from query to get list of currently borrowed books: {str(results)}"
+            )
+            rc = unpack_query_results(columns, results)
+            return rc
+        except Exception as err:
+            logger.exception(
+                f"Error unpacking query result for get_borrowed_books(): {str(err)}"
+            )
+            raise
 
     def borrow_book(self, book_id, patron_id):
         """
@@ -366,16 +535,19 @@ class Storage:
         :return: The ID of the record in the Lending table.
         """
         logger.info("Lending book %s to patron %s.", book_id, patron_id)
-        sql, sql_param_sets = insert(
-            self._tables['Lending'], [{
-                'BookID': book_id,
-                'PatronID': patron_id,
-                'Lent': datetime.date.today(),
-                'Returned': None
-            }]
+        sql, sql_param_sets = insert_returning(
+            self._tables["Lending"],
+            [
+                {
+                    "BookID": book_id,
+                    "PatronID": patron_id,
+                    "Lent": datetime.date.today(),
+                    "Returned": None,
+                }
+            ],
         )
         results = self._run_statement(sql, sql_params=sql_param_sets[0])
-        return unpack_insert_results(results)
+        return unpack_insert_results_v2(results)
 
     def return_book(self, book_id, patron_id):
         """
@@ -387,13 +559,28 @@ class Storage:
         """
         logger.info("Returning book %s from patron %s.", book_id, patron_id)
         sql, sql_params = update(
-            'Lending', {'Returned': datetime.date.today()}, [{
-                'table': 'Lending', 'column': 'BookID', 'op': '=',
-                'value': book_id
-            }, {
-                'table': 'Lending', 'column': 'PatronID', 'op': '=',
-                'value': patron_id
-            }, {
-                'table': 'Lending', 'column': 'Returned', 'op': 'IS', 'value': None
-            }])
-        self._run_statement(sql, sql_params)
+            "Lending",
+            {"Returned": datetime.date.today()},
+            [
+                {"table": "Lending", "column": "BookID", "op": "=", "value": book_id},
+                {
+                    "table": "Lending",
+                    "column": "PatronID",
+                    "op": "=",
+                    "value": patron_id,
+                },
+                {
+                    "table": "Lending",
+                    "column": "Returned",
+                    "op": "IS NOT DISTINCT FROM",
+                    "value": None,
+                },
+            ],
+        )
+        try:
+            self._run_statement(sql, sql_params)
+        except Exception as err:
+            logger.exception(
+                f"Error running SQL statement for return_book(): {str(err)}"
+            )
+            raise

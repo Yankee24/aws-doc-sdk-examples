@@ -1,11 +1,5 @@
-// snippet-sourcedescription:[UpdateUser.kt demonstrates how to update the name of an AWS Identity and Access Management (IAM) user.]
-// snippet-keyword:[AWS SDK for Kotlin]
-// snippet-service:[Identity and Access Management (IAM)]
-
-/*
-   Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
-   SPDX-License-Identifier: Apache-2.0
-*/
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 
 package com.kotlin.iam
 
@@ -24,7 +18,6 @@ https://docs.aws.amazon.com/sdk-for-kotlin/latest/developer-guide/setup.html
  */
 
 suspend fun main(args: Array<String>) {
-
     val usage = """
         Usage:
             <curName> <newName>
@@ -44,12 +37,15 @@ suspend fun main(args: Array<String>) {
 }
 
 // snippet-start:[iam.kotlin.update_user.main]
-suspend fun updateIAMUser(curName: String?, newName: String?) {
-
-    val request = UpdateUserRequest {
-        userName = curName
-        newUserName = newName
-    }
+suspend fun updateIAMUser(
+    curName: String?,
+    newName: String?,
+) {
+    val request =
+        UpdateUserRequest {
+            userName = curName
+            newUserName = newName
+        }
 
     IamClient { region = "AWS_GLOBAL" }.use { iamClient ->
         iamClient.updateUser(request)

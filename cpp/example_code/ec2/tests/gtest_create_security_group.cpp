@@ -1,7 +1,5 @@
-/*
-   Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
-   SPDX-License-Identifier: Apache-2.0
-*/
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 /*
  * Test types are indicated by the test label ending.
  *
@@ -23,7 +21,7 @@ namespace AwsDocTest {
         auto groupName = uuidName("test-create");
 
         Aws::String groupID;
-        auto result = AwsDoc::EC2::CreateSecurityGroup(groupName, "description",
+        auto result = AwsDoc::EC2::createSecurityGroup(groupName, "description",
                                                        vpcID, groupID, *s_clientConfig);
         EXPECT_TRUE(result);
 

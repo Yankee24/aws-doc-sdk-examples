@@ -1,6 +1,7 @@
-/* Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
-SPDX-License-Identifier: Apache-2.0
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 
+/*
 ABOUT THIS NODE.JS EXAMPLE: This example works with the AWS SDK for JavaScript version 3 (v3),
 which is available at https://github.com/aws/aws-sdk-js-v3. This example is in the 'AWS SDK for JavaScript v3 Developer Guide' at
 https://docs.aws.amazon.com/sdk-for-javascript/v3/developer-guide/cross-service-example-dataupload.html.
@@ -46,14 +47,14 @@ export const submitData = async () => {
     // Define the attributes and values of the item to be added. Adding ' + "" ' converts a value to
     // a string.
     Item: {
-      id: { N: id + "" },
-      title: { S: title + "" },
-      name: { S: name + "" },
-      body: { S: body + "" },
+      id: { N: `${id}` },
+      title: { S: `${title}` },
+      name: { S: `${name}` },
+      body: { S: `${body}` },
     },
   };
   // Check that all the fields are completed.
-  if (id != "" && title != "" && name != "" && body != "") {
+  if (id !== "" && title !== "" && name !== "" && body !== "") {
     try {
       //Upload the item to the table
       await dynamoClient.send(new PutItemCommand(params));
@@ -69,7 +70,7 @@ export const submitData = async () => {
         // Send the SNS message
         const data = await snsClient.send(new PublishCommand(messageParams));
         console.log(
-          "Success, message published. MessageID is " + data.MessageId
+          `Success, message published. MessageID is ${data.MessageId}`,
         );
       } catch (err) {
         // Display error message if error is not sent
@@ -79,7 +80,7 @@ export const submitData = async () => {
       // Display error message if item is no added to table
       console.error(
         "An error occurred. Check the console for further information",
-        err
+        err,
       );
     }
     // Display alert if all field are not completed.

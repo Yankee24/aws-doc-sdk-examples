@@ -1,6 +1,6 @@
-/* Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
-SPDX-License-Identifier: Apache-2.0 */
-`
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
+
 package aws.example.s3;
 
 import java.io.InputStream;
@@ -14,7 +14,7 @@ import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.amazonaws.services.s3.model.GetObjectRequest;
 import com.amazonaws.services.s3.model.S3Object;
 
-public class App {
+public class GetPDFandSave {
 
     private static final String ACCESS_KEY = "ACCESS_KEY";
     private static final String SECRET_KEY = "SECRET_KEY";
@@ -32,7 +32,7 @@ public class App {
                 .build();
 
         try {
-            
+
             // Download the PDF file from S3
             S3Object s3object = s3Client.getObject(new GetObjectRequest(BUCKET_NAME, OBJECT_KEY));
             InputStream inputStream = s3object.getObjectContent();
@@ -52,7 +52,7 @@ public class App {
             inputStream.close();
 
         } catch (Exception e) {
-            
+
             e.printStackTrace();
         }
     }

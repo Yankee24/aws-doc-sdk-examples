@@ -1,11 +1,5 @@
-// snippet-sourcedescription:[ListEvents.kt demonstrates how to list events for a given cluster.]
-// snippet-keyword:[AWS SDK for Kotlin]
-// snippet-service:[Amazon Redshift]
-
-/*
-   Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
-   SPDX-License-Identifier: Apache-2.0
-*/
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 package com.kotlin.redshift
 
 // snippet-start:[redshift.kotlin._events.import]
@@ -23,7 +17,6 @@ For more information, see the following documentation topic:
 https://docs.aws.amazon.com/sdk-for-kotlin/latest/developer-guide/setup.html
  */
 suspend fun main(args: Array<String>) {
-
     val usage = """
         Usage:
             <clusterId> <eventSourceType> 
@@ -44,14 +37,19 @@ suspend fun main(args: Array<String>) {
 }
 
 // snippet-start:[redshift.kotlin._events.main]
-suspend fun listRedShiftEvents(clusterId: String?, eventSourceType: String) {
-
-    val request = DescribeEventsRequest {
-        sourceIdentifier = clusterId
-        sourceType = SourceType.fromValue(eventSourceType)
-        startTime = aws.smithy.kotlin.runtime.time.Instant.fromEpochSeconds("1634058260")
-        maxRecords = 20
-    }
+suspend fun listRedShiftEvents(
+    clusterId: String?,
+    eventSourceType: String,
+) {
+    val request =
+        DescribeEventsRequest {
+            sourceIdentifier = clusterId
+            sourceType = SourceType.fromValue(eventSourceType)
+            startTime =
+                aws.smithy.kotlin.runtime.time.Instant
+                    .fromEpochSeconds("1634058260")
+            maxRecords = 20
+        }
 
     RedshiftClient { region = "us-west-2" }.use { redshiftClient ->
         val eventsResponse = redshiftClient.describeEvents(request)

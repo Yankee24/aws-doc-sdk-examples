@@ -1,11 +1,5 @@
-// snippet-sourcedescription:[CreateEnvironment.kt demonstrates how to create an AWS Elastic Beanstalk environment.]
-// snippet-keyword:[SDK for Kotlin]
-// snippet-service:[AWS Elastic Beanstalk]
-
-/*
-   Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
-   SPDX-License-Identifier: Apache-2.0
-*/
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 
 package com.aws.example
 
@@ -24,7 +18,6 @@ For more information, see the following documentation topic:
 https://docs.aws.amazon.com/sdk-for-kotlin/latest/developer-guide/setup.html
  */
 suspend fun main(args: Array<String>) {
-
     val usage = """
         Usage:
             <envName> <appName>
@@ -46,21 +39,25 @@ suspend fun main(args: Array<String>) {
 }
 
 // snippet-start:[eb.kotlin.create_env.main]
-suspend fun createEBEnvironment(envName: String?, appName: String?): String {
+suspend fun createEBEnvironment(
+    envName: String?,
+    appName: String?,
+): String {
+    val setting1 =
+        ConfigurationOptionSetting {
+            namespace = "aws:autoscaling:launchconfiguration"
+            optionName = "IamInstanceProfile"
+            value = "aws-elasticbeanstalk-ec2-role"
+        }
 
-    val setting1 = ConfigurationOptionSetting {
-        namespace = "aws:autoscaling:launchconfiguration"
-        optionName = "IamInstanceProfile"
-        value = "aws-elasticbeanstalk-ec2-role"
-    }
-
-    val applicationRequest = CreateEnvironmentRequest {
-        description = "An AWS Elastic Beanstalk environment created using the AWS SDK for Kotlin"
-        environmentName = envName
-        solutionStackName = "64bit Amazon Linux 2 v3.2.12 running Corretto 11"
-        applicationName = appName
-        optionSettings = listOf(setting1)
-    }
+    val applicationRequest =
+        CreateEnvironmentRequest {
+            description = "An AWS Elastic Beanstalk environment created using the AWS SDK for Kotlin"
+            environmentName = envName
+            solutionStackName = "64bit Amazon Linux 2 v3.2.12 running Corretto 11"
+            applicationName = appName
+            optionSettings = listOf(setting1)
+        }
 
     var envArn: String
     ElasticBeanstalkClient { region = "us-east-1" }.use { beanstalkClient ->

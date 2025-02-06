@@ -1,11 +1,5 @@
-// snippet-sourcedescription:[SendMessages.kt demonstrates how to send a message to an Amazon Simple Queue Service (Amazon SQS) queue.]
-// snippet-keyword:[AWS SDK for Kotlin]
-// snippet-service:[Amazon Simple Queue Service]
-
-/*
-   Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
-   SPDX-License-Identifier: Apache-2.0
-*/
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 
 package com.kotlin.sqs
 
@@ -25,7 +19,6 @@ For more information, see the following documentation topic:
 https://docs.aws.amazon.com/sdk-for-kotlin/latest/developer-guide/setup.html
  */
 suspend fun main(args: Array<String>) {
-
     val usage = """
         Usage: 
             <queueName> <tagName>
@@ -48,14 +41,18 @@ suspend fun main(args: Array<String>) {
 }
 
 // snippet-start:[sqs.kotlin.send_messages.main]
-suspend fun sendMessages(queueUrlVal: String, message: String) {
+suspend fun sendMessages(
+    queueUrlVal: String,
+    message: String,
+) {
     println("Sending multiple messages")
     println("\nSend message")
-    val sendRequest = SendMessageRequest {
-        queueUrl = queueUrlVal
-        messageBody = message
-        delaySeconds = 10
-    }
+    val sendRequest =
+        SendMessageRequest {
+            queueUrl = queueUrlVal
+            messageBody = message
+            delaySeconds = 10
+        }
 
     SqsClient { region = "us-east-1" }.use { sqsClient ->
         sqsClient.sendMessage(sendRequest)
@@ -66,20 +63,23 @@ suspend fun sendMessages(queueUrlVal: String, message: String) {
 suspend fun sendBatchMessages(queueUrlVal: String?) {
     println("Sending multiple messages")
 
-    val msg1 = SendMessageBatchRequestEntry {
-        id = "id1"
-        messageBody = "Hello from msg 1"
-    }
+    val msg1 =
+        SendMessageBatchRequestEntry {
+            id = "id1"
+            messageBody = "Hello from msg 1"
+        }
 
-    val msg2 = SendMessageBatchRequestEntry {
-        id = "id2"
-        messageBody = "Hello from msg 2"
-    }
+    val msg2 =
+        SendMessageBatchRequestEntry {
+            id = "id2"
+            messageBody = "Hello from msg 2"
+        }
 
-    val sendMessageBatchRequest = SendMessageBatchRequest {
-        queueUrl = queueUrlVal
-        entries = listOf(msg1, msg2)
-    }
+    val sendMessageBatchRequest =
+        SendMessageBatchRequest {
+            queueUrl = queueUrlVal
+            entries = listOf(msg1, msg2)
+        }
 
     SqsClient { region = "us-east-1" }.use { sqsClient ->
         sqsClient.sendMessageBatch(sendMessageBatchRequest)

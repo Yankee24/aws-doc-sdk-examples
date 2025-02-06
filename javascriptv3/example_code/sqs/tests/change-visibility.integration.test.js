@@ -1,7 +1,9 @@
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 import { describe, it, afterAll, beforeAll } from "vitest";
 
-import { getUniqueName } from "libs/utils/util-string.js";
-import { retry } from "libs/utils/util-timers.js";
+import { getUniqueName } from "@aws-doc-sdk-examples/lib/utils/util-string.js";
+import { retry } from "@aws-doc-sdk-examples/lib/utils/util-timers.js";
 
 import { main as deleteQueue } from "../actions/delete-queue.js";
 import { main as createQueue } from "../actions/create-queue.js";

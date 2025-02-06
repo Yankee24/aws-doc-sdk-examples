@@ -1,7 +1,7 @@
-# frozen_string_literal: true
-
 # Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 # SPDX-License-Identifier: Apache-2.0
+
+# frozen_string_literal: true
 
 # Purpose:
 # create_key.rb demonstrates how to create a AWS KMS key
@@ -9,7 +9,7 @@
 
 # snippet-start:[kms.ruby.createKey]
 
-require "aws-sdk-kms" # v2: require 'aws-sdk'
+require 'aws-sdk-kms' # v2: require 'aws-sdk'
 
 # Create a AWS KMS key.
 # As long we are only encrypting small amounts of data (4 KiB or less) directly,
@@ -22,8 +22,8 @@ client = Aws::KMS::Client.new
 resp = client.create_key({
                            tags: [
                              {
-                               tag_key: "CreatedBy",
-                               tag_value: "ExampleUser"
+                               tag_key: 'CreatedBy',
+                               tag_value: 'ExampleUser'
                              }
                            ]
                          })

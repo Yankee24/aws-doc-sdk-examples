@@ -1,7 +1,5 @@
-/*
-   Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
-   SPDX-License-Identifier: Apache-2.0
-*/
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 /*
  * Test types are indicated by the test label ending.
  *
@@ -21,7 +19,7 @@ namespace AwsDocTest {
         auto instanceID = getCachedInstanceID();
         ASSERT_FALSE(instanceID.empty()) << preconditionError << std::endl;
 
-        auto result = AwsDoc::EC2::RebootInstance(instanceID, *s_clientConfig);
+        auto result = AwsDoc::EC2::rebootInstance(instanceID, *s_clientConfig);
         ASSERT_TRUE(result);
     }
 

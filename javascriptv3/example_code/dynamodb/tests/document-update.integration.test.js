@@ -1,3 +1,5 @@
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 import { describe, it, expect } from "vitest";
 
 import { main } from "../actions/document-client/update.js";
@@ -12,7 +14,7 @@ describe("document-update", () => {
   tableSetupTeardown(
     tableName,
     [{ AttributeName: "Breed", AttributeType: "S" }],
-    [{ Breed: { S: "Labrador" }, Color: { S: "chocolate" } }]
+    [{ Breed: { S: "Labrador" }, Color: { S: "chocolate" } }],
   );
 
   it("should change 'chocolate' to 'black'", async () => {

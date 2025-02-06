@@ -1,3 +1,5 @@
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 import { describe, it, expect } from "vitest";
 import { DynamoDBDocumentClient, GetCommand } from "@aws-sdk/lib-dynamodb";
 import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
@@ -17,7 +19,7 @@ describe("update-item", () => {
         Flavor: { S: "Chocolate Chip Cookie Dough" },
         HasChunks: { BOOL: "true" },
       },
-    ]
+    ],
   );
 
   it("should change vanilla to not be chunky", async () => {
@@ -25,6 +27,7 @@ describe("update-item", () => {
     const command = new GetCommand({
       TableName: tableName,
       Key: { Flavor: "Vanilla" },
+      ConsistentRead: true,
     });
 
     const beforeResponse = await client.send(command);

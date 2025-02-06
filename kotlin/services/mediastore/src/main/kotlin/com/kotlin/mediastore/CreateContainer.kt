@@ -1,11 +1,5 @@
-// snippet-sourcedescription:[CreateContainer.kt demonstrates how to create an AWS Elemental MediaStore container.]
-// snippet-keyword:[AWS SDK for Kotlin]
-// snippet-service:[AWS Elemental MediaStore]
-
-/*
-   Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
-   SPDX-License-Identifier: Apache-2.0
-*/
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 
 package com.kotlin.mediastore
 
@@ -24,7 +18,6 @@ For more information, see the following documentation topic:
 https://docs.aws.amazon.com/sdk-for-kotlin/latest/developer-guide/setup.html
  */
 suspend fun main(args: Array<String>) {
-
     val usage = """
     
         Usage: <containerName> 
@@ -44,11 +37,11 @@ suspend fun main(args: Array<String>) {
 
 // snippet-start:[mediastore.kotlin.create_container.main]
 suspend fun createMediaContainer(containerNameVal: String?) {
-
     val sleepTime: Long = 10
-    val request = CreateContainerRequest {
-        containerName = containerNameVal
-    }
+    val request =
+        CreateContainerRequest {
+            containerName = containerNameVal
+        }
 
     MediaStoreClient { region = "us-west-2" }.use { mediaStoreClient ->
         val containerResponse = mediaStoreClient.createContainer(request)

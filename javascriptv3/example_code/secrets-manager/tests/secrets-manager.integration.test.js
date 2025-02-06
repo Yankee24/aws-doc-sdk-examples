@@ -1,10 +1,12 @@
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 import {
   CreateSecretCommand,
   DeleteSecretCommand,
   SecretsManagerClient,
 } from "@aws-sdk/client-secrets-manager";
-import {describe, it, expect, afterAll} from "vitest";
-import {getSecretValue} from "../actions/get-secret-value.js";
+import { describe, it, expect, afterAll } from "vitest";
+import { getSecretValue } from "../actions/get-secret-value.js";
 
 describe("secrets manager examples", () => {
   const client = new SecretsManagerClient({});
@@ -12,7 +14,7 @@ describe("secrets manager examples", () => {
 
   afterAll(async () => {
     for (const name of secretNames) {
-      await client.send(new DeleteSecretCommand({SecretId: name}));
+      await client.send(new DeleteSecretCommand({ SecretId: name }));
     }
   });
 

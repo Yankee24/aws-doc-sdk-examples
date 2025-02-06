@@ -1,7 +1,5 @@
-/*
-   Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
-   SPDX-License-Identifier: Apache-2.0
-*/
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 /**
  * Before running this C++ code example, set up your development environment, including your credentials.
  *
@@ -14,7 +12,7 @@
  *
  **/
 
-//snippet-start:[dynamodb.cpp.create_table.inc]
+// snippet-start:[dynamodb.cpp.create_table.inc]
 #include <aws/core/Aws.h>
 #include <aws/dynamodb/DynamoDBClient.h>
 #include <aws/dynamodb/model/AttributeDefinition.h>
@@ -23,7 +21,7 @@
 #include <aws/dynamodb/model/ProvisionedThroughput.h>
 #include <aws/dynamodb/model/ScalarAttributeType.h>
 #include <iostream>
-//snippet-end:[dynamodb.cpp.create_table.inc]
+// snippet-end:[dynamodb.cpp.create_table.inc]
 #include "dynamodb_samples.h"
 
 // snippet-start:[dynamodb.cpp.create_table.code]
@@ -70,9 +68,10 @@ bool AwsDoc::DynamoDB::createTable(const Aws::String &tableName,
     else {
         std::cerr << "Failed to create table: " << outcome.GetError().GetMessage()
                   << std::endl;
+        return false;
     }
 
-    return outcome.IsSuccess();
+    return waitTableActive(tableName, dynamoClient);
 }
 // snippet-end:[dynamodb.cpp.create_table.code]
 

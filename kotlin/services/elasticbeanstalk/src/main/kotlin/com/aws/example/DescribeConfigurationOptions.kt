@@ -1,11 +1,5 @@
-// snippet-sourcedescription:[DescribeConfigurationOptions.kt demonstrates how to describe configuration options.]
-// snippet-keyword:[SDK for Kotlin]
-// snippet-service:[AWS Elastic Beanstalk]
-
-/*
-   Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
-   SPDX-License-Identifier: Apache-2.0
-*/
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 
 package com.aws.example
 
@@ -25,7 +19,6 @@ https://docs.aws.amazon.com/sdk-for-kotlin/latest/developer-guide/setup.html
  */
 
 suspend fun main(args: Array<String>) {
-
     val usage = """
         Usage:
             <envName> 
@@ -45,15 +38,16 @@ suspend fun main(args: Array<String>) {
 
 // snippet-start:[eb.kotlin.describe_config.main]
 suspend fun getOptions(envName: String) {
+    val spec =
+        OptionSpecification {
+            namespace = "aws:ec2:instances"
+        }
 
-    val spec = OptionSpecification {
-        namespace = "aws:ec2:instances"
-    }
-
-    val request = DescribeConfigurationOptionsRequest {
-        environmentName = envName
-        options = listOf(spec)
-    }
+    val request =
+        DescribeConfigurationOptionsRequest {
+            environmentName = envName
+            options = listOf(spec)
+        }
 
     ElasticBeanstalkClient { region = "us-east-1" }.use { beanstalkClient ->
         val res = beanstalkClient.describeConfigurationOptions(request)
@@ -64,7 +58,6 @@ suspend fun getOptions(envName: String) {
             println("The name is $optionName")
             if (optionName != null) {
                 if (optionName.compareTo("InstanceTypes") == 0) {
-
                     val valueOptions = option.valueOptions
                     valueOptions?.forEach { value ->
                         println("The value is $value")

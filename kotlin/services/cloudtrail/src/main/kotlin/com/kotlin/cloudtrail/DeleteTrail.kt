@@ -1,12 +1,5 @@
-// snippet-comment:[These are tags for the AWS doc team's sample catalog. Do not remove.]
-// snippet-sourcedescription:[DeleteTrail.kt demonstrates how to delete a trail.]
-// snippet-keyword:[AWS SDK for Kotlin]
-// snippet-service:[AWS CloudTrail]
-
-/*
-   Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
-   SPDX-License-Identifier: Apache-2.0
-*/
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 
 package com.kotlin.cloudtrail
 
@@ -17,7 +10,6 @@ import kotlin.system.exitProcess
 // snippet-end:[cloudtrail.kotlin.delete_trail.import]
 
 suspend fun main(args: Array<String>) {
-
     val usage = """
 
     Usage:
@@ -38,10 +30,10 @@ suspend fun main(args: Array<String>) {
 
 // snippet-start:[cloudtrail.kotlin.delete_trail.main]
 suspend fun deleteSpecificTrail(trailName: String) {
-
-    val request = DeleteTrailRequest {
-        name = trailName
-    }
+    val request =
+        DeleteTrailRequest {
+            name = trailName
+        }
 
     CloudTrailClient { region = "us-east-1" }.use { cloudTrail ->
         cloudTrail.deleteTrail(request)

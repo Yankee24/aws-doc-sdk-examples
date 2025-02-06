@@ -1,10 +1,5 @@
-// snippet-sourcedescription:[PutRecord.kt demonstrates how to write a data record into a delivery stream.]
-// snippet-keyword:[AWS SDK for Kotlin]
-// snippet-service:[Amazon Kinesis Data Firehose]
-/*
-   Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
-   SPDX-License-Identifier: Apache-2.0
-*/
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 
 package com.kotlin.firehose
 
@@ -24,7 +19,6 @@ https://docs.aws.amazon.com/sdk-for-kotlin/latest/developer-guide/setup.html
  */
 
 suspend fun main(args: Array<String>) {
-
     val usage = """
         Usage:
             <textValue> <streamName> 
@@ -44,18 +38,22 @@ suspend fun main(args: Array<String>) {
 }
 
 // snippet-start:[firehose.kotlin.put_record.main]
-suspend fun putSingleRecord(textValue: String, streamName: String?) {
-
+suspend fun putSingleRecord(
+    textValue: String,
+    streamName: String?,
+) {
     val bytes = textValue.toByteArray()
 
-    val recordOb = Record {
-        data = bytes
-    }
+    val recordOb =
+        Record {
+            data = bytes
+        }
 
-    val request = PutRecordRequest {
-        deliveryStreamName = streamName
-        record = recordOb
-    }
+    val request =
+        PutRecordRequest {
+            deliveryStreamName = streamName
+            record = recordOb
+        }
 
     FirehoseClient { region = "us-west-2" }.use { firehoseClient ->
         val recordResponse = firehoseClient.putRecord(request)

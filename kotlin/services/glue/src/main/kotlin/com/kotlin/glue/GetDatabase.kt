@@ -1,10 +1,5 @@
-// snippet-sourcedescription:[GetDatabase.kt demonstrates how to get a database.]
-// snippet-keyword:[AWS SDK for Kotlin]
-// snippet-keyword:[AWS Glue]
-/*
-   Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
-   SPDX-License-Identifier: Apache-2.0
-*/
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 
 package com.kotlin.glue
 
@@ -23,7 +18,6 @@ https://docs.aws.amazon.com/sdk-for-kotlin/latest/developer-guide/setup.html
  */
 
 suspend fun main(args: Array<String>) {
-
     val usage = """
         
         Usage:
@@ -45,10 +39,10 @@ suspend fun main(args: Array<String>) {
 
 // snippet-start:[glue.kotlin.get_database.main]
 suspend fun getSpecificDatabase(databaseName: String?) {
-
-    val request = GetDatabaseRequest {
-        name = databaseName
-    }
+    val request =
+        GetDatabaseRequest {
+            name = databaseName
+        }
 
     GlueClient { region = "us-east-1" }.use { glueClient ->
         val response = glueClient.getDatabase(request)

@@ -1,15 +1,22 @@
 #!/bin/bash
+# Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+# SPDX-License-Identifier: Apache-2.0
 
 function runCommand() {
-  dt=$(date +%Y-%m-%d)
-  if [ $@ ] && [ $@ == 'integration' ]
-  then
+  if [ "$1" ] && [ "$1" == 'integration' ]; then
     kind='integration'
   else
     kind='unit'
   fi
-  echo Running $kind tests...
-  for d in ./*/ ; do /bin/bash -c "(cd '$d' && go test -tags=$@  -timeout=60m ./...)"; done
+  echo "Running $kind tests..."
+  for d in /"$2"/*/
+    do
+      (cd "$d" || exit
+      if [ -f go.mod ]; then
+        /bin/bash -c "(go test -tags='$1' -timeout=60m ./...)"
+      fi)
+    done
 }
 
-runCommand $1
+runCommand "$1" "gov2"
+runCommand "$1" "gov2/workflows"

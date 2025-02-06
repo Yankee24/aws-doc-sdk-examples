@@ -1,11 +1,5 @@
-// snippet-sourcedescription:[GetSamplingRules.kt demonstrates how to retrieve sampling rules.]
-// snippet-keyword:[SDK for Kotlin]
-// snippet-service:[AWS X-Ray Service]
-
-/*
-   Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
-   SPDX-License-Identifier: Apache-2.0
-*/
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 
 package com.kotlin.xray
 
@@ -22,13 +16,11 @@ For more information, see the following documentation topic:
 https://docs.aws.amazon.com/sdk-for-kotlin/latest/developer-guide/setup.html
  */
 suspend fun main() {
-
     getRules()
 }
 
 // snippet-start:[xray.kotlin_get_rules.main]
 suspend fun getRules() {
-
     XRayClient { region = "us-east-1" }.use { xRayClient ->
         val response = xRayClient.getSamplingRules(GetSamplingRulesRequest {})
         response.samplingRuleRecords?.forEach { record ->

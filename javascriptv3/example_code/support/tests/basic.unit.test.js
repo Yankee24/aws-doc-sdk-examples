@@ -1,12 +1,11 @@
-/*
- * Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
- * SPDX-License-Identifier: Apache-2.0
- */
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 
 import { describe, it, expect, vi, beforeEach } from "vitest";
 
 const send = vi.fn();
-const prompt = vi.fn();
+const selectMock = vi.fn();
+const confirmMock = vi.fn();
 
 vi.doMock("@aws-sdk/client-support", async () => {
   const actual = await vi.importActual("@aws-sdk/client-support");
@@ -18,9 +17,10 @@ vi.doMock("@aws-sdk/client-support", async () => {
   };
 });
 
-vi.doMock("inquirer", () => {
+vi.doMock("@inquirer/prompts", () => {
   return Promise.resolve({
-    default: { prompt },
+    select: selectMock,
+    confirm: confirmMock,
   });
 });
 
@@ -65,7 +65,7 @@ describe("Basic", () => {
       err.name = "SubscriptionRequiredException";
       send.mockRejectedValueOnce(err);
       await expect(verifyAccount()).rejects.toThrow(
-        "You must be subscribed to the AWS Support plan to use this feature."
+        "You must be subscribed to the AWS Support plan to use this feature.",
       );
     });
   });
@@ -78,7 +78,7 @@ describe("Basic", () => {
         code: "AmazonEC2",
       };
       send.mockResolvedValueOnce({ services: [] });
-      prompt.mockResolvedValueOnce({ selectedService: service });
+      selectMock.mockResolvedValueOnce(service);
 
       await expect(getService()).resolves.toEqual(service);
     });
@@ -88,7 +88,7 @@ describe("Basic", () => {
     it("should return the selected category", async () => {
       expect.assertions(1);
       const category = { name: "General Support", code: "GeneralSupport" };
-      prompt.mockResolvedValueOnce({ selectedCategory: category });
+      selectMock.mockResolvedValueOnce(category);
 
       await expect(getCategory({ categories: [] })).resolves.toEqual(category);
     });
@@ -99,7 +99,7 @@ describe("Basic", () => {
       expect.assertions(1);
       const severityLevel = { name: "low", code: "low" };
       send.mockResolvedValueOnce({ severityLevels: [] });
-      prompt.mockResolvedValueOnce({ selectedSeverityLevel: severityLevel });
+      selectMock.mockResolvedValueOnce(severityLevel);
 
       await expect(getSeverityLevel()).resolves.toEqual(severityLevel);
     });
@@ -115,7 +115,7 @@ describe("Basic", () => {
           selectedCategory: "",
           selectedService: "",
           selectedSeverityLevel: "",
-        })
+        }),
       ).resolves.toEqual("caseId");
     });
   });
@@ -135,7 +135,7 @@ describe("Basic", () => {
       send.mockResolvedValueOnce({ cases: [] });
 
       await expect(getTodaysOpenCases()).rejects.toThrow(
-        "Unexpected number of cases. Expected more than 0 open cases."
+        "Unexpected number of cases. Expected more than 0 open cases.",
       );
     });
   });
@@ -202,21 +202,21 @@ describe("Basic", () => {
       send.mockResolvedValueOnce({ attachment: "attachment" });
 
       await expect(getAttachment("attachmentId")).resolves.toEqual(
-        "attachment"
+        "attachment",
       );
     });
   });
 
   describe("resolveCase", () => {
     it("should resolve the case if the user confirms", async () => {
-      prompt.mockResolvedValueOnce({ shouldResolve: true });
+      confirmMock.mockResolvedValueOnce(true);
       send.mockResolvedValueOnce();
       await expect(resolveCase("case1")).resolves.toEqual(true);
       expect(send).toHaveBeenCalled();
     });
 
     it("should not resolve the case if the user does not confirm", async () => {
-      prompt.mockResolvedValueOnce({ shouldResolve: false });
+      confirmMock.mockResolvedValueOnce(false);
       await expect(resolveCase("case1")).resolves.toEqual(false);
       expect(send).not.toHaveBeenCalled();
     });
@@ -228,7 +228,7 @@ describe("Basic", () => {
       const case2 = { caseId: "case2", subject: "Test case 2" };
 
       expect(
-        await findCase({ caseId: "case1", cases: [case1, case2] })
+        await findCase({ caseId: "case1", cases: [case1, case2] }),
       ).toEqual(case1);
     });
 
@@ -237,7 +237,7 @@ describe("Basic", () => {
       const case2 = { caseId: "case2", subject: "One" };
       send.mockResolvedValueOnce({ cases: [case2] });
       expect(
-        findCase({ caseId: "case2", cases: [case1], nextToken: "abc" })
+        findCase({ caseId: "case2", cases: [case1], nextToken: "abc" }),
       ).resolves.toEqual(case2);
     });
 
@@ -245,7 +245,7 @@ describe("Basic", () => {
       const case1 = { caseId: "case1", subject: "One" };
       send.mockResolvedValueOnce({ cases: [] });
       expect(
-        findCase({ caseId: "special-case", cases: [case1], nextToken: "abc" })
+        findCase({ caseId: "special-case", cases: [case1], nextToken: "abc" }),
       ).rejects.toThrow("special-case not found");
     });
   });

@@ -1,10 +1,5 @@
-// snippet-sourcedescription:[CreateDataStream.kt demonstrates how to create an Amazon Kinesis data stream.]
-// snippet-keyword:[AWS SDK for Kotlin]
-// snippet-keyword:[Amazon Kinesis]
-/*
-   Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
-   SPDX-License-Identifier: Apache-2.0
-*/
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 
 package com.kotlin.kinesis
 // snippet-start:[kinesis.kotlin.create.import]
@@ -22,7 +17,6 @@ https://docs.aws.amazon.com/sdk-for-kotlin/latest/developer-guide/setup.html
  */
 
 suspend fun main(args: Array<String>) {
-
     val usage = """
     Usage: 
         <streamName>
@@ -42,11 +36,11 @@ suspend fun main(args: Array<String>) {
 
 // snippet-start:[kinesis.kotlin.create.main]
 suspend fun createStream(streamNameVal: String?) {
-
-    val request = CreateStreamRequest {
-        streamName = streamNameVal
-        shardCount = 1
-    }
+    val request =
+        CreateStreamRequest {
+            streamName = streamNameVal
+            shardCount = 1
+        }
 
     KinesisClient { region = "us-east-1" }.use { kinesisClient ->
         kinesisClient.createStream(request)

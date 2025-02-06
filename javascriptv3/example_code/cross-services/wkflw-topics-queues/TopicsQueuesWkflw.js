@@ -1,7 +1,5 @@
-/*
- * Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
- * SPDX-License-Identifier: Apache-2.0
- */
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 
 import {
   CreateQueueCommand,
@@ -52,7 +50,7 @@ export class TopicsQueuesWkflw {
    * @param {import('@aws-sdk/client-sns').SNSClient} snsClient
    * @param {import('@aws-sdk/client-sqs').SQSClient} sqsClient
    * @param {import('../../libs/prompter.js').Prompter} prompter
-   * @param {import('../../libs/slow-logger.js').Logger} logger
+   * @param {import('../../libs/logger.js').Logger} logger
    */
   constructor(snsClient, sqsClient, prompter, logger) {
     this.snsClient = snsClient;
@@ -72,7 +70,7 @@ export class TopicsQueuesWkflw {
     });
 
     if (this.isFifo) {
-      this.prompter.logSeparator(MESSAGES.headerDedup);
+      this.logger.logSeparator(MESSAGES.headerDedup);
       await this.logger.log(MESSAGES.deduplicationNotice);
       await this.logger.log(MESSAGES.deduplicationDescription);
       this.autoDedup = await this.prompter.confirm({
@@ -88,7 +86,7 @@ export class TopicsQueuesWkflw {
     });
     if (this.isFifo) {
       this.topicName += ".fifo";
-      this.prompter.logSeparator(MESSAGES.headerFifoNaming);
+      this.logger.logSeparator(MESSAGES.headerFifoNaming);
       await this.logger.log(MESSAGES.appendFifoNotice);
     }
 
@@ -99,7 +97,7 @@ export class TopicsQueuesWkflw {
           FifoTopic: this.isFifo ? "true" : "false",
           ...(this.autoDedup ? { ContentBasedDeduplication: "true" } : {}),
         },
-      })
+      }),
     );
 
     this.topicArn = response.TopicArn;
@@ -107,21 +105,21 @@ export class TopicsQueuesWkflw {
     await this.logger.log(
       MESSAGES.topicCreatedNotice
         .replace("${TOPIC_NAME}", this.topicName)
-        .replace("${TOPIC_ARN}", this.topicArn)
+        .replace("${TOPIC_ARN}", this.topicArn),
     );
   }
 
   async createQueues() {
     await this.logger.log(MESSAGES.createQueuesNotice);
     // Increase this number to add more queues.
-    let maxQueues = 2;
+    const maxQueues = 2;
 
     for (let i = 0; i < maxQueues; i++) {
       await this.logger.log(MESSAGES.queueCount.replace("${COUNT}", i + 1));
       let queueName = await this.prompter.input({
         message: MESSAGES.queueNamePrompt.replace(
           "${EXAMPLE_NAME}",
-          i === 0 ? "good-news" : "bad-news"
+          i === 0 ? "good-news" : "bad-news",
         ),
       });
 
@@ -134,14 +132,14 @@ export class TopicsQueuesWkflw {
         new CreateQueueCommand({
           QueueName: queueName,
           Attributes: { ...(this.isFifo ? { FifoQueue: "true" } : {}) },
-        })
+        }),
       );
 
       const { Attributes } = await this.sqsClient.send(
         new GetQueueAttributesCommand({
           QueueUrl: response.QueueUrl,
           AttributeNames: ["QueueArn"],
-        })
+        }),
       );
 
       this.queues.push({
@@ -154,7 +152,7 @@ export class TopicsQueuesWkflw {
         MESSAGES.queueCreatedNotice
           .replace("${QUEUE_NAME}", queueName)
           .replace("${QUEUE_URL}", response.QueueUrl)
-          .replace("${QUEUE_ARN}", Attributes.QueueArn)
+          .replace("${QUEUE_ARN}", Attributes.QueueArn),
       );
     }
   }
@@ -180,11 +178,11 @@ export class TopicsQueuesWkflw {
           ],
         },
         null,
-        2
+        2,
       );
 
       if (index !== 0) {
-        this.prompter.logSeparator();
+        this.logger.logSeparator();
       }
 
       await this.logger.log(MESSAGES.attachPolicyNotice);
@@ -192,7 +190,7 @@ export class TopicsQueuesWkflw {
       const addPolicy = await this.prompter.confirm({
         message: MESSAGES.addPolicyConfirmation.replace(
           "${QUEUE_NAME}",
-          queue.queueName
+          queue.queueName,
         ),
       });
 
@@ -203,15 +201,15 @@ export class TopicsQueuesWkflw {
             Attributes: {
               Policy: policy,
             },
-          })
+          }),
         );
         queue.policy = policy;
       } else {
         await this.logger.log(
           MESSAGES.policyNotAttachedNotice.replace(
             "${QUEUE_NAME}",
-            queue.queueName
-          )
+            queue.queueName,
+          ),
         );
       }
     }
@@ -236,7 +234,7 @@ export class TopicsQueuesWkflw {
         tones = await this.prompter.checkbox({
           message: MESSAGES.fifoFilterSelect.replace(
             "${QUEUE_NAME}",
-            queue.queueName
+            queue.queueName,
           ),
           choices: toneChoices,
         });
@@ -252,7 +250,7 @@ export class TopicsQueuesWkflw {
       }
 
       const { SubscriptionArn } = await this.snsClient.send(
-        new SubscribeCommand(subscribeParams)
+        new SubscribeCommand(subscribeParams),
       );
 
       this.subscriptionArns.push(SubscriptionArn);
@@ -261,7 +259,7 @@ export class TopicsQueuesWkflw {
         MESSAGES.queueSubscribedNotice
           .replace("${QUEUE_NAME}", queue.queueName)
           .replace("${TOPIC_NAME}", this.topicName)
-          .replace("${TONES}", tones.length ? tones.join(", ") : "none")
+          .replace("${TONES}", tones.length ? tones.join(", ") : "none"),
       );
     }
   }
@@ -272,7 +270,9 @@ export class TopicsQueuesWkflw {
       message: MESSAGES.publishMessagePrompt,
     });
 
-    let groupId, deduplicationId, choices;
+    let groupId;
+    let deduplicationId;
+    let choices;
 
     if (this.isFifo) {
       await this.logger.log(MESSAGES.groupIdNotice);
@@ -317,7 +317,7 @@ export class TopicsQueuesWkflw {
               },
             }
           : {}),
-      })
+      }),
     );
 
     const publishAnother = await this.prompter.confirm({
@@ -335,15 +335,15 @@ export class TopicsQueuesWkflw {
       const { Messages } = await this.sqsClient.send(
         new ReceiveMessageCommand({
           QueueUrl: queue.queueUrl,
-        })
+        }),
       );
 
       if (Messages) {
         await this.logger.log(
           MESSAGES.messagesReceivedNotice.replace(
             "${QUEUE_NAME}",
-            queue.queueName
-          )
+            queue.queueName,
+          ),
         );
         console.log(Messages);
 
@@ -354,14 +354,14 @@ export class TopicsQueuesWkflw {
               Id: message.MessageId,
               ReceiptHandle: message.ReceiptHandle,
             })),
-          })
+          }),
         );
       } else {
         await this.logger.log(
           MESSAGES.noMessagesReceivedNotice.replace(
             "${QUEUE_NAME}",
-            queue.queueName
-          )
+            queue.queueName,
+          ),
         );
       }
     }
@@ -378,19 +378,19 @@ export class TopicsQueuesWkflw {
   async destroyResources() {
     for (const subscriptionArn of this.subscriptionArns) {
       await this.snsClient.send(
-        new UnsubscribeCommand({ SubscriptionArn: subscriptionArn })
+        new UnsubscribeCommand({ SubscriptionArn: subscriptionArn }),
       );
     }
 
     for (const queue of this.queues) {
       await this.sqsClient.send(
-        new DeleteQueueCommand({ QueueUrl: queue.queueUrl })
+        new DeleteQueueCommand({ QueueUrl: queue.queueUrl }),
       );
     }
 
     if (this.topicArn) {
       await this.snsClient.send(
-        new DeleteTopicCommand({ TopicArn: this.topicArn })
+        new DeleteTopicCommand({ TopicArn: this.topicArn }),
       );
     }
   }
@@ -399,21 +399,21 @@ export class TopicsQueuesWkflw {
     console.clear();
 
     try {
-      this.prompter.logSeparator(MESSAGES.headerWelcome);
+      this.logger.logSeparator(MESSAGES.headerWelcome);
       await this.welcome();
-      this.prompter.logSeparator(MESSAGES.headerFifo);
+      this.logger.logSeparator(MESSAGES.headerFifo);
       await this.confirmFifo();
-      this.prompter.logSeparator(MESSAGES.headerCreateTopic);
+      this.logger.logSeparator(MESSAGES.headerCreateTopic);
       await this.createTopic();
-      this.prompter.logSeparator(MESSAGES.headerCreateQueues);
+      this.logger.logSeparator(MESSAGES.headerCreateQueues);
       await this.createQueues();
-      this.prompter.logSeparator(MESSAGES.headerAttachPolicy);
+      this.logger.logSeparator(MESSAGES.headerAttachPolicy);
       await this.attachQueueIamPolicies();
-      this.prompter.logSeparator(MESSAGES.headerSubscribeQueues);
+      this.logger.logSeparator(MESSAGES.headerSubscribeQueues);
       await this.subscribeQueuesToTopic();
-      this.prompter.logSeparator(MESSAGES.headerPublishMessage);
+      this.logger.logSeparator(MESSAGES.headerPublishMessage);
       await this.publishMessages();
-      this.prompter.logSeparator(MESSAGES.headerReceiveMessages);
+      this.logger.logSeparator(MESSAGES.headerReceiveMessages);
       await this.receiveAndDeleteMessages();
     } catch (err) {
       console.error(err);

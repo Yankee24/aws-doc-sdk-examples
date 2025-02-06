@@ -1,10 +1,5 @@
-// snippet-sourcedescription:[DynamoDBPartiQ.kt demonstrates how to work with PartiQL for Amazon DynamoDB.]
-// snippet-keyword:[AWS SDK for Kotlin]
-// snippet-service:[Amazon DynamoDB]
-/*
-   Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
-   SPDX-License-Identifier: Apache-2.0
-*/
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 
 package com.kotlin.dynamodb
 
@@ -28,7 +23,6 @@ import aws.sdk.kotlin.services.dynamodb.model.ExecuteStatementResponse
 
 // snippet-start:[dynamodb.kotlin.partiql.main]
 suspend fun main() {
-
     val ddb = DynamoDbClient { region = "us-east-1" }
     val parameters = mutableListOf<AttributeValue>()
     parameters.add(AttributeValue.S("Acme Band"))
@@ -41,22 +35,38 @@ suspend fun main() {
     }
 
     // Update an item in the Music table using the UPDATE PartiQL statement.
-    response = executeStatementRequest(ddb, "UPDATE Music SET AwardsWon=1 SET AwardDetail={'Grammys':[2020, 2018]}  where Artist=? and SongTitle=?", parameters)
+    response =
+        executeStatementRequest(
+            ddb,
+            "UPDATE Music SET AwardsWon=1 SET AwardDetail={'Grammys':[2020, 2018]}  where Artist=? and SongTitle=?",
+            parameters,
+        )
     if (response != null) {
         processResults(response)
     }
 
-    response = executeStatementRequest(ddb, "UPDATE Music SET AwardDetail.Grammys =LIST_APPEND(AwardDetail.Grammys,[2016])  where Artist=? and SongTitle=?", parameters)
+    response =
+        executeStatementRequest(
+            ddb,
+            "UPDATE Music SET AwardDetail.Grammys =LIST_APPEND(AwardDetail.Grammys,[2016])  where Artist=? and SongTitle=?",
+            parameters,
+        )
     if (response != null) {
         processResults(response)
     }
 
-    response = executeStatementRequest(ddb, "UPDATE Music SET BandMembers =<<'member1', 'member2'>> where Artist=? and SongTitle=?", parameters)
+    response =
+        executeStatementRequest(ddb, "UPDATE Music SET BandMembers =<<'member1', 'member2'>> where Artist=? and SongTitle=?", parameters)
     if (response != null) {
         processResults(response)
     }
 
-    response = executeStatementRequest(ddb, "UPDATE Music SET AwardDetail.Grammys =list_append(AwardDetail.Grammys,[2016])  where Artist=? and SongTitle=?", parameters)
+    response =
+        executeStatementRequest(
+            ddb,
+            "UPDATE Music SET AwardDetail.Grammys =list_append(AwardDetail.Grammys,[2016])  where Artist=? and SongTitle=?",
+            parameters,
+        )
     if (response != null) {
         processResults(response)
     }
@@ -71,12 +81,18 @@ suspend fun main() {
         processResults(response)
     }
 
-    response = executeStatementRequest(ddb, "UPDATE Music SET BandMembers =<<'member1', 'member2'>> where Artist=? and SongTitle=?", parameters)
+    response =
+        executeStatementRequest(ddb, "UPDATE Music SET BandMembers =<<'member1', 'member2'>> where Artist=? and SongTitle=?", parameters)
     if (response != null) {
         processResults(response)
     }
 
-    response = executeStatementRequest(ddb, "UPDATE Music SET BandMembers =set_add(BandMembers, <<'newmember'>>) where Artist=? and SongTitle=?", parameters)
+    response =
+        executeStatementRequest(
+            ddb,
+            "UPDATE Music SET BandMembers =set_add(BandMembers, <<'newmember'>>) where Artist=? and SongTitle=?",
+            parameters,
+        )
     if (response != null) {
         processResults(response)
     }
@@ -87,13 +103,13 @@ suspend fun main() {
 suspend fun executeStatementRequest(
     ddb: DynamoDbClient,
     statementVal: String,
-    parametersVal: List<AttributeValue>
+    parametersVal: List<AttributeValue>,
 ): ExecuteStatementResponse? {
-
-    val request = ExecuteStatementRequest {
-        statement = statementVal
-        parameters = parametersVal
-    }
+    val request =
+        ExecuteStatementRequest {
+            statement = statementVal
+            parameters = parametersVal
+        }
 
     return ddb.executeStatement(request)
 }

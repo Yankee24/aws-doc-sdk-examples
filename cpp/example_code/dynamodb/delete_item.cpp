@@ -1,7 +1,5 @@
-/*
-   Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
-   SPDX-License-Identifier: Apache-2.0
-*/
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 /**
  * Before running this C++ code example, set up your development environment, including your credentials.
  *
@@ -21,7 +19,7 @@
 #include <iostream>
 #include "dynamodb_samples.h"
 
-//snippet-start:[cpp.example_code.dynamodb.delete_item]
+// snippet-start:[cpp.example_code.dynamodb.delete_item]
 //! Delete an item from an Amazon DynamoDB table.
 /*!
   \sa deleteItem()
@@ -52,11 +50,12 @@ bool AwsDoc::DynamoDB::deleteItem(const Aws::String &tableName,
     else {
         std::cerr << "Failed to delete item: " << outcome.GetError().GetMessage()
                   << std::endl;
+        return false;
     }
 
-    return outcome.IsSuccess();
+    return waitTableActive(tableName, dynamoClient);
 }
-//snippet-end:[cpp.example_code.dynamodb.delete_item]
+// snippet-end:[cpp.example_code.dynamodb.delete_item]
 
 /*
  *

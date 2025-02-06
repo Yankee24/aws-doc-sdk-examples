@@ -1,10 +1,8 @@
-/*
- * Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
- * SPDX-License-Identifier: Apache-2.0
- */
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 
 // snippet-start:[javascript.v3.sagemaker.wkflw.pipeline]
-import { retry, wait } from "libs/utils/util-timers.js";
+import { retry, wait } from "@aws-doc-sdk-examples/lib/utils/util-timers.js";
 import {
   attachPolicy,
   configureLambdaSQSEventSource,
@@ -42,8 +40,8 @@ export class SageMakerPipelinesWkflw {
   cleanUpFunctions = [];
 
   /**
-   * @param {import("libs/prompter.js").Prompter} prompter
-   * @param {import("libs/slow-logger.js").Logger} logger
+   * @param {import("@aws-doc-sdk-examples/lib/prompter.js").Prompter} prompter
+   * @param {import("@aws-doc-sdk-examples/lib/logger.js").Logger} logger
    * @param {{ IAM: import("@aws-sdk/client-iam").IAMClient, Lambda: import("@aws-sdk/client-lambda").LambdaClient, SageMaker: import("@aws-sdk/client-sagemaker").SageMakerClient, S3: import("@aws-sdk/client-s3").S3Client, SQS: import("@aws-sdk/client-sqs").SQSClient }} clients
    */
   constructor(prompter, logger, clients) {
@@ -59,33 +57,37 @@ export class SageMakerPipelinesWkflw {
       console.error(err);
       throw err;
     } finally {
-      // Run all of the clean up functions. If any fail, we log the error and continue.
-      // This ensures all clean up functions are run.
-      this.prompter.logSeparator();
+      this.logger.logSeparator();
       const doCleanUp = await this.prompter.confirm({
         message: "Clean up resources?",
       });
       if (doCleanUp) {
-        for (let i = this.cleanUpFunctions.length - 1; i >= 0; i--) {
-          await retry(
-            { intervalInMs: 1000, maxRetries: 60, swallowError: true },
-            this.cleanUpFunctions[i]
-          );
-        }
+        await this.cleanUp();
       }
     }
   }
 
+  async cleanUp() {
+    // Run all of the clean up functions. If any fail, we log the error and continue.
+    // This ensures all clean up functions are run.
+    for (let i = this.cleanUpFunctions.length - 1; i >= 0; i--) {
+      await retry(
+        { intervalInMs: 1000, maxRetries: 60, swallowError: true },
+        this.cleanUpFunctions[i],
+      );
+    }
+  }
+
   async startWorkflow() {
-    this.prompter.logSeparator(MESSAGES.greetingHeader);
+    this.logger.logSeparator(MESSAGES.greetingHeader);
     await this.logger.log(MESSAGES.greeting);
 
-    this.prompter.logSeparator();
+    this.logger.logSeparator();
     await this.logger.log(
       MESSAGES.creatingRole.replace(
         "${ROLE_NAME}",
-        this.names.LAMBDA_EXECUTION_ROLE
-      )
+        this.names.LAMBDA_EXECUTION_ROLE,
+      ),
     );
 
     // Create an IAM role that will be assumed by the AWS Lambda function. This function
@@ -101,17 +103,17 @@ export class SageMakerPipelinesWkflw {
     await this.logger.log(
       MESSAGES.roleCreated.replace(
         "${ROLE_NAME}",
-        this.names.LAMBDA_EXECUTION_ROLE
-      )
+        this.names.LAMBDA_EXECUTION_ROLE,
+      ),
     );
 
-    this.prompter.logSeparator();
+    this.logger.logSeparator();
 
     await this.logger.log(
       MESSAGES.creatingRole.replace(
         "${ROLE_NAME}",
-        this.names.SAGE_MAKER_EXECUTION_ROLE
-      )
+        this.names.SAGE_MAKER_EXECUTION_ROLE,
+      ),
     );
 
     // Create an IAM role that will be assumed by the SageMaker pipeline. The pipeline
@@ -122,17 +124,18 @@ export class SageMakerPipelinesWkflw {
     } = await createSagemakerRole({
       iamClient: this.clients.IAM,
       name: this.names.SAGE_MAKER_EXECUTION_ROLE,
+      wait,
     });
     this.cleanUpFunctions.push(pipelineExecutionRoleCleanUp);
 
     await this.logger.log(
       MESSAGES.roleCreated.replace(
         "${ROLE_NAME}",
-        this.names.SAGE_MAKER_EXECUTION_ROLE
-      )
+        this.names.SAGE_MAKER_EXECUTION_ROLE,
+      ),
     );
 
-    this.prompter.logSeparator();
+    this.logger.logSeparator();
 
     // Create an IAM policy that allows the AWS Lambda function to invoke SageMaker APIs.
     const {
@@ -152,7 +155,7 @@ export class SageMakerPipelinesWkflw {
     await this.logger.log(
       MESSAGES.attachPolicy
         .replace("${POLICY_NAME}", this.names.LAMBDA_EXECUTION_ROLE_POLICY)
-        .replace("${ROLE_NAME}", this.names.LAMBDA_EXECUTION_ROLE)
+        .replace("${ROLE_NAME}", this.names.LAMBDA_EXECUTION_ROLE),
     );
 
     await this.prompter.checkContinue();
@@ -167,7 +170,7 @@ export class SageMakerPipelinesWkflw {
 
     await this.logger.log(MESSAGES.policyAttached);
 
-    this.prompter.logSeparator();
+    this.logger.logSeparator();
 
     // Create Lambda layer for SageMaker packages.
     const { versionArn: layerVersionArn, cleanUp: lambdaLayerCleanUp } =
@@ -180,8 +183,8 @@ export class SageMakerPipelinesWkflw {
     await this.logger.log(
       MESSAGES.creatingFunction.replace(
         "${FUNCTION_NAME}",
-        this.names.LAMBDA_FUNCTION
-      )
+        this.names.LAMBDA_FUNCTION,
+      ),
     );
 
     // Create the Lambda function with the execution role.
@@ -197,14 +200,14 @@ export class SageMakerPipelinesWkflw {
     await this.logger.log(
       MESSAGES.functionCreated.replace(
         "${FUNCTION_NAME}",
-        this.names.LAMBDA_FUNCTION
-      )
+        this.names.LAMBDA_FUNCTION,
+      ),
     );
 
-    this.prompter.logSeparator();
+    this.logger.logSeparator();
 
     await this.logger.log(
-      MESSAGES.creatingSQSQueue.replace("${QUEUE_NAME}", this.names.SQS_QUEUE)
+      MESSAGES.creatingSQSQueue.replace("${QUEUE_NAME}", this.names.SQS_QUEUE),
     );
 
     // Create an SQS queue for the SageMaker pipeline.
@@ -219,15 +222,15 @@ export class SageMakerPipelinesWkflw {
     this.cleanUpFunctions.push(queueCleanUp);
 
     await this.logger.log(
-      MESSAGES.sqsQueueCreated.replace("${QUEUE_NAME}", this.names.SQS_QUEUE)
+      MESSAGES.sqsQueueCreated.replace("${QUEUE_NAME}", this.names.SQS_QUEUE),
     );
 
-    this.prompter.logSeparator();
+    this.logger.logSeparator();
 
     await this.logger.log(
       MESSAGES.configuringLambdaSQSEventSource
         .replace("${LAMBDA_NAME}", this.names.LAMBDA_FUNCTION)
-        .replace("${QUEUE_NAME}", this.names.SQS_QUEUE)
+        .replace("${QUEUE_NAME}", this.names.SQS_QUEUE),
     );
 
     // Configure the SQS queue as an event source for the Lambda.
@@ -244,10 +247,10 @@ export class SageMakerPipelinesWkflw {
     await this.logger.log(
       MESSAGES.lambdaSQSEventSourceConfigured
         .replace("${LAMBDA_NAME}", this.names.LAMBDA_FUNCTION)
-        .replace("${QUEUE_NAME}", this.names.SQS_QUEUE)
+        .replace("${QUEUE_NAME}", this.names.SQS_QUEUE),
     );
 
-    this.prompter.logSeparator();
+    this.logger.logSeparator();
 
     // Create an IAM policy that allows the SageMaker pipeline to invoke AWS Lambda
     // and send messages to the Amazon SQS queue.
@@ -269,7 +272,7 @@ export class SageMakerPipelinesWkflw {
     await this.logger.log(
       MESSAGES.attachPolicy
         .replace("${POLICY_NAME}", this.names.SAGE_MAKER_EXECUTION_ROLE_POLICY)
-        .replace("${ROLE_NAME}", this.names.SAGE_MAKER_EXECUTION_ROLE)
+        .replace("${ROLE_NAME}", this.names.SAGE_MAKER_EXECUTION_ROLE),
     );
 
     await this.prompter.checkContinue();
@@ -287,13 +290,13 @@ export class SageMakerPipelinesWkflw {
 
     await this.logger.log(MESSAGES.policyAttached);
 
-    this.prompter.logSeparator();
+    this.logger.logSeparator();
 
     await this.logger.log(
       MESSAGES.creatingPipeline.replace(
         "${PIPELINE_NAME}",
-        this.names.SAGE_MAKER_PIPELINE
-      )
+        this.names.SAGE_MAKER_PIPELINE,
+      ),
     );
 
     // Create the SageMaker pipeline.
@@ -308,14 +311,14 @@ export class SageMakerPipelinesWkflw {
     await this.logger.log(
       MESSAGES.pipelineCreated.replace(
         "${PIPELINE_NAME}",
-        this.names.SAGE_MAKER_PIPELINE
-      )
+        this.names.SAGE_MAKER_PIPELINE,
+      ),
     );
 
-    this.prompter.logSeparator();
+    this.logger.logSeparator();
 
     await this.logger.log(
-      MESSAGES.creatingS3Bucket.replace("${BUCKET_NAME}", this.names.S3_BUCKET)
+      MESSAGES.creatingS3Bucket.replace("${BUCKET_NAME}", this.names.S3_BUCKET),
     );
 
     // Create an S3 bucket for storing inputs and outputs.
@@ -326,16 +329,16 @@ export class SageMakerPipelinesWkflw {
     this.cleanUpFunctions.push(s3BucketCleanUp);
 
     await this.logger.log(
-      MESSAGES.s3BucketCreated.replace("${BUCKET_NAME}", this.names.S3_BUCKET)
+      MESSAGES.s3BucketCreated.replace("${BUCKET_NAME}", this.names.S3_BUCKET),
     );
 
-    this.prompter.logSeparator();
+    this.logger.logSeparator();
 
     await this.logger.log(
       MESSAGES.uploadingInputData.replace(
         "${BUCKET_NAME}",
-        this.names.S3_BUCKET
-      )
+        this.names.S3_BUCKET,
+      ),
     );
 
     // Upload CSV Lat/Long data to S3.
@@ -346,7 +349,7 @@ export class SageMakerPipelinesWkflw {
 
     await this.logger.log(MESSAGES.inputDataUploaded);
 
-    this.prompter.logSeparator();
+    this.logger.logSeparator();
 
     await this.prompter.checkContinue(MESSAGES.executePipeline);
 
@@ -363,9 +366,10 @@ export class SageMakerPipelinesWkflw {
     await waitForPipelineComplete({
       arn: pipelineExecutionArn,
       sagemakerClient: this.clients.SageMaker,
+      wait,
     });
 
-    this.prompter.logSeparator();
+    this.logger.logSeparator();
 
     await this.logger.log(MESSAGES.outputDelay);
 
@@ -376,10 +380,10 @@ export class SageMakerPipelinesWkflw {
       getObject({
         bucket: this.names.S3_BUCKET,
         s3Client: this.clients.S3,
-      })
+      }),
     );
 
-    this.prompter.logSeparator();
+    this.logger.logSeparator();
     await this.logger.log(MESSAGES.outputDataRetrieved);
     console.log(output.split("\n").slice(0, 6).join("\n"));
   }

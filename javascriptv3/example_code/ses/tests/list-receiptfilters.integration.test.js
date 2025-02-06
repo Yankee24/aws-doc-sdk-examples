@@ -1,6 +1,8 @@
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 import { describe, beforeAll, afterAll, it, expect } from "vitest";
 
-import { getUniqueName } from "../../libs/utils/util-string.js";
+import { getUniqueName } from "@aws-doc-sdk-examples/lib/utils/util-string.js";
 import { run } from "../src/ses_listreceiptfilters";
 import { createReceiptFilter, deleteReceiptFilter } from "../src/libs/sesUtils";
 
@@ -18,7 +20,7 @@ describe("ses_listreceiptfilters", () => {
   it("should list existing receipt filters", async () => {
     const result = await run();
     const filterMatch = result.Filters.find(
-      (f) => f.Name === RECEIPT_FILTER_NAME
+      (f) => f.Name === RECEIPT_FILTER_NAME,
     );
     expect(filterMatch).toBeTruthy();
   });

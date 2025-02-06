@@ -1,6 +1,7 @@
-/* Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
-SPDX-License-Identifier: Apache-2.0
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 
+/*
 This example is in the 'AWS SDK for JavaScript v3 Developer Guide' at
 https://docs.aws.amazon.com/cognito/latest/developerguide/user-pool-lambda-create-auth-challenge.html.
 
@@ -31,5 +32,5 @@ const handler = async (event) => {
   return event;
 };
 
-export { handler }
+export { handler };
 // snippet-end:[javascript.v3.cognito.scenarios.lambda-triggers.CreateAuthChallenge]

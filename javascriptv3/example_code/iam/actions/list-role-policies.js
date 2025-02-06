@@ -1,9 +1,7 @@
-/*
- * Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
- * SPDX-License-Identifier: Apache-2.0
- */
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 
-import { fileURLToPath } from "url";
+import { fileURLToPath } from "node:url";
 
 // snippet-start:[iam.JavaScript.listrolepoliciesv3]
 import { ListRolePoliciesCommand, IAMClient } from "@aws-sdk/client-iam";
@@ -35,7 +33,7 @@ export async function* listRolePolicies(roleName) {
           RoleName: roleName,
           MaxItems: 10,
           Marker: response.Marker,
-        })
+        }),
       );
     } else {
       break;

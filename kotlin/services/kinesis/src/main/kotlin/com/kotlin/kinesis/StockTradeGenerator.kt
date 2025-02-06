@@ -1,10 +1,5 @@
-// snippet-sourcedescription:[StockTradeGenerator.kt is a helper class.]
-// snippet-keyword:[AWS SDK for Kotlin]
-// snippet-keyword:[Amazon Kinesis]
-/*
-   Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
-   SPDX-License-Identifier: Apache-2.0
-*/
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 package com.kotlin.kinesis
 
 import com.kotlin.kinesis.StockTrade.TradeType
@@ -18,7 +13,6 @@ import kotlin.collections.ArrayList
  *
  */
 class StockTradeGenerator {
-
     var randomTrade: StockTrade = StockTrade()
 
     companion object {
@@ -68,7 +62,6 @@ class StockTradeGenerator {
      * Return a random stock trade with a unique id every time.
      */
     fun getSampleData(): StockTrade {
-
         // pick a random stock
         val stockPrice = STOCK_PRICES[random.nextInt(STOCK_PRICES.size)]
         val deviation = (random.nextDouble() - 0.5) * 2.0 * MAX_DEVIATION
@@ -87,5 +80,8 @@ class StockTradeGenerator {
         return StockTrade(stockPrice.tickerSymbol, tradeType, price, quantity, id.getAndIncrement())
     }
 
-    private class StockPrice constructor(var tickerSymbol: String, var price: Double)
+    private class StockPrice constructor(
+        var tickerSymbol: String,
+        var price: Double,
+    )
 }

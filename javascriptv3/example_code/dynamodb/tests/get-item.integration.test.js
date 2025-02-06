@@ -1,3 +1,5 @@
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 import { describe, it, expect } from "vitest";
 
 import { main } from "../actions/get-item.js";
@@ -14,7 +16,7 @@ describe("get-item", () => {
         AttributeType: "N",
       },
     ],
-    [{ TreatId: { N: "101" } }]
+    [{ TreatId: { N: "101" } }],
   );
 
   it("should return the requested item", async () => {

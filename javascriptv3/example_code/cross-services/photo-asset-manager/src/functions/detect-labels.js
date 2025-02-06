@@ -1,7 +1,5 @@
-/*
- * Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
- * SPDX-License-Identifier: Apache-2.0
- */
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 
 import {
   RekognitionClient,
@@ -39,7 +37,7 @@ const detect = async (bucket, key) => {
   }
 
   return response.Labels.filter((label) => label.Confidence >= 95).map(
-    (label) => label.Name
+    (label) => label.Name,
   );
 };
 

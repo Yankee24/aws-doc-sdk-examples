@@ -1,4 +1,6 @@
-import {describe, it, expect, vi} from "vitest";
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
+import { describe, it, expect, vi } from "vitest";
 
 const send = vi.fn(() => Promise.resolve());
 
@@ -12,7 +14,7 @@ vi.doMock("@aws-sdk/client-translate", async () => {
   };
 });
 
-const {handler} = await import("../src/index.js");
+const { handler } = await import("../src/index.js");
 
 describe("translate-text-handler", () => {
   it("should return the the translated text", async () => {
@@ -24,6 +26,6 @@ describe("translate-text-handler", () => {
       extracted_text: "J'adore.",
       source_language_code: "fr",
     });
-    expect(response).toEqual({translated_text: "I love you."});
+    expect(response).toEqual({ translated_text: "I love you." });
   });
 });

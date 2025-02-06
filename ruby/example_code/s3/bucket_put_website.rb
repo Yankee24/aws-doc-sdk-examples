@@ -6,7 +6,7 @@
 # Shows how to configure an Amazon Simple Storage Service (Amazon S3) bucket as a static website.
 
 # snippet-start:[ruby.example_code.s3.PutBucketWebsite]
-require "aws-sdk-s3"
+require 'aws-sdk-s3'
 
 # Wraps Amazon S3 bucket website actions.
 class BucketWebsiteWrapper
@@ -36,8 +36,9 @@ class BucketWebsiteWrapper
   end
 end
 
+# Example usage:
 def run_demo
-  bucket_name = "doc-example-bucket"
+  bucket_name = "amzn-s3-demo-bucket"
   index_document = "index.html"
   error_document = "404.html"
 

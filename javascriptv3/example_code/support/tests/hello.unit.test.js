@@ -1,7 +1,5 @@
-/*
- * Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
- * SPDX-License-Identifier: Apache-2.0
- */
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 
 import { describe, it, expect, vi, beforeEach } from "vitest";
 
@@ -38,7 +36,7 @@ describe("hello service", () => {
     await main();
 
     expect(spy).toHaveBeenCalledWith(
-      "Hello, AWS Support! There are 2 services available."
+      "Hello, AWS Support! There are 2 services available.",
     );
   });
 
@@ -46,8 +44,8 @@ describe("hello service", () => {
     // Mock the SupportClient to throw an error.
     send.mockRejectedValue(
       new Error(
-        "You must be subscribed to the AWS Support plan to use this feature."
-      )
+        "You must be subscribed to the AWS Support plan to use this feature.",
+      ),
     );
 
     const spy = vi.spyOn(console, "error");
@@ -56,7 +54,7 @@ describe("hello service", () => {
 
     expect(spy).toHaveBeenCalledWith(
       "Failed to get service count: ",
-      "You must be subscribed to the AWS Support plan to use this feature."
+      "You must be subscribed to the AWS Support plan to use this feature.",
     );
   });
 });

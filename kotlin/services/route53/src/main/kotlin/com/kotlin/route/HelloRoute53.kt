@@ -1,10 +1,5 @@
-// snippet-sourcedescription:[HelloRoute53.kt demonstrates how to get started using the Route53DomainsClient.]
-// snippet-keyword:[AWS SDK for Kotlin]
-// snippet-service:[Amazon Route 53]
-/*
-   Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
-   SPDX-License-Identifier: Apache-2.0
-*/
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 package com.kotlin.route
 
 import aws.sdk.kotlin.services.route53domains.Route53DomainsClient
@@ -14,6 +9,7 @@ import kotlinx.coroutines.flow.transform
 import kotlin.system.exitProcess
 
 // snippet-start:[route.kotlin.hello.main]
+
 /**
  Before running this Kotlin code example, set up your development environment,
  including your credentials.
@@ -41,13 +37,15 @@ suspend fun main(args: Array<String>) {
 }
 
 suspend fun listPricesPaginated(domainType: String) {
-    val pricesRequest = ListPricesRequest {
-        maxItems = 10
-        tld = domainType
-    }
+    val pricesRequest =
+        ListPricesRequest {
+            maxItems = 10
+            tld = domainType
+        }
 
     Route53DomainsClient { region = "us-east-1" }.use { route53DomainsClient ->
-        route53DomainsClient.listPricesPaginated(pricesRequest)
+        route53DomainsClient
+            .listPricesPaginated(pricesRequest)
             .transform { it.prices?.forEach { obj -> emit(obj) } }
             .collect { pr ->
                 println("Registration: ${pr.registrationPrice} ${pr.registrationPrice?.currency}")

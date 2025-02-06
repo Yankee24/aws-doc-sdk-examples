@@ -1,6 +1,7 @@
-/* Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
-SPDX-License-Identifier: Apache-2.0
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 
+/*
 ABOUT THIS NODE.JS EXAMPLE: This example works with the AWS SDK for JavaScript version 3 (v3),
 which is available at https://github.com/aws/aws-sdk-js-v3. This example is in the 'AWS SDK for JavaScript v3 Developer Guide' at
 https://docs.aws.amazon.com/sdk-for-javascript/v3/developer-guide//ses-examples-sending-email.html.
@@ -14,7 +15,10 @@ node ses_sendbulktemplatedemail.js
  */
 // snippet-start:[ses.JavaScript.email.sendBulkTemplatedEmailV3]
 import { SendBulkTemplatedEmailCommand } from "@aws-sdk/client-ses";
-import { getUniqueName, postfix } from "../../libs/utils/util-string.js";
+import {
+  getUniqueName,
+  postfix,
+} from "@aws-doc-sdk-examples/lib/utils/util-string.js";
 import { sesClient } from "./libs/sesClient.js";
 
 /**
@@ -63,13 +67,17 @@ const createBulkReminderEmailCommand = (users, templateName) => {
 const run = async () => {
   const sendBulkTemplateEmailCommand = createBulkReminderEmailCommand(
     USERS,
-    TEMPLATE_NAME
+    TEMPLATE_NAME,
   );
   try {
     return await sesClient.send(sendBulkTemplateEmailCommand);
-  } catch (err) {
-    console.log("Failed to send bulk template email", err);
-    return err;
+  } catch (caught) {
+    if (caught instanceof Error && caught.name === "MessageRejected") {
+      /** @type { import('@aws-sdk/client-ses').MessageRejected} */
+      const messageRejectedError = caught;
+      return messageRejectedError;
+    }
+    throw caught;
   }
 };
 // snippet-end:[ses.JavaScript.email.sendBulkTemplatedEmailV3]

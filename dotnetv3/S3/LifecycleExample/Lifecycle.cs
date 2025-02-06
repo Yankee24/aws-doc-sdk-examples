@@ -1,11 +1,6 @@
 ﻿// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
-// SPDX-License-Identifier:  Apache-2.0
+// SPDX-License-Identifier: Apache-2.0
 
-/// <summary>
-/// This example shows how to work with Amazon Simple Storage Service
-/// (Amazon S3) bucket lifecycle settings. It was created with the AWS SDK
-/// for .NET version 3.7 and .NET Core 5.0.
-/// </summary>
 namespace LifecycleExample
 {
     // snippet-start:[S3.dotnetv3.LifecycleExample]
@@ -15,6 +10,10 @@ namespace LifecycleExample
     using Amazon.S3;
     using Amazon.S3.Model;
 
+    /// <summary>
+    /// This example shows how to work with Amazon Simple Storage Service
+    /// (Amazon S3) bucket lifecycle settings.
+    /// </summary>
     public class Lifecycle
     {
         public static async Task Main()
@@ -25,7 +24,7 @@ namespace LifecycleExample
             // should look like this:
             //      RegionEndpoint.USWest2
             var client = new AmazonS3Client();
-            const string BucketName = "doc-example-bucket";
+            const string BucketName = "amzn-s3-demo-bucket";
 
             await AddUpdateDeleteLifecycleConfigAsync(client, BucketName);
         }

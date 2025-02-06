@@ -1,11 +1,5 @@
-// snippet-sourcedescription:[CreateDataSet.kt demonstrates how to create a data set for the Amazon Forecast service.]
-// snippet-keyword:[AWS SDK for Kotlin]
-// snippet-service:[Amazon Forecast]
-
-/*
-   Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
-   SPDX-License-Identifier: Apache-2.0
-*/
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 
 package com.kotlin.forecast
 
@@ -29,7 +23,6 @@ https://docs.aws.amazon.com/sdk-for-kotlin/latest/developer-guide/setup.html
  */
 
 suspend fun main(args: Array<String>) {
-
     val usage = """
     Usage:
         <name>  
@@ -50,18 +43,19 @@ suspend fun main(args: Array<String>) {
 
 // snippet-start:[forecast.kotlin.create_forecast_dataset.main]
 suspend fun createForecastDataSet(name: String?): String? {
+    val schemaOb =
+        Schema {
+            attributes = getSchema()
+        }
 
-    val schemaOb = Schema {
-        attributes = getSchema()
-    }
-
-    val request = CreateDatasetRequest {
-        datasetName = name
-        domain = Domain.fromValue("CUSTOM")
-        datasetType = DatasetType.fromValue("RELATED_TIME_SERIES")
-        dataFrequency = "D"
-        schema = schemaOb
-    }
+    val request =
+        CreateDatasetRequest {
+            datasetName = name
+            domain = Domain.fromValue("CUSTOM")
+            datasetType = DatasetType.fromValue("RELATED_TIME_SERIES")
+            dataFrequency = "D"
+            schema = schemaOb
+        }
 
     ForecastClient { region = "us-west-2" }.use { forecast ->
         val response = forecast.createDataset(request)
@@ -71,23 +65,25 @@ suspend fun createForecastDataSet(name: String?): String? {
 
 // Create a SchemaAttribute list required to create a data set.
 private fun getSchema(): MutableList<SchemaAttribute> {
-
     val schemaList = mutableListOf<SchemaAttribute>()
 
-    val att1 = SchemaAttribute {
-        attributeName = "item_id"
-        attributeType = AttributeType.fromValue("string")
-    }
+    val att1 =
+        SchemaAttribute {
+            attributeName = "item_id"
+            attributeType = AttributeType.fromValue("string")
+        }
 
-    val att2 = SchemaAttribute {
-        attributeName = "timestamp"
-        attributeType = AttributeType.fromValue("timestamp")
-    }
+    val att2 =
+        SchemaAttribute {
+            attributeName = "timestamp"
+            attributeType = AttributeType.fromValue("timestamp")
+        }
 
-    val att3 = SchemaAttribute {
-        attributeName = "target_value"
-        attributeType = AttributeType.fromValue("float")
-    }
+    val att3 =
+        SchemaAttribute {
+            attributeName = "target_value"
+            attributeType = AttributeType.fromValue("float")
+        }
 
     // Push the SchemaAttribute objects to the List.
     schemaList.add(att1)

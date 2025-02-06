@@ -1,9 +1,7 @@
-/*
- * Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
- * SPDX-License-Identifier: Apache-2.0
- */
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 
-import { fileURLToPath } from "url";
+import { fileURLToPath } from "node:url";
 
 // snippet-start:[sns.JavaScript.SMS.publishV3]
 import { PublishCommand } from "@aws-sdk/client-sns";
@@ -16,14 +14,14 @@ import { snsClient } from "../libs/snsClient.js";
  */
 export const publish = async (
   message = "Hello from SNS!",
-  phoneNumber = "+15555555555"
+  phoneNumber = "+15555555555",
 ) => {
   const response = await snsClient.send(
     new PublishCommand({
       Message: message,
       // One of PhoneNumber, TopicArn, or TargetArn must be specified.
       PhoneNumber: phoneNumber,
-    })
+    }),
   );
   console.log(response);
   // {

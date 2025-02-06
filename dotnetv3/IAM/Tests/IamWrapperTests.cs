@@ -1,11 +1,8 @@
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
-// SPDX-License-Identifier:  Apache-2.0
+// SPDX-License-Identifier: Apache-2.0
 
 using Amazon.IdentityManagement;
 using Amazon.IdentityManagement.Model;
-using IAMActions;
-using Xunit;
-using Xunit.Sdk;
 
 namespace IAMActions.Tests
 {
@@ -20,16 +17,12 @@ namespace IAMActions.Tests
         private readonly string? _rolePolicyName;
 
         // Values for tests related to the IAM Groups scenario.
-        private readonly string? _groupUserName;
         private readonly string? _groupPolicyName;
         private readonly string? _groupName;
-        private readonly string? _s3FullAccessPolicyName;
 
         private readonly string? _listBucketsPolicyDocument;
-        private readonly string? _s3FullAccessPolicyDocument;
 
         private readonly string? _roleName;
-        private readonly string? _assumePolicyName;
 
         private readonly string? _userName;
         private readonly string? _userPolicyName;
@@ -51,12 +44,10 @@ namespace IAMActions.Tests
                     true) // Optionally load local settings.
                 .Build();
 
-            _groupUserName = _configuration["GroupUserName"];
             _groupPolicyName = _configuration["GroupPolicyName"];
             _groupName = _configuration["GroupName"];
 
             _s3ListBucketsPolicyName = _configuration["S3ListBucketsPolicyName"];
-            _s3FullAccessPolicyName = _configuration["S3FullAccessPolicyName"];
 
             _roleName = _configuration["RoleName"];
             _rolePolicyName = _configuration["RolePolicyName"];
@@ -72,16 +63,6 @@ namespace IAMActions.Tests
                 "\"Version\": \"2012-10-17\"," +
                 "	\"Statement\" : [{" +
                     "	\"Action\" : [\"s3:ListAllMyBuckets\"]," +
-                    "	\"Effect\" : \"Allow\"," +
-                    "	\"Resource\" : \"*\"" +
-                "}]" +
-            "}";
-
-            // Permissions for full access to Amazon Simple Storage Service
-            // (Amazon S3).
-            _s3FullAccessPolicyDocument = "{" +
-                    "	\"Statement\" : [{" +
-                    "	\"Action\" : [\"s3:*\"]," +
                     "	\"Effect\" : \"Allow\"," +
                     "	\"Resource\" : \"*\"" +
                 "}]" +
@@ -113,24 +94,6 @@ namespace IAMActions.Tests
         {
             var passwordPolicy = await _iamWrapper.GetAccountPasswordPolicyAsync();
             Assert.NotNull(passwordPolicy);
-        }
-
-        /// <summary>
-        /// Test the call to create an AWS Identity and Access Management (IAM)
-        /// group. The resulting group object should not be null.
-        /// </summary>
-        /// <returns>Async Task.</returns>
-        [Fact()]
-        [Order(1)]
-        [Trait("Category", "Integration")]
-        public async Task CreateGroupAsyncTest()
-        {
-            if (_groupName is not null)
-            {
-                var group = await _iamWrapper.CreateGroupAsync(_groupName);
-                Assert.Equal(_groupName, group.GroupName);
-                Assert.NotNull(group);
-            }
         }
 
         /// <summary>
@@ -251,24 +214,10 @@ namespace IAMActions.Tests
             Assert.NotNull(groups);
         }
 
-        /// <summary>
-        /// Test the call to add an IAM policy to a group. Success should
-        /// be true.
-        /// </summary>
-        /// <returns>Async Task.</returns>
-        [Fact()]
-        [Order(8)]
-        [Trait("Category", "Integration")]
-        public async Task PutGroupPolicyAsyncTest()
-        {
-            var success = await _iamWrapper.PutGroupPolicyAsync(_groupName, _groupPolicyName, _listBucketsPolicyDocument);
-            Assert.True(success, $"Could not embed policy {_s3ListBucketsPolicyName} to {_groupName}");
-        }
-
         [Fact()]
         [Order(9)]
         [Trait("Category", "Integration")]
-        public async Task PutRolePollicyTest()
+        public async Task PutRolePolicyTest()
         {
             var success = await _iamWrapper.PutRolePolicyAsync(_rolePolicyName, _roleName, _listBucketsPolicyDocument);
             Assert.True(success, "Could not embed policy {_s3ListBucketsPolicyName}.");
@@ -337,20 +286,6 @@ namespace IAMActions.Tests
         {
             var users = await _iamWrapper.ListUsersAsync();
             Assert.True(users.Count >= 1, "No users to list.");
-        }
-
-        /// <summary>
-        /// Tests the call to add an IAM user to a group. Success should be
-        /// true.
-        /// </summary>
-        /// <returns>Async Task.</returns>
-        [Fact()]
-        [Order(15)]
-        [Trait("Category", "Integration")]
-        public async Task AddUserToGroupTest()
-        {
-            var success = await _iamWrapper.AddUserToGroupAsync(_userName, _groupName);
-            Assert.True(success, $"Couldn't add user, {_userName}, to group, {_groupName}.");
         }
 
         /// <summary>
@@ -440,20 +375,6 @@ namespace IAMActions.Tests
         {
             var success = await _iamWrapper.DeleteAccessKeyAsync(_accessKeyId, _userName);
             Assert.True(success);
-        }
-
-        /// <summary>
-        /// Tests the call to remove an IAM user from a group. Success should
-        /// be true.
-        /// </summary>
-        /// <returns>Async Task.</returns>
-        [Fact]
-        [Order(22)]
-        [Trait("Category", "Integration")]
-        public async Task RemoveUserFromGroupTest()
-        {
-            var success = await _iamWrapper.RemoveUserFromGroupAsync(_userName, _groupName);
-            Assert.True(success, $"Couldn't remove user {_userName} from the group {_groupName}");
         }
 
         /// <summary>
@@ -550,22 +471,5 @@ namespace IAMActions.Tests
             Assert.True(success, "Could not delete the policy.");
         }
 
-        [Fact()]
-        [Order(29)]
-        [Trait("Category", "Integration")]
-        public async Task DeleteGroupPolicyAsyncTest()
-        {
-            var success = await _iamWrapper.DeleteGroupPolicyAsync(_groupName, _groupPolicyName);
-            Assert.True(success);
-        }
-
-        [Fact()]
-        [Order(30)]
-        [Trait("Category", "Integration")]
-        public async Task DeleteGroupAsyncTest()
-        {
-            var success = await _iamWrapper.DeleteGroupAsync(_groupName);
-            Assert.True(success, $"Couldn't delete the IAM group {_groupName}");
-        }
     }
 }

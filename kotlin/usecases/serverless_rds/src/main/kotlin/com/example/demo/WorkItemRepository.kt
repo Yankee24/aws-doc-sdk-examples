@@ -1,7 +1,5 @@
-/*
-   Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
-   SPDX-License-Identifier: Apache-2.0
-*/
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 
 package com.example.demo
 
@@ -46,7 +44,7 @@ class WorkItemRepository {
         sqlStatement = "update work set archive = (:arch) where idwork =(:id);"
         val parametersVal = listOf(
             param("arch", arc),
-            param("id", id)
+            param("id", id),
         )
         val sqlRequest = ExecuteStatementRequest {
             secretArn = secretArnVal
@@ -183,7 +181,7 @@ class WorkItemRepository {
             param("date", sqlDate.toString()),
             param("description", description),
             param("guide", guide),
-            param("idwork", workId)
+            param("idwork", workId),
         )
 
         val sqlRequest = ExecuteStatementRequest {

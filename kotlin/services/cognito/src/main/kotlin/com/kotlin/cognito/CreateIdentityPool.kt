@@ -1,11 +1,5 @@
-// snippet-sourcedescription:[CreateIdentityPool.kt demonstrates how to create a new Amazon Cognito identity pool. The identity pool is a store of user identity information that is specific to your AWS account.]
-// snippet-keyword:[AWS SDK for Kotlin]
-// snippet-service:[Amazon Cognito]
-
-/*
-   Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
-   SPDX-License-Identifier: Apache-2.0
-*/
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 
 package com.kotlin.cognito
 
@@ -24,7 +18,6 @@ https://docs.aws.amazon.com/sdk-for-kotlin/latest/developer-guide/setup.html
  */
 
 suspend fun main(args: Array<String>) {
-
     val usage = """
         Usage: <identityPoolName>
     
@@ -44,11 +37,11 @@ suspend fun main(args: Array<String>) {
 
 // snippet-start:[cognito.kotlin.create_identity_pool.main]
 suspend fun createIdPool(identityPoolName: String?): String? {
-
-    val request = CreateIdentityPoolRequest {
-        this.allowUnauthenticatedIdentities = false
-        this.identityPoolName = identityPoolName
-    }
+    val request =
+        CreateIdentityPoolRequest {
+            this.allowUnauthenticatedIdentities = false
+            this.identityPoolName = identityPoolName
+        }
 
     CognitoIdentityClient { region = "us-east-1" }.use { cognitoIdentityClient ->
 

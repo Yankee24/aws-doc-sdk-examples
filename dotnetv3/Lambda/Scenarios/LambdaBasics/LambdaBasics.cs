@@ -1,8 +1,7 @@
 ﻿// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
-// SPDX-License-Identifier:  Apache-2.0
+// SPDX-License-Identifier: Apache-2.0
 
 // snippet-start:[Lambda.dotnetv3.LambdaBasics]
-using Amazon.IdentityManagement;
 using Amazon.Lambda.Model;
 using Microsoft.Extensions.Configuration;
 
@@ -44,8 +43,8 @@ public class LambdaBasics
         var lambdaRoleWrapper = host.Services.GetRequiredService<LambdaRoleWrapper>();
         var uiWrapper = host.Services.GetRequiredService<UIWrapper>();
 
-        string functionName = configuration["FunctionName"];
-        string roleName = configuration["RoleName"];
+        string functionName = configuration["FunctionName"]!;
+        string roleName = configuration["RoleName"]!;
         string policyDocument = "{" +
             " \"Version\": \"2012-10-17\"," +
             " \"Statement\": [ " +

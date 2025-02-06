@@ -1,7 +1,5 @@
-/*
- * Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
- * SPDX-License-Identifier: Apache-2.0
- */
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 
 import { log } from "../log.js";
 
@@ -14,7 +12,7 @@ const makeCreateJobStep =
       process.env.JOB_NAME,
       process.env.ROLE_NAME,
       process.env.BUCKET_NAME,
-      process.env.PYTHON_SCRIPT_KEY
+      process.env.PYTHON_SCRIPT_KEY,
     );
     log("Job created.", { type: "success" });
 

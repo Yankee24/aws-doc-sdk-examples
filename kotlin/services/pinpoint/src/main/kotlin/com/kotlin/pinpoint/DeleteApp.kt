@@ -1,11 +1,5 @@
-// snippet-sourcedescription:[DeleteApp.kt demonstrates how to delete an Amazon Pinpoint application.]
-// snippet-keyword:[AWS SDK for Kotlin]
-// snippet-keyword:[Amazon Pinpoint]
-
-/*
-   Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
-   SPDX-License-Identifier: Apache-2.0
-*/
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 
 package com.kotlin.pinpoint
 
@@ -24,7 +18,6 @@ https://docs.aws.amazon.com/sdk-for-kotlin/latest/developer-guide/setup.html
  */
 
 suspend fun main(args: Array<String>) {
-
     val usage = """
     Usage: <appId> 
 
@@ -43,13 +36,13 @@ suspend fun main(args: Array<String>) {
 
 // snippet-start:[pinpoint.kotlin.deleteapp.main]
 suspend fun deletePinApp(appId: String?) {
-
     PinpointClient { region = "us-west-2" }.use { pinpoint ->
-        val result = pinpoint.deleteApp(
-            DeleteAppRequest {
-                applicationId = appId
-            }
-        )
+        val result =
+            pinpoint.deleteApp(
+                DeleteAppRequest {
+                    applicationId = appId
+                },
+            )
         val appName = result.applicationResponse?.name
         println("Application $appName has been deleted.")
     }

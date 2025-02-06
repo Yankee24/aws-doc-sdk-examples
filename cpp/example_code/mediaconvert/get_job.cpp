@@ -1,7 +1,5 @@
-/*
-  Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
-  SPDX-License-Identifier: Apache-2.0
-*/
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 /**
  * Before running this C++ code example, set up your development environment, including your credentials.
  *
@@ -26,33 +24,22 @@
   \param clientConfiguration: AWS client configuration.
   \return bool: Function succeeded.
  */
-bool AwsDoc::MediaConvert::getJob(const Aws::String& jobID,
-        const Aws::Client::ClientConfiguration &clientConfiguration) {
-    // AWS Elemental MediaConvert has a low request limit for DescribeEndpoints.
-    // "getEndpointUriHelper" uses caching to limit requests.
-    // See utils.cpp.
-    Aws::String endpoint = getEndpointUriHelper(clientConfiguration);
-
-    if (endpoint.empty())
-    {
-        return false;
-    }
-
-    Aws::Client::ClientConfiguration endpointConfiguration(clientConfiguration);
-    endpointConfiguration.endpointOverride = endpoint;
-    Aws::MediaConvert::MediaConvertClient client(endpointConfiguration);
+bool AwsDoc::MediaConvert::getJob(const Aws::String &jobID,
+                                  const Aws::Client::ClientConfiguration &clientConfiguration) {
+    Aws::MediaConvert::MediaConvertClient client(clientConfiguration);
 
     Aws::MediaConvert::Model::GetJobRequest request;
     request.SetId(jobID);
-         const Aws::MediaConvert::Model::GetJobOutcome outcome = client.GetJob(
-                request);
-        if (outcome.IsSuccess()) {
-            std::cout << outcome.GetResult().GetJob().Jsonize().View().WriteReadable() << std::endl;
-        }
-        else {
-            std::cerr << "DescribeEndpoints error - " << outcome.GetError().GetMessage()
-                      << std::endl;
-        }
+    const Aws::MediaConvert::Model::GetJobOutcome outcome = client.GetJob(
+            request);
+    if (outcome.IsSuccess()) {
+        std::cout << outcome.GetResult().GetJob().Jsonize().View().WriteReadable()
+                  << std::endl;
+    }
+    else {
+        std::cerr << "DescribeEndpoints error - " << outcome.GetError().GetMessage()
+                  << std::endl;
+    }
 
 
     return outcome.IsSuccess();
@@ -79,7 +66,7 @@ Where:
 )";
     }
     Aws::SDKOptions options;
-    options.loggingOptions.logLevel = Aws::Utils::Logging::LogLevel::Debug;
+
     Aws::InitAPI(options);
     {
         Aws::String jobID = argv[1];

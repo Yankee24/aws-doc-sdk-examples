@@ -1,11 +1,5 @@
-// snippet-sourcedescription:[Scenario.kt demonstrates how to perform various operations.]
-// snippet-keyword:[AWS SDK for Kotlin]
-// snippet-service:[Amazon DynamoDB]
-
-/*
-   Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
-   SPDX-License-Identifier: Apache-2.0
-*/
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 
 package com.kotlin.dynamodb
 
@@ -42,7 +36,6 @@ https://docs.aws.amazon.com/sdk-for-kotlin/latest/developer-guide/setup.html
 
 // snippet-start:[dynamodb.kotlin.scenario.main]
 suspend fun main(args: Array<String>) {
-
     val usage = """
         Usage:
           <fileName>
@@ -72,44 +65,53 @@ suspend fun main(args: Array<String>) {
 }
 
 // snippet-start:[dynamodb.kotlin.scenario.create_table.main]
-suspend fun createScenarioTable(tableNameVal: String, key: String) {
+suspend fun createScenarioTable(
+    tableNameVal: String,
+    key: String,
+) {
+    val attDef =
+        AttributeDefinition {
+            attributeName = key
+            attributeType = ScalarAttributeType.N
+        }
 
-    val attDef = AttributeDefinition {
-        attributeName = key
-        attributeType = ScalarAttributeType.N
-    }
+    val attDef1 =
+        AttributeDefinition {
+            attributeName = "title"
+            attributeType = ScalarAttributeType.S
+        }
 
-    val attDef1 = AttributeDefinition {
-        attributeName = "title"
-        attributeType = ScalarAttributeType.S
-    }
+    val keySchemaVal =
+        KeySchemaElement {
+            attributeName = key
+            keyType = KeyType.Hash
+        }
 
-    val keySchemaVal = KeySchemaElement {
-        attributeName = key
-        keyType = KeyType.Hash
-    }
+    val keySchemaVal1 =
+        KeySchemaElement {
+            attributeName = "title"
+            keyType = KeyType.Range
+        }
 
-    val keySchemaVal1 = KeySchemaElement {
-        attributeName = "title"
-        keyType = KeyType.Range
-    }
+    val provisionedVal =
+        ProvisionedThroughput {
+            readCapacityUnits = 10
+            writeCapacityUnits = 10
+        }
 
-    val provisionedVal = ProvisionedThroughput {
-        readCapacityUnits = 10
-        writeCapacityUnits = 10
-    }
-
-    val request = CreateTableRequest {
-        attributeDefinitions = listOf(attDef, attDef1)
-        keySchema = listOf(keySchemaVal, keySchemaVal1)
-        provisionedThroughput = provisionedVal
-        tableName = tableNameVal
-    }
+    val request =
+        CreateTableRequest {
+            attributeDefinitions = listOf(attDef, attDef1)
+            keySchema = listOf(keySchemaVal, keySchemaVal1)
+            provisionedThroughput = provisionedVal
+            tableName = tableNameVal
+        }
 
     DynamoDbClient { region = "us-east-1" }.use { ddb ->
 
         val response = ddb.createTable(request)
-        ddb.waitUntilTableExists { // suspend call
+        ddb.waitUntilTableExists {
+            // suspend call
             tableName = tableNameVal
         }
         println("The table was successfully created ${response.tableDescription?.tableArn}")
@@ -119,8 +121,10 @@ suspend fun createScenarioTable(tableNameVal: String, key: String) {
 
 // snippet-start:[dynamodb.kotlin.scenario.populate_table.main]
 // Load data into the table.
-suspend fun loadData(tableName: String, fileName: String) {
-
+suspend fun loadData(
+    tableName: String,
+    fileName: String,
+) {
     val parser = JsonFactory().createParser(File(fileName))
     val rootNode = ObjectMapper().readTree<JsonNode>(parser)
     val iter: Iterator<JsonNode> = rootNode.iterator()
@@ -128,9 +132,9 @@ suspend fun loadData(tableName: String, fileName: String) {
 
     var t = 0
     while (iter.hasNext()) {
-
-        if (t == 50)
+        if (t == 50) {
             break
+        }
 
         currentNode = iter.next() as ObjectNode
         val year = currentNode.path("year").asInt()
@@ -145,7 +149,7 @@ suspend fun putMovie(
     tableNameVal: String,
     year: Int,
     title: String,
-    info: String
+    info: String,
 ) {
     val itemValues = mutableMapOf<String, AttributeValue>()
     val strVal = year.toString()
@@ -154,10 +158,11 @@ suspend fun putMovie(
     itemValues["title"] = AttributeValue.S(title)
     itemValues["info"] = AttributeValue.S(info)
 
-    val request = PutItemRequest {
-        tableName = tableNameVal
-        item = itemValues
-    }
+    val request =
+        PutItemRequest {
+            tableName = tableNameVal
+            item = itemValues
+        }
 
     DynamoDbClient { region = "us-east-1" }.use { ddb ->
         ddb.putItem(request)
@@ -167,16 +172,20 @@ suspend fun putMovie(
 // snippet-end:[dynamodb.kotlin.scenario.populate_table.main]
 
 // snippet-start:[dynamodb.kotlin.scenario.get_item.main]
-suspend fun getMovie(tableNameVal: String, keyName: String, keyVal: String) {
-
+suspend fun getMovie(
+    tableNameVal: String,
+    keyName: String,
+    keyVal: String,
+) {
     val keyToGet = mutableMapOf<String, AttributeValue>()
     keyToGet[keyName] = AttributeValue.N(keyVal)
     keyToGet["title"] = AttributeValue.S("King Kong")
 
-    val request = GetItemRequest {
-        key = keyToGet
-        tableName = tableNameVal
-    }
+    val request =
+        GetItemRequest {
+            key = keyToGet
+            tableName = tableNameVal
+        }
 
     DynamoDbClient { region = "us-east-1" }.use { ddb ->
         val returnedItem = ddb.getItem(request)
@@ -190,10 +199,10 @@ suspend fun getMovie(tableNameVal: String, keyName: String, keyVal: String) {
 // snippet-end:[dynamodb.kotlin.scenario.get_item.main]
 
 suspend fun deletIssuesTable(tableNameVal: String) {
-
-    val request = DeleteTableRequest {
-        tableName = tableNameVal
-    }
+    val request =
+        DeleteTableRequest {
+            tableName = tableNameVal
+        }
 
     DynamoDbClient { region = "us-east-1" }.use { ddb ->
         ddb.deleteTable(request)
@@ -204,9 +213,8 @@ suspend fun deletIssuesTable(tableNameVal: String) {
 suspend fun queryMovieTable(
     tableNameVal: String,
     partitionKeyName: String,
-    partitionAlias: String
+    partitionAlias: String,
 ): Int {
-
     val attrNameAlias = mutableMapOf<String, String>()
     attrNameAlias[partitionAlias] = "year"
 
@@ -214,12 +222,13 @@ suspend fun queryMovieTable(
     val attrValues = mutableMapOf<String, AttributeValue>()
     attrValues[":$partitionKeyName"] = AttributeValue.N("2013")
 
-    val request = QueryRequest {
-        tableName = tableNameVal
-        keyConditionExpression = "$partitionAlias = :$partitionKeyName"
-        expressionAttributeNames = attrNameAlias
-        this.expressionAttributeValues = attrValues
-    }
+    val request =
+        QueryRequest {
+            tableName = tableNameVal
+            keyConditionExpression = "$partitionAlias = :$partitionKeyName"
+            expressionAttributeNames = attrNameAlias
+            this.expressionAttributeValues = attrValues
+        }
 
     DynamoDbClient { region = "us-east-1" }.use { ddb ->
         val response = ddb.query(request)
@@ -228,10 +237,10 @@ suspend fun queryMovieTable(
 }
 
 suspend fun scanMovies(tableNameVal: String) {
-
-    val request = ScanRequest {
-        tableName = tableNameVal
-    }
+    val request =
+        ScanRequest {
+            tableName = tableNameVal
+        }
 
     DynamoDbClient { region = "us-east-1" }.use { ddb ->
         val response = ddb.scan(request)

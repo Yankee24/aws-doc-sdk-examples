@@ -1,10 +1,8 @@
-/*
- * Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
- * SPDX-License-Identifier: Apache-2.0
- */
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 
 // snippet-start:[javascript.v3.sagemaker.wkflw.pipeline.library]
-import { readFileSync } from "fs";
+import { readFileSync } from "node:fs";
 
 import {
   CreateRoleCommand,
@@ -13,6 +11,8 @@ import {
   DeletePolicyCommand,
   AttachRolePolicyCommand,
   DetachRolePolicyCommand,
+  GetRoleCommand,
+  ListPoliciesCommand,
 } from "@aws-sdk/client-iam";
 
 import {
@@ -23,13 +23,13 @@ import {
   DeleteFunctionCommand,
   CreateEventSourceMappingCommand,
   DeleteEventSourceMappingCommand,
+  GetFunctionCommand,
 } from "@aws-sdk/client-lambda";
 
 import {
   PutObjectCommand,
   CreateBucketCommand,
   DeleteBucketCommand,
-  paginateListObjectsV2,
   DeleteObjectCommand,
   GetObjectCommand,
   ListObjectsV2Command,
@@ -38,6 +38,7 @@ import {
 import {
   CreatePipelineCommand,
   DeletePipelineCommand,
+  DescribePipelineCommand,
   DescribePipelineExecutionCommand,
   PipelineExecutionStatus,
   StartPipelineExecutionCommand,
@@ -49,10 +50,11 @@ import {
   CreateQueueCommand,
   DeleteQueueCommand,
   GetQueueAttributesCommand,
+  GetQueueUrlCommand,
 } from "@aws-sdk/client-sqs";
 
-import { dirnameFromMetaUrl } from "libs/utils/util-fs.js";
-import { retry, wait } from "libs/utils/util-timers.js";
+import { dirnameFromMetaUrl } from "@aws-doc-sdk-examples/lib/utils/util-fs.js";
+import { retry } from "@aws-doc-sdk-examples/lib/utils/util-timers.js";
 
 // snippet-start:[javascript.v3.sagemaker.wkflw.pipeline.lambda.permissions]
 /**
@@ -60,24 +62,44 @@ import { retry, wait } from "libs/utils/util-timers.js";
  * @param {{ name: string, iamClient: import('@aws-sdk/client-iam').IAMClient }} props
  */
 export async function createLambdaExecutionRole({ name, iamClient }) {
-  const { Role } = await iamClient.send(
-    new CreateRoleCommand({
-      RoleName: name,
-      AssumeRolePolicyDocument: JSON.stringify({
-        Version: "2012-10-17",
-        Statement: [
-          {
-            Effect: "Allow",
-            Action: ["sts:AssumeRole"],
-            Principal: { Service: ["lambda.amazonaws.com"] },
-          },
-        ],
+  const createRole = () =>
+    iamClient.send(
+      new CreateRoleCommand({
+        RoleName: name,
+        AssumeRolePolicyDocument: JSON.stringify({
+          Version: "2012-10-17",
+          Statement: [
+            {
+              Effect: "Allow",
+              Action: ["sts:AssumeRole"],
+              Principal: { Service: ["lambda.amazonaws.com"] },
+            },
+          ],
+        }),
       }),
-    })
-  );
+    );
+
+  let role = null;
+
+  try {
+    const { Role } = await createRole();
+    role = Role;
+  } catch (caught) {
+    if (
+      caught instanceof Error &&
+      caught.name === "EntityAlreadyExistsException"
+    ) {
+      const { Role } = await iamClient.send(
+        new GetRoleCommand({ RoleName: name }),
+      );
+      role = Role;
+    } else {
+      throw caught;
+    }
+  }
 
   return {
-    arn: Role.Arn,
+    arn: role.Arn,
     cleanUp: async () => {
       await iamClient.send(new DeleteRoleCommand({ RoleName: name }));
     },
@@ -94,7 +116,7 @@ export async function createLambdaExecutionPolicy({
   iamClient,
   pipelineExecutionRoleArn,
 }) {
-  const policy = {
+  const policyConfig = {
     Version: "2012-10-17",
     Statement: [
       {
@@ -134,17 +156,40 @@ export async function createLambdaExecutionPolicy({
     ],
   };
 
-  const createPolicyCommand = new CreatePolicyCommand({
-    PolicyDocument: JSON.stringify(policy),
-    PolicyName: name,
-  });
+  const createPolicy = () =>
+    iamClient.send(
+      new CreatePolicyCommand({
+        PolicyDocument: JSON.stringify(policyConfig),
+        PolicyName: name,
+      }),
+    );
 
-  const { Policy } = await iamClient.send(createPolicyCommand);
+  let policy = null;
+
+  try {
+    const { Policy } = await createPolicy();
+    policy = Policy;
+  } catch (caught) {
+    if (
+      caught instanceof Error &&
+      caught.name === "EntityAlreadyExistsException"
+    ) {
+      const { Policies } = await iamClient.send(new ListPoliciesCommand({}));
+      if (Policies) {
+        policy = Policies.find((p) => p.PolicyName === name);
+      } else {
+        throw new Error("No policies found.");
+      }
+    } else {
+      throw caught;
+    }
+  }
+
   return {
-    arn: Policy.Arn,
-    policy,
+    arn: policy?.Arn,
+    policyConfig,
     cleanUp: async () => {
-      await iamClient.send(new DeletePolicyCommand({ PolicyArn: Policy.Arn }));
+      await iamClient.send(new DeletePolicyCommand({ PolicyArn: policy?.Arn }));
     },
   };
 }
@@ -168,7 +213,7 @@ export async function attachPolicy({ roleName, policyArn, iamClient }) {
         new DetachRolePolicyCommand({
           RoleName: roleName,
           PolicyArn: policyArn,
-        })
+        }),
       );
     },
   };
@@ -190,7 +235,7 @@ export async function createLambdaLayer({ name, lambdaClient }) {
       Content: {
         ZipFile: Uint8Array.from(readFileSync(layerPath)),
       },
-    })
+    }),
   );
 
   return {
@@ -201,7 +246,7 @@ export async function createLambdaLayer({ name, lambdaClient }) {
         new DeleteLayerVersionCommand({
           LayerName: name,
           VersionNumber: Version,
-        })
+        }),
       );
     },
   };
@@ -221,32 +266,53 @@ export async function createLambdaFunction({
   layerVersionArn,
 }) {
   const lambdaPath = `${dirnameFromMetaUrl(
-    import.meta.url
+    import.meta.url,
   )}lambda/dist/index.mjs.zip`;
 
-  const command = new CreateFunctionCommand({
-    Code: {
-      ZipFile: Uint8Array.from(readFileSync(lambdaPath)),
-    },
-    Runtime: Runtime.nodejs18x,
-    Handler: "index.handler",
-    Layers: [layerVersionArn],
-    FunctionName: name,
-    Role: roleArn,
-  });
+  // If a function of the same name already exists, return that
+  // function's ARN instead. By default this is
+  // "sagemaker-wkflw-lambda-function", so collisions are
+  // unlikely.
+  const createFunction = async () => {
+    try {
+      return await lambdaClient.send(
+        new CreateFunctionCommand({
+          Code: {
+            ZipFile: Uint8Array.from(readFileSync(lambdaPath)),
+          },
+          Runtime: Runtime.nodejs18x,
+          Handler: "index.handler",
+          Layers: [layerVersionArn],
+          FunctionName: name,
+          Role: roleArn,
+        }),
+      );
+    } catch (caught) {
+      if (
+        caught instanceof Error &&
+        caught.name === "ResourceConflictException"
+      ) {
+        const { Configuration } = await lambdaClient.send(
+          new GetFunctionCommand({ FunctionName: name }),
+        );
+        return Configuration;
+      }
+      throw caught;
+    }
+  };
 
   // Function creation fails if the Role is not ready. This retries
   // function creation until it succeeds or it times out.
   const { FunctionArn } = await retry(
     { intervalInMs: 1000, maxRetries: 60 },
-    () => lambdaClient.send(command)
+    createFunction,
   );
 
   return {
     arn: FunctionArn,
     cleanUp: async () => {
       await lambdaClient.send(
-        new DeleteFunctionCommand({ FunctionName: name })
+        new DeleteFunctionCommand({ FunctionName: name }),
       );
     },
   };
@@ -262,15 +328,15 @@ export async function createLambdaFunction({
  */
 export async function uploadCSVDataToS3({ bucketName, s3Client }) {
   const s3Path = `${dirnameFromMetaUrl(
-    import.meta.url
-  )}../../../../../workflows/sagemaker_pipelines/resources/latlongtest.csv`;
+    import.meta.url,
+  )}../../../../../scenarios/features/sagemaker_pipelines/resources/latlongtest.csv`;
 
   await s3Client.send(
     new PutObjectCommand({
       Bucket: bucketName,
       Key: "input/sample_data.csv",
       Body: readFileSync(s3Path),
-    })
+    }),
   );
 }
 // snippet-end:[javascript.v3.sagemaker.wkflw.pipeline.s3_upload]
@@ -278,34 +344,54 @@ export async function uploadCSVDataToS3({ bucketName, s3Client }) {
 // snippet-start:[javascript.v3.sagemaker.wkflw.pipeline.sagemaker_permissions]
 /**
  * Create the AWS IAM role that will be assumed by the Amazon SageMaker pipeline.
- * @param {{name: string, iamClient: import('@aws-sdk/client-iam').IAMClient}} props
+ * @param {{name: string, iamClient: import('@aws-sdk/client-iam').IAMClient, wait: (ms: number) => Promise<void>}} props
  */
-export async function createSagemakerRole({ name, iamClient }) {
-  const command = new CreateRoleCommand({
-    RoleName: name,
-    AssumeRolePolicyDocument: JSON.stringify({
-      Version: "2012-10-17",
-      Statement: [
-        {
-          Effect: "Allow",
-          Action: ["sts:AssumeRole"],
-          Principal: {
-            Service: [
-              "sagemaker.amazonaws.com",
-              "sagemaker-geospatial.amazonaws.com",
-            ],
-          },
-        },
-      ],
-    }),
-  });
+export async function createSagemakerRole({ name, iamClient, wait }) {
+  let role = null;
 
-  const { Role } = await iamClient.send(command);
-  // Wait for the role to be ready.
-  await wait(10);
+  const createRole = () =>
+    iamClient.send(
+      new CreateRoleCommand({
+        RoleName: name,
+        AssumeRolePolicyDocument: JSON.stringify({
+          Version: "2012-10-17",
+          Statement: [
+            {
+              Effect: "Allow",
+              Action: ["sts:AssumeRole"],
+              Principal: {
+                Service: [
+                  "sagemaker.amazonaws.com",
+                  "sagemaker-geospatial.amazonaws.com",
+                ],
+              },
+            },
+          ],
+        }),
+      }),
+    );
+
+  try {
+    const { Role } = await createRole();
+    role = Role;
+    // Wait for the role to be ready.
+    await wait(10);
+  } catch (caught) {
+    if (
+      caught instanceof Error &&
+      caught.name === "EntityAlreadyExistsException"
+    ) {
+      const { Role } = await iamClient.send(
+        new GetRoleCommand({ RoleName: name }),
+      );
+      role = Role;
+    } else {
+      throw caught;
+    }
+  }
 
   return {
-    arn: Role.Arn,
+    arn: role.Arn,
     cleanUp: async () => {
       await iamClient.send(new DeleteRoleCommand({ RoleName: name }));
     },
@@ -325,7 +411,7 @@ export async function createSagemakerExecutionPolicy({
   name,
   s3BucketName,
 }) {
-  const policy = {
+  const policyConfig = {
     Version: "2012-10-17",
     Statement: [
       {
@@ -349,17 +435,40 @@ export async function createSagemakerExecutionPolicy({
     ],
   };
 
-  const createPolicyCommand = new CreatePolicyCommand({
-    PolicyDocument: JSON.stringify(policy),
-    PolicyName: name,
-  });
+  const createPolicy = () =>
+    iamClient.send(
+      new CreatePolicyCommand({
+        PolicyDocument: JSON.stringify(policyConfig),
+        PolicyName: name,
+      }),
+    );
 
-  const { Policy } = await iamClient.send(createPolicyCommand);
+  let policy = null;
+
+  try {
+    const { Policy } = await createPolicy();
+    policy = Policy;
+  } catch (caught) {
+    if (
+      caught instanceof Error &&
+      caught.name === "EntityAlreadyExistsException"
+    ) {
+      const { Policies } = await iamClient.send(new ListPoliciesCommand({}));
+      if (Policies) {
+        policy = Policies.find((p) => p.PolicyName === name);
+      } else {
+        throw new Error("No policies found.");
+      }
+    } else {
+      throw caught;
+    }
+  }
+
   return {
-    arn: Policy.Arn,
-    policy,
+    arn: policy?.Arn,
+    policyConfig,
     cleanUp: async () => {
-      await iamClient.send(new DeletePolicyCommand({ PolicyArn: Policy.Arn }));
+      await iamClient.send(new DeletePolicyCommand({ PolicyArn: policy?.Arn }));
     },
   };
 }
@@ -383,26 +492,49 @@ export async function createSagemakerPipeline({
     // dirnameFromMetaUrl is a local utility function. You can find its implementation
     // on GitHub.
     `${dirnameFromMetaUrl(
-      import.meta.url
-    )}../../../../../workflows/sagemaker_pipelines/resources/GeoSpatialPipeline.json`
+      import.meta.url,
+    )}../../../../../scenarios/features/sagemaker_pipelines/resources/GeoSpatialPipeline.json`,
   )
     .toString()
     .replace(/\*FUNCTION_ARN\*/g, functionArn);
 
-  const { PipelineArn } = await sagemakerClient.send(
-    new CreatePipelineCommand({
-      PipelineName: name,
-      PipelineDefinition: pipelineDefinition,
-      RoleArn: roleArn,
-    })
-  );
+  let arn = null;
+
+  const createPipeline = () =>
+    sagemakerClient.send(
+      new CreatePipelineCommand({
+        PipelineName: name,
+        PipelineDefinition: pipelineDefinition,
+        RoleArn: roleArn,
+      }),
+    );
+
+  try {
+    const { PipelineArn } = await createPipeline();
+    arn = PipelineArn;
+  } catch (caught) {
+    if (
+      caught instanceof Error &&
+      caught.name === "ValidationException" &&
+      caught.message.includes(
+        "Pipeline names must be unique within an AWS account and region",
+      )
+    ) {
+      const { PipelineArn } = await sagemakerClient.send(
+        new DescribePipelineCommand({ PipelineName: name }),
+      );
+      arn = PipelineArn;
+    } else {
+      throw caught;
+    }
+  }
 
   return {
-    arn: PipelineArn,
+    arn,
     cleanUp: async () => {
       // snippet-start:[javascript.v3.sagemaker.wkflw.pipeline.delete]
       await sagemakerClient.send(
-        new DeletePipelineCommand({ PipelineName: name })
+        new DeletePipelineCommand({ PipelineName: name }),
       );
       // snippet-end:[javascript.v3.sagemaker.wkflw.pipeline.delete]
     },
@@ -417,29 +549,49 @@ export async function createSagemakerPipeline({
  * @param {{name: string, sqsClient: import('@aws-sdk/client-sqs').SQSClient}} props
  */
 export async function createSQSQueue({ name, sqsClient }) {
-  const { QueueUrl } = await sqsClient.send(
-    new CreateQueueCommand({
-      QueueName: name,
-      Attributes: {
-        DelaySeconds: "5",
-        ReceiveMessageWaitTimeSeconds: "5",
-        VisibilityTimeout: "300",
-      },
-    })
-  );
+  const createSqsQueue = () =>
+    sqsClient.send(
+      new CreateQueueCommand({
+        QueueName: name,
+        Attributes: {
+          DelaySeconds: "5",
+          ReceiveMessageWaitTimeSeconds: "5",
+          VisibilityTimeout: "300",
+        },
+      }),
+    );
 
-  const { Attributes } = await sqsClient.send(
-    new GetQueueAttributesCommand({
-      QueueUrl,
-      AttributeNames: ["QueueArn"],
-    })
+  let queueUrl = null;
+  try {
+    const { QueueUrl } = await createSqsQueue();
+    queueUrl = QueueUrl;
+  } catch (caught) {
+    if (caught instanceof Error && caught.name === "QueueNameExists") {
+      const { QueueUrl } = await sqsClient.send(
+        new GetQueueUrlCommand({ QueueName: name }),
+      );
+      queueUrl = QueueUrl;
+    } else {
+      throw caught;
+    }
+  }
+
+  const { Attributes } = await retry(
+    { intervalInMs: 1000, maxRetries: 60 },
+    () =>
+      sqsClient.send(
+        new GetQueueAttributesCommand({
+          QueueUrl: queueUrl,
+          AttributeNames: ["QueueArn"],
+        }),
+      ),
   );
 
   return {
-    queueUrl: QueueUrl,
+    queueUrl,
     queueArn: Attributes.QueueArn,
     cleanUp: async () => {
-      await sqsClient.send(new DeleteQueueCommand({ QueueUrl }));
+      await sqsClient.send(new DeleteQueueCommand({ QueueUrl: queueUrl }));
     },
   };
 }
@@ -449,26 +601,67 @@ export async function createSQSQueue({ name, sqsClient }) {
 /**
  * Configure the AWS Lambda function to long poll for messages from the Amazon SQS
  * queue.
- * @param {{lambdaName: string, queueArn: string, lambdaClient: import('@aws-sdk/client-lambda').LambdaClient, sqsClient: import('@aws-sdk/client-sqs').SQSClient}} props
+ * @param {{
+ *   paginateListEventSourceMappings: () => Generator<import('@aws-sdk/client-lambda').ListEventSourceMappingsCommandOutput>,
+ *   lambdaName: string,
+ *   queueArn: string,
+ *   lambdaClient: import('@aws-sdk/client-lambda').LambdaClient}} props
  */
 export async function configureLambdaSQSEventSource({
   lambdaName,
   queueArn,
   lambdaClient,
+  paginateListEventSourceMappings,
 }) {
-  const { UUID } = await lambdaClient.send(
-    new CreateEventSourceMappingCommand({
-      EventSourceArn: queueArn,
-      FunctionName: lambdaName,
-    })
-  );
+  let uuid = null;
+  const createEvenSourceMapping = () =>
+    lambdaClient.send(
+      new CreateEventSourceMappingCommand({
+        EventSourceArn: queueArn,
+        FunctionName: lambdaName,
+      }),
+    );
+
+  try {
+    const { UUID } = await createEvenSourceMapping();
+    uuid = UUID;
+  } catch (caught) {
+    if (
+      caught instanceof Error &&
+      caught.name === "ResourceConflictException"
+    ) {
+      const paginator = paginateListEventSourceMappings(
+        { client: lambdaClient },
+        {},
+      );
+      /**
+       * @type {import('@aws-sdk/client-lambda').EventSourceMappingConfiguration[]}
+       */
+      const eventSourceMappings = [];
+      for await (const page of paginator) {
+        eventSourceMappings.concat(page.EventSourceMappings || []);
+      }
+
+      const { Configuration } = await lambdaClient.send(
+        new GetFunctionCommand({ FunctionName: lambdaName }),
+      );
+
+      uuid = eventSourceMappings.find(
+        (mapping) =>
+          mapping.EventSourceArn === queueArn &&
+          mapping.FunctionArn === Configuration.FunctionArn,
+      ).UUID;
+    } else {
+      throw caught;
+    }
+  }
 
   return {
     cleanUp: async () => {
       await lambdaClient.send(
         new DeleteEventSourceMappingCommand({
-          UUID,
-        })
+          UUID: uuid,
+        }),
       );
     },
   };
@@ -479,23 +672,31 @@ export async function configureLambdaSQSEventSource({
 /**
  * Create an Amazon S3 bucket that will store the simple coordinate file as input
  * and the output of the Amazon SageMaker Geospatial vector enrichment job.
- * @param {{s3Client: import('@aws-sdk/client-s3').S3Client, name: string}} props
+ * @param {{
+ *   s3Client: import('@aws-sdk/client-s3').S3Client,
+ *   name: string,
+ *   paginateListObjectsV2: () => Generator<import('@aws-sdk/client-s3').ListObjectsCommandOutput>
+ * }} props
  */
-export async function createS3Bucket({ name, s3Client }) {
+export async function createS3Bucket({
+  name,
+  s3Client,
+  paginateListObjectsV2,
+}) {
   await s3Client.send(new CreateBucketCommand({ Bucket: name }));
 
   return {
     cleanUp: async () => {
       const paginator = paginateListObjectsV2(
         { client: s3Client },
-        { Bucket: name }
+        { Bucket: name },
       );
       for await (const page of paginator) {
         const objects = page.Contents;
         if (objects) {
           for (const object of objects) {
             await s3Client.send(
-              new DeleteObjectCommand({ Bucket: name, Key: object.Key })
+              new DeleteObjectCommand({ Bucket: name, Key: object.Key }),
             );
           }
         }
@@ -582,7 +783,7 @@ export async function startPipelineExecution({
           Value: JSON.stringify(jobConfig),
         },
       ],
-    })
+    }),
   );
 
   return {
@@ -594,15 +795,15 @@ export async function startPipelineExecution({
 // snippet-start:[javascript.v3.sagemaker.wkflw.pipeline.wait]
 /**
  * Poll the executing pipeline until the status is 'SUCCEEDED', 'STOPPED', or 'FAILED'.
- * @param {{ arn: string, sagemakerClient: import('@aws-sdk/client-sagemaker').SageMakerClient}} props
+ * @param {{ arn: string, sagemakerClient: import('@aws-sdk/client-sagemaker').SageMakerClient, wait: (ms: number) => Promise<void>}} props
  */
-export async function waitForPipelineComplete({ arn, sagemakerClient }) {
+export async function waitForPipelineComplete({ arn, sagemakerClient, wait }) {
   const command = new DescribePipelineExecutionCommand({
     PipelineExecutionArn: arn,
   });
 
   let complete = false;
-  let intervalInSeconds = 15;
+  const intervalInSeconds = 15;
   const COMPLETION_STATUSES = [
     PipelineExecutionStatus.FAILED,
     PipelineExecutionStatus.STOPPED,
@@ -617,13 +818,13 @@ export async function waitForPipelineComplete({ arn, sagemakerClient }) {
 
     if (!complete) {
       console.log(
-        `Pipeline is ${status}. Waiting ${intervalInSeconds} seconds before checking again.`
+        `Pipeline is ${status}. Waiting ${intervalInSeconds} seconds before checking again.`,
       );
       await wait(intervalInSeconds);
     } else if (status === PipelineExecutionStatus.FAILED) {
       throw new Error(`Pipeline failed because: ${FailureReason}`);
     } else if (status === PipelineExecutionStatus.STOPPED) {
-      throw new Error(`Pipeline was forcefully stopped.`);
+      throw new Error("Pipeline was forcefully stopped.");
     } else {
       console.log(`Pipeline execution ${status}.`);
     }
@@ -639,7 +840,7 @@ export async function waitForPipelineComplete({ arn, sagemakerClient }) {
 export async function getObject({ bucket, s3Client }) {
   const prefix = "output/";
   const { Contents } = await s3Client.send(
-    new ListObjectsV2Command({ MaxKeys: 1, Bucket: bucket, Prefix: prefix })
+    new ListObjectsV2Command({ MaxKeys: 1, Bucket: bucket, Prefix: prefix }),
   );
 
   if (!Contents.length) {
@@ -657,7 +858,7 @@ export async function getObject({ bucket, s3Client }) {
     new GetObjectCommand({
       Bucket: bucket,
       Key: outputObject.Key,
-    })
+    }),
   );
 
   return Body.transformToString();

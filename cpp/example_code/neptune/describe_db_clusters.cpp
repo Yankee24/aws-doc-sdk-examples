@@ -1,28 +1,5 @@
- 
-//snippet-sourcedescription:[describe_db_clusters.cpp demonstrates how to retrieve information about Amazon Neptune provisioned DB clusters.]
-//snippet-keyword:[C++]
-//snippet-sourcesyntax:[cpp]
-//snippet-keyword:[Code Sample]
-//snippet-keyword:[Amazon Neptune]
-//snippet-service:[neptune]
-//snippet-sourcetype:[full-example]
-//snippet-sourcedate:[]
-//snippet-sourceauthor:[tapasweni-pathak]
-
-
-/*
-Copyright 2010-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
-
-This file is licensed under the Apache License, Version 2.0 (the "License").
-You may not use this file except in compliance with the License. A copy of
-the License is located at
-
-http://aws.amazon.com/apache2.0/
-
-This file is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
-CONDITIONS OF ANY KIND, either express or implied. See the License for the
-specific language governing permissions and limitations under the License.
-*/
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 #include <aws/core/Aws.h>
 #include <aws/neptune/NeptuneClient.h>
 #include <aws/neptune/model/DescribeDBClustersRequest.h>
@@ -33,39 +10,54 @@ specific language governing permissions and limitations under the License.
  * Describes Neptune db cluster based on command line input
  */
 
-int main(int argc, char **argv)
-{
-  if (argc != 1)
-  {
-    std::cout << "Usage: describe_db_cluster";
-    return 1;
-  }
-  Aws::SDKOptions options;
-  Aws::InitAPI(options);
-  {
-    Aws::Neptune::NeptuneClient neptune;
-
-    Aws::Neptune::Model::DescribeDBClustersRequest ddbc_req;
-
-    auto ddbc_out = neptune.DescribeDBClusters(ddbc_req);
-
-    if (ddbc_out.IsSuccess())
+int main(int argc, char **argv) {
+    if (argc != 1) {
+        std::cout << "Usage: describe_db_cluster";
+        return 1;
+    }
+    Aws::SDKOptions options;
+    Aws::InitAPI(options);
     {
-      std::cout << "Successfully described db clusters request:";
+        Aws::Neptune::NeptuneClient neptune;
 
-      for (auto val: ddbc_out.GetResult().GetDBClusters())
-      {
-        std::cout << " " << val.GetDBClusterIdentifier() << std::endl;
-      }
+        Aws::Neptune::Model::DescribeDBClustersRequest ddbc_req;
+
+        Aws::String marker; // Used for pagination.
+        Aws::Vector<Aws::Neptune::Model::DBCluster> all_clusters;
+
+        do {
+            if (!marker.empty()) {
+                ddbc_req.SetMarker(marker);
+            }
+
+            auto ddbc_out = neptune.DescribeDBClusters(ddbc_req);
+
+            if (ddbc_out.IsSuccess()) {
+                auto &db_clusters = ddbc_out.GetResult().GetDBClusters();
+                all_clusters.insert(all_clusters.end(), db_clusters.begin(),
+                                    db_clusters.end());
+                marker = ddbc_out.GetResult().GetMarker();
+            }
+
+            else {
+                std::cerr << "Error describing neptune db clusters "
+                          << ddbc_out.GetError().GetMessage()
+                          << std::endl;
+                break;
+            }
+
+        } while (!marker.empty());
+
+        std::cout << all_clusters.size() << " Neptune db cluster(s) found."
+                  << std::endl;
+        for (auto cluster: all_clusters) {
+            std::cout << "Neptune db cluster id: " << cluster.GetDBClusterIdentifier()
+                      << std::endl;
+            std::cout << "Neptune db cluster status: " << cluster.GetStatus()
+                      << std::endl;
+        }
     }
 
-    else
-    {
-      std::cout << "Error describing neptune db clusters " << ddbc_out.GetError().GetMessage()
-        << std::endl;
-    }
-  }
-
-  Aws::ShutdownAPI(options);
-  return 0;
+    Aws::ShutdownAPI(options);
+    return 0;
 }

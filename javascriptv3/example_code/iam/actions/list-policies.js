@@ -1,9 +1,7 @@
-/*
- * Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
- * SPDX-License-Identifier: Apache-2.0
- */
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 
-import { fileURLToPath } from "url";
+import { fileURLToPath } from "node:url";
 
 // snippet-start:[iam.JavaScript.listpoliciesv3]
 import { ListPoliciesCommand, IAMClient } from "@aws-sdk/client-iam";
@@ -37,7 +35,7 @@ export async function* listPolicies() {
           MaxItems: 10,
           OnlyAttached: false,
           Scope: "Local",
-        })
+        }),
       );
     } else {
       break;

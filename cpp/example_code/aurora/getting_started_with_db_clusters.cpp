@@ -1,7 +1,5 @@
-/*
-   Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
-   SPDX-License-Identifier: Apache-2.0
-*/
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 
 /**
  * Before running this C++ code example, set up your development environment, including your credentials.
@@ -866,19 +864,32 @@ bool AwsDoc::Aurora::getDBEngineVersions(const Aws::String &engineName,
         request.SetDBParameterGroupFamily(parameterGroupFamily);
     }
 
-    Aws::RDS::Model::DescribeDBEngineVersionsOutcome outcome =
-            client.DescribeDBEngineVersions(request);
+    engineVersionsResult.clear();
+    Aws::String marker; // The marker is used for pagination.
+    do {
+        if (!marker.empty()) {
+            request.SetMarker(marker);
+        }
 
-    if (outcome.IsSuccess()) {
-        engineVersionsResult = outcome.GetResult().GetDBEngineVersions();
-    }
-    else {
-        std::cerr << "Error with Aurora::DescribeDBEngineVersionsRequest. "
-                  << outcome.GetError().GetMessage()
-                  << std::endl;
-    }
+        Aws::RDS::Model::DescribeDBEngineVersionsOutcome outcome =
+                client.DescribeDBEngineVersions(request);
 
-    return outcome.IsSuccess();
+        if (outcome.IsSuccess()) {
+            const Aws::Vector<Aws::RDS::Model::DBEngineVersion> &engineVersions =
+                    outcome.GetResult().GetDBEngineVersions();
+
+            engineVersionsResult.insert(engineVersionsResult.end(),
+                                        engineVersions.begin(), engineVersions.end());
+            marker  = outcome.GetResult().GetMarker();
+        }
+        else {
+            std::cerr << "Error with Aurora::DescribeDBEngineVersionsRequest. "
+                      << outcome.GetError().GetMessage()
+                      << std::endl;
+        }
+    } while (!marker.empty());
+
+    return true;
 }
 // snippet-end:[cpp.example_code.aurora.DescribeDBEngineVersions]
 
@@ -956,7 +967,10 @@ bool AwsDoc::Aurora::chooseDBInstanceClass(const Aws::String &engine,
                     outcome.GetResult().GetOrderableDBInstanceOptions();
             for (const Aws::RDS::Model::OrderableDBInstanceOption &option: options) {
                 const Aws::String &instanceClass = option.GetDBInstanceClass();
-                instanceClasses.push_back(instanceClass);
+                if (std::find(instanceClasses.begin(), instanceClasses.end(),
+                              instanceClass) == instanceClasses.end()) {
+                    instanceClasses.push_back(instanceClass);
+                }
             }
             marker = outcome.GetResult().GetMarker();
         }
@@ -1260,12 +1274,12 @@ int AwsDoc::Aurora::askQuestionForIntRange(const Aws::String &string, int low,
                 int number = std::stoi(string1);
                 bool result = number >= low && number <= high;
                 if (!result) {
-                    std::cout << "\nThe number is out of range." << std::endl;
+                    std::cerr << "\nThe number is out of range." << std::endl;
                 }
                 return result;
             }
             catch (const std::invalid_argument &) {
-                std::cout << "\nNot a valid number." << std::endl;
+                std::cerr << "\nNot a valid number." << std::endl;
                 return false;
             }
     });

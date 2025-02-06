@@ -1,7 +1,5 @@
-/*
-   Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
-   SPDX-License-Identifier: Apache-2.0
-*/
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 import XCTest
 import Foundation
 import AWSIAM
@@ -23,7 +21,6 @@ final class CreateServiceLinkedRoleTests: XCTestCase {
     ///
     /// This function sets up the following:
     ///
-    ///     Configures the AWS SDK log system to only log errors.
     ///     Initializes the service handler, which is used to call
     ///     Amazon Identity and Access Management (IAM) functions.
     ///     Initializes the demo cleanup handler, which is used to
@@ -32,10 +29,9 @@ final class CreateServiceLinkedRoleTests: XCTestCase {
     override class func setUp() {
         let tdSem = TestWaiter(name: "Setup")
         super.setUp()
-        SDKLoggingSystem.initialize(logLevel: .error)
 
         Task() {
-            CreateServiceLinkedRoleTests.serviceHandler = await ServiceHandler()
+            CreateServiceLinkedRoleTests.serviceHandler = try await ServiceHandler()
             tdSem.signal()
         }
         tdSem.wait()

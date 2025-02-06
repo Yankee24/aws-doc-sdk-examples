@@ -1,11 +1,5 @@
-// snippet-sourcedescription:[CreateDBSnapshot.kt demonstrates how to create an Amazon Relational Database Service (RDS) snapshot.]
-// snippet-keyword:[AWS SDK for Kotlin]
-// snippet-service:[Amazon Relational Database Service]
-
-/*
-   Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
-   SPDX-License-Identifier: Apache-2.0
-*/
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 
 package com.kotlin.rds
 
@@ -23,7 +17,6 @@ For more information, see the following documentation topic:
 https://docs.aws.amazon.com/sdk-for-kotlin/latest/developer-guide/setup.html
 */
 suspend fun main(args: Array<String>) {
-
     val usage = """
         Usage:
             <dbInstanceIdentifier> <dbSnapshotIdentifier>
@@ -44,12 +37,15 @@ suspend fun main(args: Array<String>) {
 }
 
 // snippet-start:[rds.kotlin.create_snap.main]
-suspend fun createSnapshot(dbInstanceIdentifierVal: String?, dbSnapshotIdentifierVal: String?) {
-
-    val snapshotRequest = CreateDbSnapshotRequest {
-        dbInstanceIdentifier = dbInstanceIdentifierVal
-        dbSnapshotIdentifier = dbSnapshotIdentifierVal
-    }
+suspend fun createSnapshot(
+    dbInstanceIdentifierVal: String?,
+    dbSnapshotIdentifierVal: String?,
+) {
+    val snapshotRequest =
+        CreateDbSnapshotRequest {
+            dbInstanceIdentifier = dbInstanceIdentifierVal
+            dbSnapshotIdentifier = dbSnapshotIdentifierVal
+        }
 
     RdsClient { region = "us-west-2" }.use { rdsClient ->
         val response = rdsClient.createDbSnapshot(snapshotRequest)

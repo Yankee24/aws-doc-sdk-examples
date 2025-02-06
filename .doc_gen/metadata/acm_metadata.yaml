@@ -1,10 +1,15 @@
 # zexi 0.4.0
 acm_DescribeCertificate:
-  title: Describe an &ACM; certificate using an &AWS; SDK
-  title_abbrev: Describe a certificate
-  synopsis: describe &ACM; certificates.
-  category:
   languages:
+    Java:
+      versions:
+        - sdk_version: 2
+          github: javav2/example_code/acm
+          sdkguide:
+          excerpts:
+            - description:
+              snippet_tags:
+                - acm.java2.describe_cert.main
     .NET:
       versions:
         - sdk_version: 3
@@ -23,13 +28,17 @@ acm_DescribeCertificate:
               snippet_tags:
                 - python.example_code.acm.AcmCertificate
                 - python.example_code.acm.DescribeCertificate
+    C++:
+      versions:
+        - sdk_version: 1
+          github: cpp/example_code/acm
+          excerpts:
+            - description:
+              snippet_tags:
+                - cpp.example_code.acm.DescribeCertificate
   services:
     acm: {DescribeCertificate}
 acm_GetCertificate:
-  title: Get an &ACM; certificate using an &AWS; SDK
-  title_abbrev: Get a certificate
-  synopsis: get &ACM; certificates.
-  category:
   languages:
     Python:
       versions:
@@ -40,14 +49,27 @@ acm_GetCertificate:
               snippet_tags:
                 - python.example_code.acm.AcmCertificate
                 - python.example_code.acm.GetCertificate
+    C++:
+      versions:
+        - sdk_version: 1
+          github: cpp/example_code/acm
+          excerpts:
+            - description:
+              snippet_tags:
+                - cpp.example_code.acm.GetCertificate
   services:
     acm: {GetCertificate}
 acm_ListCertificates:
-  title: List &ACM; certificates using an &AWS; SDK
-  title_abbrev: List certificates
-  synopsis: list &ACM; certificates.
-  category:
   languages:
+    Java:
+      versions:
+        - sdk_version: 2
+          github: javav2/example_code/acm
+          sdkguide:
+          excerpts:
+            - description:
+              snippet_tags:
+                - acm.java2.list_certs.main
     .NET:
       versions:
         - sdk_version: 3
@@ -66,14 +88,27 @@ acm_ListCertificates:
               snippet_tags:
                 - python.example_code.acm.AcmCertificate
                 - python.example_code.acm.ListCertificates
+    C++:
+      versions:
+        - sdk_version: 1
+          github: cpp/example_code/acm
+          excerpts:
+            - description:
+              snippet_tags:
+                - cpp.example_code.acm.ListCertificates
   services:
     acm: {ListCertificates}
 acm_ImportCertificate:
-  title: Import an &ACM; certificate using an &AWS; SDK
-  title_abbrev: Import certificates
-  synopsis: import &ACM; certficates.
-  category:
   languages:
+    Java:
+      versions:
+        - sdk_version: 2
+          github: javav2/example_code/acm
+          sdkguide:
+          excerpts:
+            - description:
+              snippet_tags:
+                - acm.java2.import_cert.main
     Python:
       versions:
         - sdk_version: 3
@@ -83,14 +118,27 @@ acm_ImportCertificate:
               snippet_tags:
                 - python.example_code.acm.AcmCertificate
                 - python.example_code.acm.ImportCertificate
+    C++:
+      versions:
+        - sdk_version: 1
+          github: cpp/example_code/acm
+          excerpts:
+            - description:
+              snippet_tags:
+                - cpp.example_code.acm.ImportCertificate
   services:
     acm: {ImportCertificate}
 acm_DeleteCertificate:
-  title: Delete an &ACM; certificate using an &AWS; SDK
-  title_abbrev: Delete a certificate
-  synopsis: delete &ACM; certificates.
-  category:
   languages:
+    Java:
+      versions:
+        - sdk_version: 2
+          github: javav2/example_code/acm
+          sdkguide:
+          excerpts:
+            - description:
+              snippet_tags:
+                - acm.java2.del_cert.main
     Python:
       versions:
         - sdk_version: 3
@@ -100,14 +148,27 @@ acm_DeleteCertificate:
               snippet_tags:
                 - python.example_code.acm.AcmCertificate
                 - python.example_code.acm.DeleteCertificate
+    C++:
+      versions:
+        - sdk_version: 1
+          github: cpp/example_code/acm
+          excerpts:
+            - description:
+              snippet_tags:
+                - cpp.example_code.acm.DeleteCertificate
   services:
     acm: {DeleteCertificate}
 acm_AddTagsToCertificate:
-  title: Add tags to an &ACM; certificate using an &AWS; SDK
-  title_abbrev: Add tags to a certificate
-  synopsis: add tags to &ACM; certificates.
-  category:
   languages:
+    Java:
+      versions:
+        - sdk_version: 2
+          github: javav2/example_code/acm
+          sdkguide:
+          excerpts:
+            - description:
+              snippet_tags:
+                - acm.java2.add_tags.main
     Python:
       versions:
         - sdk_version: 3
@@ -117,14 +178,48 @@ acm_AddTagsToCertificate:
               snippet_tags:
                 - python.example_code.acm.AcmCertificate
                 - python.example_code.acm.AddTagsToCertificate
+    C++:
+      versions:
+        - sdk_version: 1
+          github: cpp/example_code/acm
+          excerpts:
+            - description:
+              snippet_tags:
+                - cpp.example_code.acm.AddTagsToCertificate
   services:
     acm: {AddTagsToCertificate}
-acm_ListTagsForCertificate:
-  title: List tags for an &ACM; certificate using an &AWS; SDK
-  title_abbrev: List tags for a certificate
-  synopsis: list tags for &ACM; certificates.
-  category:
+acm_ExportCertificate:
   languages:
+    Java:
+      versions:
+        - sdk_version: 2
+          github: javav2/example_code/acm
+          sdkguide:
+          excerpts:
+            - description:
+              snippet_tags:
+                - acm.java2.export_cert.main
+    C++:
+      versions:
+        - sdk_version: 1
+          github: cpp/example_code/acm
+          excerpts:
+            - description:
+              snippet_tags:
+                - cpp.example_code.acm.ExportCertificate
+  services:
+    acm: {ExportCertificate}
+acm_ListTagsForCertificate:
+  languages:
+    Java:
+      versions:
+        - sdk_version: 2
+          github: javav2/example_code/acm
+          sdkguide:
+          excerpts:
+            - description:
+              snippet_tags:
+                - acm.java2.list_cert_tags.main
     Python:
       versions:
         - sdk_version: 3
@@ -134,14 +229,27 @@ acm_ListTagsForCertificate:
               snippet_tags:
                 - python.example_code.acm.AcmCertificate
                 - python.example_code.acm.ListTagsForCertificate
+    C++:
+      versions:
+        - sdk_version: 1
+          github: cpp/example_code/acm
+          excerpts:
+            - description:
+              snippet_tags:
+                - cpp.example_code.acm.ListTagsForCertificate
   services:
     acm: {ListTagsForCertificate}
 acm_RemoveTagsFromCertificate:
-  title: Remove tags from an &ACM; certificate using an &AWS; SDK
-  title_abbrev: Remove tags from a certificate
-  synopsis: remove tags from &ACM; certificates.
-  category:
   languages:
+    Java:
+      versions:
+        - sdk_version: 2
+          github: javav2/example_code/acm
+          sdkguide:
+          excerpts:
+            - description:
+              snippet_tags:
+                - acm.java2.remove_tags.main
     Python:
       versions:
         - sdk_version: 3
@@ -151,14 +259,27 @@ acm_RemoveTagsFromCertificate:
               snippet_tags:
                 - python.example_code.acm.AcmCertificate
                 - python.example_code.acm.RemoveTagsFromCertificate
+    C++:
+      versions:
+        - sdk_version: 1
+          github: cpp/example_code/acm
+          excerpts:
+            - description:
+              snippet_tags:
+                - cpp.example_code.acm.RemoveTagsFromCertificate
   services:
     acm: {RemoveTagsFromCertificate}
 acm_RequestCertificate:
-  title: Request validation of an &ACM; certificate using an &AWS; SDK
-  title_abbrev: Request validation of a certificate
-  synopsis: request validation of &ACM; certificates.
-  category:
   languages:
+    Java:
+      versions:
+        - sdk_version: 2
+          github: javav2/example_code/acm
+          sdkguide:
+          excerpts:
+            - description:
+              snippet_tags:
+                - acm.java2.request_cert.main
     Python:
       versions:
         - sdk_version: 3
@@ -168,13 +289,17 @@ acm_RequestCertificate:
               snippet_tags:
                 - python.example_code.acm.AcmCertificate
                 - python.example_code.acm.RequestCertificate
+    C++:
+      versions:
+        - sdk_version: 1
+          github: cpp/example_code/acm
+          excerpts:
+            - description:
+              snippet_tags:
+                - cpp.example_code.acm.RequestCertificate
   services:
     acm: {RequestCertificate}
 acm_ResendValidationEmail:
-  title: Resend validation email for an &ACM; certificate using an &AWS; SDK
-  title_abbrev: Resend validation email for a certificate
-  synopsis: resend validation email for &ACM; certificates.
-  category:
   languages:
     Python:
       versions:
@@ -185,17 +310,56 @@ acm_ResendValidationEmail:
               snippet_tags:
                 - python.example_code.acm.AcmCertificate
                 - python.example_code.acm.ResendValidationEmail
+    C++:
+      versions:
+        - sdk_version: 1
+          github: cpp/example_code/acm
+          excerpts:
+            - description:
+              snippet_tags:
+                - cpp.example_code.acm.ResendValidationEmail
   services:
     acm: {ResendValidationEmail}
+acm_RenewCertificate:
+  languages:
+    Java:
+      versions:
+        - sdk_version: 2
+          github: javav2/example_code/acm
+          sdkguide:
+          excerpts:
+            - description:
+              snippet_tags:
+                - acm.java2.renew_cert.main
+    C++:
+      versions:
+        - sdk_version: 1
+          github: cpp/example_code/acm
+          excerpts:
+            - description:
+              snippet_tags:
+                - cpp.example_code.acm.RenewCertificate
+  services:
+    acm: {RenewCertificate}
+acm_UpdateCertificateOptions:
+  languages:
+    C++:
+      versions:
+        - sdk_version: 1
+          github: cpp/example_code/acm
+          excerpts:
+            - description:
+              snippet_tags:
+                - cpp.example_code.acm.UpdateCertificateOptions
+  services:
+    acm: {UpdateCertificateOptions}
 acm_Usage_ImportListRemove:
-  title: Manage &ACM; certificates using an &AWS; SDK
-  title_abbrev: Manage certificates
   synopsis_list:
     - Request a certificate from &ACM;.
     - Import a self-signed certificate.
     - List and describe certificates.
     - Remove certificates.
-  category: Scenarios
+  category: Basics
   languages:
     Python:
       versions:
@@ -220,6 +384,5 @@ acm_Usage_ImportListRemove:
               snippet_tags:
                 - python.example_code.acm.Usage_ImportListRemove
   services:
-    acm: {AddTagsToCertificate, DeleteCertificate, DescribeCertificate, GetCertificate,
-          ImportCertificate, ListCertificates, ListTagsForCertificate, RemoveTagsFromCertificate,
-          RequestCertificate, ResendValidationEmail}
+    acm: {AddTagsToCertificate, DeleteCertificate, DescribeCertificate, GetCertificate, ImportCertificate, ListCertificates,
+          ListTagsForCertificate, RemoveTagsFromCertificate, RequestCertificate, ResendValidationEmail}

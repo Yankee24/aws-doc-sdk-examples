@@ -1,11 +1,5 @@
-// snippet-sourcedescription:[DescribeKeyPairs.kt demonstrates how to get information about all instance key pairs.]
-// snippet-keyword:[AWS SDK for Kotlin]
-// snippet-service:[Amazon EC2]
-
-/*
-   Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
-   SPDX-License-Identifier: Apache-2.0
-*/
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 
 package com.kotlin.ec2
 
@@ -28,7 +22,6 @@ suspend fun main() {
 
 // snippet-start:[ec2.kotlin.describe_key_pairs.main]
 suspend fun describeEC2Keys() {
-
     Ec2Client { region = "us-west-2" }.use { ec2 ->
         val response = ec2.describeKeyPairs(DescribeKeyPairsRequest {})
         response.keyPairs?.forEach { keyPair ->

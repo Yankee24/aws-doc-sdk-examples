@@ -1,11 +1,5 @@
-// snippet-sourcedescription:[DeleteGroup.kt demonstrates how to delete an AWS X-Ray group.]
-// snippet-keyword:[SDK for Kotlin]
-// snippet-service:[AWS X-Ray Service]
-
-/*
-   Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
-   SPDX-License-Identifier: Apache-2.0
-*/
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 
 package com.kotlin.xray
 
@@ -23,7 +17,6 @@ For more information, see the following documentation topic:
 https://docs.aws.amazon.com/sdk-for-kotlin/latest/developer-guide/setup.html
  */
 suspend fun main(args: Array<String>) {
-
     val usage = """
         
         Usage: 
@@ -45,10 +38,10 @@ suspend fun main(args: Array<String>) {
 
 // snippet-start:[xray.kotlin_delete_group.main]
 suspend fun deleteSpecificGroup(groupNameVal: String) {
-
-    val groupRequest = DeleteGroupRequest {
-        groupName = groupNameVal
-    }
+    val groupRequest =
+        DeleteGroupRequest {
+            groupName = groupNameVal
+        }
 
     XRayClient { region = "us-east-1" }.use { xRayClient ->
         xRayClient.deleteGroup(groupRequest)

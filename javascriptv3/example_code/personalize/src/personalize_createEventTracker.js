@@ -1,5 +1,7 @@
-/* Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
-SPDX-License-Identifier: Apache-2.0
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
+
+/*
 ABOUT THIS NODE.JS EXAMPLE: This example works with the AWS SDK for JavaScript version 3 (v3),
 which is available at https://github.com/aws/aws-sdk-js-v3.
 
@@ -18,8 +20,7 @@ node createEventTracker.js
 
 // snippet-start:[personalize.JavaScript.createEventTrackerV3]
 // Get service clients module and commands using ES6 syntax.
-import { CreateEventTrackerCommand } from
-  "@aws-sdk/client-personalize";
+import { CreateEventTrackerCommand } from "@aws-sdk/client-personalize";
 import { personalizeClient } from "./libs/personalizeClients.js";
 
 // Or, create the client here.
@@ -27,13 +28,15 @@ import { personalizeClient } from "./libs/personalizeClients.js";
 
 // Set the event tracker's parameters.
 export const createEventTrackerParam = {
-  datasetGroupArn: 'DATASET_GROUP_ARN', /* required */
-  name: 'NAME', /* required */
-}
+  datasetGroupArn: "DATASET_GROUP_ARN" /* required */,
+  name: "NAME" /* required */,
+};
 
 export const run = async () => {
   try {
-    const response = await personalizeClient.send(new CreateEventTrackerCommand(createEventTrackerParam));
+    const response = await personalizeClient.send(
+      new CreateEventTrackerCommand(createEventTrackerParam),
+    );
     console.log("Success", response);
     return response; // For unit tests.
   } catch (err) {

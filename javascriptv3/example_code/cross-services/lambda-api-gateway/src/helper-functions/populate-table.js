@@ -1,6 +1,7 @@
-/* Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
-SPDX-License-Identifier: Apache-2.0
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 
+/*
 ABOUT THIS NODE.JS EXAMPLE: This example works with the AWS SDK for JavaScript version 3 (v3),
 which is available at https://github.com/aws/aws-sdk-js-v3. This example is in the 'AWS SDK for JavaScript v3 Developer Guide' at
 https://docs.aws.amazon.com/sdk-for-javascript/v3/developer-guide/cross-service-example-scan-and-publish-message.html.
@@ -17,10 +18,8 @@ node populate-table.js
 */
 // snippet-start:[lambda.JavaScript.general-examples-dynamodb-lambda.CreateTableV3]
 // Load the required Amazon DynamoDB client and commands.
-const {
-  BatchWriteItemCommand
-} = require("@aws-sdk/client-dynamodb");
-const {dynamoClient} = require ( "../libs/dynamoClient.js" );
+const { BatchWriteItemCommand } = require("@aws-sdk/client-dynamodb");
+const { dynamoClient } = require("../libs/dynamoClient.js");
 
 // Set the parameters.
 const params = {

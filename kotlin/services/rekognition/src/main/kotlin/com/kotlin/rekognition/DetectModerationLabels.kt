@@ -1,10 +1,5 @@
-// snippet-sourcedescription:[DetectModerationLabels.kt demonstrates how to detect unsafe content in an image.]
-// snippet-keyword:[AWS SDK for Kotlin]
-// snippet-service:[Amazon Rekognition]
-/*
-   Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
-   SPDX-License-Identifier: Apache-2.0
-*/
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 package com.kotlin.rekognition
 
 // snippet-start:[rekognition.kotlin.detect_mod_labels.import]
@@ -24,7 +19,6 @@ https://docs.aws.amazon.com/sdk-for-kotlin/latest/developer-guide/setup.html
  */
 
 suspend fun main(args: Array<String>) {
-
     val usage = """
         Usage: <sourceImage> 
 
@@ -43,15 +37,16 @@ suspend fun main(args: Array<String>) {
 
 // snippet-start:[rekognition.kotlin.detect_mod_labels.main]
 suspend fun detectModLabels(sourceImage: String) {
+    val myImage =
+        Image {
+            this.bytes = (File(sourceImage).readBytes())
+        }
 
-    val myImage = Image {
-        this.bytes = (File(sourceImage).readBytes())
-    }
-
-    val request = DetectModerationLabelsRequest {
-        image = myImage
-        minConfidence = 60f
-    }
+    val request =
+        DetectModerationLabelsRequest {
+            image = myImage
+            minConfidence = 60f
+        }
 
     RekognitionClient { region = "us-east-1" }.use { rekClient ->
         val response = rekClient.detectModerationLabels(request)

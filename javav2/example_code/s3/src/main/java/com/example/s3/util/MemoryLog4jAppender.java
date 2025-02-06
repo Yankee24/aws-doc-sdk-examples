@@ -1,3 +1,5 @@
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 package com.example.s3.util;
 
 import org.apache.logging.log4j.core.Appender;
@@ -21,6 +23,7 @@ import java.util.Map;
 public class MemoryLog4jAppender extends AbstractAppender {
 
     private Map<String, String> eventMap = new LinkedHashMap<>();
+    private StringBuilder stringBuilder = new StringBuilder();
 
     protected MemoryLog4jAppender(String name, Filter filter) {
         super(name, filter, null);
@@ -39,11 +42,19 @@ public class MemoryLog4jAppender extends AbstractAppender {
         if (eventWithParameters.getParameterCount() == 2) {
             eventMap.put(eventWithParameters.getParameters()[0].toString(), eventWithParameters.getParameters()[1].toString());
         } else {
-            eventMap.put (eventWithParameters.getFormattedMessage(), null);
+            eventMap.put (eventWithParameters.toString(), null);
+        }
+        if (eventWithParameters.getFormat() != null) {
+            stringBuilder.append(eventWithParameters.getFormattedMessage() + "\n");
+        } else {
+            stringBuilder.append(eventWithParameters.getMessage() + "\n");
         }
     }
 
     public Map<String, String> getEventMap(){
         return this.eventMap;
+    }
+    public String getEventsAsString(){
+        return stringBuilder.toString();
     }
 }

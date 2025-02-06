@@ -1,11 +1,6 @@
 #!/bin/bash
-
-###############################################################################
-#
-#    Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
-#    SPDX-License-Identifier: Apache-2.0
-#
-###############################################################################
+# Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+# SPDX-License-Identifier: Apache-2.0
 
 ###############################################################################
 #
@@ -32,7 +27,120 @@
 #     7. Delete the bucket.
 #
 
-get_input_result=""
+# snippet-start:[aws-cli.bash-linux.s3.getting_started_scenario]
+###############################################################################
+# function s3_getting_started
+#
+# This function creates, copies, and deletes S3 buckets and objects.
+#
+# Returns:
+#       0 - If successful.
+#       1 - If an error occurred.
+###############################################################################
+function s3_getting_started() {
+  {
+    if [ "$BUCKET_OPERATIONS_SOURCED" != "True" ]; then
+      cd bucket-lifecycle-operations || exit
+
+      source ./bucket_operations.sh
+      cd ..
+    fi
+  }
+
+  echo_repeat "*" 88
+  echo "Welcome to the Amazon S3 getting started demo."
+  echo_repeat "*" 88
+    echo "A unique bucket will be created by appending a Universally Unique Identifier to a bucket name prefix."
+    echo -n "Enter a prefix for the S3 bucket that will be used in this demo: "
+    get_input
+    bucket_name_prefix=$get_input_result
+  local bucket_name
+  bucket_name=$(generate_random_name "$bucket_name_prefix")
+
+  local region_code
+  region_code=$(aws configure get region)
+
+  if create_bucket -b "$bucket_name" -r "$region_code"; then
+    echo "Created demo bucket named $bucket_name"
+  else
+    errecho "The bucket failed to create. This demo will exit."
+    return 1
+  fi
+
+  local file_name
+  while [ -z "$file_name" ]; do
+    echo -n "Enter a file you want to upload to your bucket: "
+    get_input
+    file_name=$get_input_result
+
+    if [ ! -f "$file_name" ]; then
+      echo "Could not find file $file_name. Are you sure it exists?"
+      file_name=""
+    fi
+  done
+
+  local key
+  key="$(basename "$file_name")"
+
+  local result=0
+  if copy_file_to_bucket "$bucket_name" "$file_name" "$key"; then
+    echo "Uploaded file $file_name into bucket $bucket_name with key $key."
+  else
+    result=1
+  fi
+
+  local destination_file
+  destination_file="$file_name.download"
+  if yes_no_input "Would you like to download $key to the file $destination_file? (y/n) "; then
+    if download_object_from_bucket "$bucket_name" "$destination_file" "$key"; then
+      echo "Downloaded $key in the bucket $bucket_name to the file $destination_file."
+    else
+      result=1
+    fi
+  fi
+
+  if yes_no_input "Would you like to copy $key a new object key in your bucket? (y/n) "; then
+    local to_key
+    to_key="demo/$key"
+    if copy_item_in_bucket "$bucket_name" "$key" "$to_key"; then
+      echo "Copied $key in the bucket $bucket_name to the  $to_key."
+    else
+      result=1
+    fi
+  fi
+
+  local bucket_items
+  bucket_items=$(list_items_in_bucket "$bucket_name")
+
+  # shellcheck disable=SC2181
+  if [[ $? -ne 0 ]]; then
+    result=1
+  fi
+
+  echo "Your bucket contains the following items."
+  echo -e "Name\t\tSize"
+  echo "$bucket_items"
+
+  if yes_no_input "Delete the bucket, $bucket_name, as well as the objects in it? (y/n) "; then
+    bucket_items=$(echo "$bucket_items" | cut -f 1)
+
+    if delete_items_in_bucket "$bucket_name" "$bucket_items"; then
+      echo "The following items were deleted from the bucket $bucket_name"
+      echo "$bucket_items"
+    else
+      result=1
+    fi
+
+    if delete_bucket "$bucket_name"; then
+      echo "Deleted the bucket $bucket_name"
+    else
+      result=1
+    fi
+  fi
+
+  return $result
+}
+# snippet-end:[aws-cli.bash-linux.s3.getting_started_scenario]
 
 ###############################################################################
 # function get_input
@@ -124,122 +232,13 @@ function echo_repeat() {
   echo
 }
 
-# snippet-start:[aws-cli.bash-linux.s3.getting_started_scenario]
-###############################################################################
-# function s3_getting_started
-#
-# This function creates, copies, and deletes S3 buckets and objects.
-#
-# Returns:
-#       0 - If successful.
-#       1 - If an error occurred.
-###############################################################################
-function s3_getting_started() {
-  {
-    if [ "$BUCKET_OPERATIONS_SOURCED" != "True" ]; then
-      cd bucket-lifecycle-operations || exit
-      # shellcheck disable=SC1091
-      source ./bucket_operations.sh
-      cd ..
-    fi
-  }
-
-  echo_repeat "*" 88
-  echo "Welcome to the Amazon S3 getting started demo."
-  echo_repeat "*" 88
-
-  local bucket_name
-  bucket_name=$(generate_random_name "doc-example-bucket")
-
-  local region_code
-  region_code=$(aws configure get region)
-
-  if create_bucket -b "$bucket_name" -r "$region_code"; then
-    echo "Created demo bucket named $bucket_name"
-  else
-    errecho "The bucket failed to create. This demo will exit."
-    return 1
-  fi
-
-  local file_name
-  while [ -z "$file_name" ]; do
-    echo -n "Enter a file you want to upload to your bucket: "
-    get_input
-    file_name=$get_input_result
-
-    if [ ! -f "$file_name" ]; then
-      echo "Could not find file $file_name. Are you sure it exists?"
-      file_name=""
-    fi
-  done
-
-  local key
-  key="$(basename "$file_name")"
-
-  local result=0
-  if copy_file_to_bucket "$bucket_name" "$file_name" "$key"; then
-    echo "Uploaded file $file_name into bucket $bucket_name with key $key."
-  else
-    result=1
-  fi
-
-  local destination_file
-  destination_file="$file_name.download"
-  if yes_no_input "Would you like to download $key to the file $destination_file? (y/n) "; then
-    if download_object_from_bucket "$bucket_name" "$destination_file" "$key"; then
-      echo "Downloaded $key in the bucket $bucket_name to the file $destination_file."
-    else
-      result=1
-    fi
-  fi
-
-  if yes_no_input "Would you like to copy $key a new object key in your bucket? (y/n) "; then
-    local to_key
-    to_key="demo/$key"
-    if copy_item_in_bucket "$bucket_name" "$key" "$to_key"; then
-      echo "Copied $key in the bucket $bucket_name to the  $to_key."
-    else
-      result=1
-    fi
-  fi
-
-  local bucket_items
-  bucket_items=$(list_items_in_bucket "$bucket_name")
-
-  if [[ $? -ne 0 ]]; then
-    result=1
-  fi
-
-  echo "Your bucket contains the following items."
-  echo -e "Name\t\tSize"
-  echo "$bucket_items"
-
-  if yes_no_input "Delete the bucket, $bucket_name, as well as the objects in it? (y/n) "; then
-    bucket_items=$(echo "$bucket_items" | cut -f 1)
-
-    if delete_items_in_bucket "$bucket_name" "$bucket_items"; then
-      echo "The following items were deleted from the bucket $bucket_name"
-      echo "$bucket_items"
-    else
-      result=1
-    fi
-
-    if delete_bucket "$bucket_name"; then
-      echo "Deleted the bucket $bucket_name"
-    else
-      result=1
-    fi
-  fi
-
-  return $result
-}
-# snippet-end:[aws-cli.bash-linux.s3.getting_started_scenario]
-
 ###############################################################################
 # function main
 #
 ###############################################################################
 function main() {
+  get_input_result=""
+
   s3_getting_started
 }
 
@@ -247,4 +246,3 @@ function main() {
 if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
   main
 fi
-

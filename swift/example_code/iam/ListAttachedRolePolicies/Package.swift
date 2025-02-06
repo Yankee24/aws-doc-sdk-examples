@@ -1,9 +1,9 @@
-// swift-tools-version:5.5
-// The swift-tools-version declares the minimum version of Swift required to
-// build this package.
-//
+// swift-tools-version:5.9
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 // SPDX-License-Identifier: Apache-2.0
+//
+// The swift-tools-version declares the minimum version of Swift required to
+// build this package.
 
 import PackageDescription
 
@@ -20,7 +20,7 @@ let package = Package(
         // Dependencies declare other packages that this package depends on.
         .package(
             url: "https://github.com/awslabs/aws-sdk-swift",
-            from: "0.20.0"
+            from: "1.0.0"
         ),
         .package(
             url: "https://github.com/apple/swift-argument-parser.git",

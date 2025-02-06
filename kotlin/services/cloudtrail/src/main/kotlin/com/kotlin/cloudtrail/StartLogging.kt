@@ -1,12 +1,5 @@
-// snippet-comment:[These are tags for the AWS doc team's sample catalog. Do not remove.]
-// snippet-sourcedescription:[StartLogging.java demonstrates how to start and stop logging.]
-// snippet-keyword:[AWS SDK for Kotlin]
-// snippet-service:[AWS CloudTrail]
-
-/*
-   Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
-   SPDX-License-Identifier: Apache-2.0
-*/
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 
 package com.kotlin.cloudtrail
 
@@ -18,7 +11,6 @@ import kotlin.system.exitProcess
 // snippet-end:[cloudtrail.kotlin.logging.import]
 
 suspend fun main(args: Array<String>) {
-
     val usage = """
 
     Usage:
@@ -41,10 +33,10 @@ suspend fun main(args: Array<String>) {
 
 // snippet-start:[cloudtrail.kotlin.logging.main]
 suspend fun stopLog(trailName: String) {
-
-    val request = StopLoggingRequest {
-        name = trailName
-    }
+    val request =
+        StopLoggingRequest {
+            name = trailName
+        }
     CloudTrailClient { region = "us-east-1" }.use { cloudTrail ->
         cloudTrail.stopLogging(request)
         println("$trailName has stopped logging")
@@ -52,10 +44,10 @@ suspend fun stopLog(trailName: String) {
 }
 
 suspend fun startLog(trailName: String) {
-
-    val request = StartLoggingRequest {
-        name = trailName
-    }
+    val request =
+        StartLoggingRequest {
+            name = trailName
+        }
     CloudTrailClient { region = "us-east-1" }.use { cloudTrail ->
         cloudTrail.startLogging(request)
         println("$trailName has started logging")

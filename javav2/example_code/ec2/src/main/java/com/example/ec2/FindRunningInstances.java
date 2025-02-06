@@ -1,29 +1,20 @@
-// snippet-comment:[These are tags for the AWS doc team's sample catalog. Do not remove.]
-//snippet-sourcedescription:[FindRunningInstances.java demonstrates how to find running Amazon Elastic Compute Cloud (Amazon EC2) instances by using a filter.]
-//snippet-keyword:[AWS SDK for Java v2]
-//snippet-service:[Amazon EC2]
-
-/*
-   Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
-   SPDX-License-Identifier: Apache-2.0
-*/
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 
 package com.example.ec2;
 
+// snippet-start:[ec2.java2.running_instances.main]
 // snippet-start:[ec2.java2.running_instances.import]
-import software.amazon.awssdk.auth.credentials.ProfileCredentialsProvider;
 import software.amazon.awssdk.regions.Region;
-import software.amazon.awssdk.services.ec2.Ec2Client;
-import software.amazon.awssdk.services.ec2.model.Filter;
+import software.amazon.awssdk.services.ec2.Ec2AsyncClient;
 import software.amazon.awssdk.services.ec2.model.DescribeInstancesRequest;
 import software.amazon.awssdk.services.ec2.model.DescribeInstancesResponse;
-import software.amazon.awssdk.services.ec2.model.Reservation;
-import software.amazon.awssdk.services.ec2.model.Instance;
-import software.amazon.awssdk.services.ec2.model.Ec2Exception;
+import java.util.concurrent.CompletableFuture;
 // snippet-end:[ec2.java2.running_instances.import]
 
 /**
- * Before running this Java V2 code example, set up your development environment, including your credentials.
+ * Before running this Java V2 code example, set up your development
+ * environment, including your credentials.
  *
  * For more information, see the following documentation topic:
  *
@@ -31,55 +22,42 @@ import software.amazon.awssdk.services.ec2.model.Ec2Exception;
  */
 public class FindRunningInstances {
     public static void main(String[] args) {
-
-        Region region = Region.US_EAST_1;
-        Ec2Client ec2 = Ec2Client.builder()
-            .region(region)
-            .credentialsProvider(ProfileCredentialsProvider.create())
+        Ec2AsyncClient ec2AsyncClient = Ec2AsyncClient.builder()
+            .region(Region.US_EAST_1)
             .build();
-
-        findRunningEC2Instances(ec2);
-        ec2.close();
+        try {
+            CompletableFuture<Void> future = findRunningEC2InstancesUsingPaginatorAsync(ec2AsyncClient);
+            future.join();
+        } catch (RuntimeException rte) {
+            System.err.println("An exception occurred: " + (rte.getCause() != null ? rte.getCause().getMessage() : rte.getMessage()));
+        }
     }
 
-   // snippet-start:[ec2.java2.running_instances.main]
-   public static void findRunningEC2Instances(Ec2Client ec2) {
+    /**
+     * Finds all running EC2 instances asynchronously.
+     *
+     * @param ec2AsyncClient the EC2 asynchronous client to use for the operation
+     * @return a {@link CompletableFuture} that completes when the asynchronous operation is finished
+     */
+    public static CompletableFuture<Void> findRunningEC2InstancesUsingPaginatorAsync(Ec2AsyncClient ec2AsyncClient) {
+        DescribeInstancesRequest describeInstancesRequest = DescribeInstancesRequest.builder()
+            .filters(f -> f.name("instance-state-name").values("running"))
+            .build();
 
-       try {
-           String nextToken = null;
-           do {
-               Filter filter = Filter.builder()
-                   .name("instance-state-name")
-                   .values("running")
-                   .build();
+        CompletableFuture<DescribeInstancesResponse> response = ec2AsyncClient.describeInstances(describeInstancesRequest);
+        response.whenComplete((instancesResponse, ex) -> {
+            if (ex != null) {
+                throw new RuntimeException("Failed to describe running EC2 instances.", ex);
+            } else if (instancesResponse == null || instancesResponse.reservations().isEmpty()) {
+                throw new RuntimeException("No running EC2 instances found.");
+            } else {
+                instancesResponse.reservations().stream()
+                    .flatMap(reservation -> reservation.instances().stream())
+                    .forEach(instance -> System.out.println("Instance ID: " + instance.instanceId() + ", State: " + instance.state().name()));
+            }
+        });
 
-               DescribeInstancesRequest request = DescribeInstancesRequest.builder()
-                   .filters(filter)
-                   .build();
-
-               DescribeInstancesResponse response = ec2.describeInstances(request);
-               for (Reservation reservation : response.reservations()) {
-                    for (Instance instance : reservation.instances()) {
-                        System.out.printf("Found Reservation with id %s, " +
-                            "AMI %s, " +
-                            "type %s, " +
-                            "state %s " +
-                            "and monitoring state %s",
-                            instance.instanceId(),
-                            instance.imageId(),
-                            instance.instanceType(),
-                            instance.state().name(),
-                            instance.monitoring().state());
-                    }
-               }
-               nextToken = response.nextToken();
-
-           } while (nextToken != null);
-
-       } catch (Ec2Exception e) {
-           System.err.println(e.awsErrorDetails().errorMessage());
-           System.exit(1);
-       }
-   }
-    // snippet-end:[ec2.java2.running_instances.main]
+        return response.thenApply(resp -> null);
+    }
 }
+// snippet-end:[ec2.java2.running_instances.main]

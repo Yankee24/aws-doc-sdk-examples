@@ -201,7 +201,7 @@ For example:
 
 ```json
 {
-  "bucket": "DOC-EXAMPLE-BUCKET",
+  "bucket": "amzn-s3-demo-bucket",
   "region": "us-east-1",
   "object": "obj/ect.png"
 }
@@ -285,7 +285,7 @@ For example:
 
 ### SynthesizeAudio
 
-Uses the Amazon Polly [SynthesizeSpeech](https://docs.aws.amazon.com/polly/latest/dg/API_SynthesizeSpeech.html) method to convert input text into life-like speech. Store the synthesized audio in the provided Amazon S3 bucket with a content type of "audio/mp3".
+Uses the Amazon Polly [SynthesizeSpeech](https://docs.aws.amazon.com/polly/latest/dg/API_SynthesizeSpeech.html) method to convert input text into life-like speech. Store the synthesized audio in the provided Amazon S3 bucket with a content type of "audio/mpeg".
 
 #### **Input**
 
@@ -295,7 +295,7 @@ For example:
 
 ```json
 {
-  "bucket": "DOC-EXAMPLE-BUCKET",
+  "bucket": "amzn-s3-demo-bucket",
   "translated_text": "THIS HOTEL WAS GREAT",
   "region": "us-east-1",
   "object": "comment.png"

@@ -1,9 +1,7 @@
-/*
- * Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
- * SPDX-License-Identifier: Apache-2.0
- */
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 
-import { fileURLToPath } from "url";
+import { fileURLToPath } from "node:url";
 
 // snippet-start:[sqs.JavaScript.messages.receiveMessageV3]
 import {
@@ -23,8 +21,9 @@ const receiveMessage = (queueUrl) =>
       MaxNumberOfMessages: 10,
       MessageAttributeNames: ["All"],
       QueueUrl: queueUrl,
+      WaitTimeSeconds: 20,
       VisibilityTimeout: 20,
-    })
+    }),
   );
 
 export const main = async (queueUrl = SQS_QUEUE_URL) => {
@@ -40,7 +39,7 @@ export const main = async (queueUrl = SQS_QUEUE_URL) => {
       new DeleteMessageCommand({
         QueueUrl: queueUrl,
         ReceiptHandle: Messages[0].ReceiptHandle,
-      })
+      }),
     );
   } else {
     await client.send(
@@ -50,7 +49,7 @@ export const main = async (queueUrl = SQS_QUEUE_URL) => {
           Id: message.MessageId,
           ReceiptHandle: message.ReceiptHandle,
         })),
-      })
+      }),
     );
   }
 };

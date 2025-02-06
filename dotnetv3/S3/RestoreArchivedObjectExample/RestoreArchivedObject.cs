@@ -1,11 +1,6 @@
 ﻿// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
-// SPDX-License-Identifier:  Apache-2.0
+// SPDX-License-Identifier: Apache-2.0
 
-/// <summary>
-/// This example shows how to restore an archived object in an Amazon
-/// Simple Storage Service (Amazon S3) bucket. The example was created
-/// using the AWS SDK for .NET version 3.7 and .NET Core 5.0.
-/// </summary>
 namespace RestoreArchivedObjectExample
 {
     // snippet-start:[S3.dotnetv3.RestoreArchivedObjectExample]
@@ -15,11 +10,15 @@ namespace RestoreArchivedObjectExample
     using Amazon.S3;
     using Amazon.S3.Model;
 
+    /// <summary>
+    /// This example shows how to restore an archived object in an Amazon
+    /// Simple Storage Service (Amazon S3) bucket.
+    /// </summary>
     public class RestoreArchivedObject
     {
         public static void Main()
         {
-            string bucketName = "doc-example-bucket";
+            string bucketName = "amzn-s3-demo-bucket";
             string objectKey = "archived-object.txt";
 
             // Specify your bucket region (an example region is shown).
@@ -70,7 +69,7 @@ namespace RestoreArchivedObjectExample
         /// archived object you want to restore.</param>
         public static async Task CheckRestorationStatusAsync(IAmazonS3 client, string bucketName, string objectKey)
         {
-            GetObjectMetadataRequest metadataRequest = new()
+            GetObjectMetadataRequest metadataRequest = new GetObjectMetadataRequest()
             {
                 BucketName = bucketName,
                 Key = objectKey,

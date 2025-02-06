@@ -1,11 +1,5 @@
-// snippet-sourcedescription:[ListEndpointIds.kt demonstrates how to retrieve information about all the endpoints that are associated with a specific user ID.]
-// snippet-keyword:[AWS SDK for Kotlin]
-// snippet-keyword:[Amazon Pinpoint]
-
-/*
-   Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
-   SPDX-License-Identifier: Apache-2.0
-*/
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 
 package com.kotlin.pinpoint
 
@@ -24,7 +18,6 @@ https://docs.aws.amazon.com/sdk-for-kotlin/latest/developer-guide/setup.html
  */
 
 suspend fun main(args: Array<String>) {
-
     val usage = """
     Usage: <applicationId> <userId>
 
@@ -43,16 +36,19 @@ suspend fun main(args: Array<String>) {
     listAllEndpoints(applicationId, userId)
 }
 
-suspend fun listAllEndpoints(applicationIdVal: String?, userIdVal: String?) {
-
+suspend fun listAllEndpoints(
+    applicationIdVal: String?,
+    userIdVal: String?,
+) {
     PinpointClient { region = "us-east-1" }.use { pinpoint ->
 
-        val response = pinpoint.getUserEndpoints(
-            GetUserEndpointsRequest {
-                userId = userIdVal
-                applicationId = applicationIdVal
-            }
-        )
+        val response =
+            pinpoint.getUserEndpoints(
+                GetUserEndpointsRequest {
+                    userId = userIdVal
+                    applicationId = applicationIdVal
+                },
+            )
         response.endpointsResponse?.item?.forEach { endpoint ->
             println("The channel type is ${endpoint.channelType}")
             println("The address is  ${endpoint.address}")

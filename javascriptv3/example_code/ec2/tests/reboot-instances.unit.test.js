@@ -1,12 +1,5 @@
-/*
- * Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
- * SPDX-License-Identifier: Apache-2.0
- */
-
-/*
- * Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
- * SPDX-License-Identifier: Apache-2.0
- */
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 
 import { describe, it, expect, vi } from "vitest";
 
@@ -30,17 +23,28 @@ describe("reboot-instances", () => {
 
     send.mockResolvedValueOnce({});
 
-    await main();
+    await main({ instanceIds: [] });
 
     expect(logSpy).toHaveBeenCalledWith("Instance rebooted successfully.");
   });
 
-  it("should log the error message", async () => {
-    const logSpy = vi.spyOn(console, "error");
-    send.mockRejectedValueOnce(new Error("Failed"));
+  it("should log InvalidInstanceID.NotFound errors", async () => {
+    const logSpy = vi.spyOn(console, "warn");
+    const error = new Error("Failed");
+    error.name = "InvalidInstanceID.NotFound";
+    send.mockRejectedValueOnce(error);
 
-    await main();
+    await main({ instanceIds: [] });
 
-    expect(logSpy).toHaveBeenCalledWith(new Error("Failed"));
+    expect(logSpy).toHaveBeenCalledWith(
+      "Failed. Please provide the InstanceId of a valid instance to reboot.",
+    );
+  });
+
+  it("should throw unknown errors", async () => {
+    const error = new Error("Unknown error");
+    send.mockRejectedValueOnce(error);
+
+    await expect(() => main({})).rejects.toBe(error);
   });
 });

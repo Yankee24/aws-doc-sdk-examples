@@ -1,8 +1,6 @@
-/*
- * Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
- * SPDX-License-Identifier: Apache-2.0
- */
-import { fileURLToPath } from "url";
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
+import { fileURLToPath } from "node:url";
 
 // snippet-start:[sqs.JavaScript.visibility.receiveMessageV3]
 import {
@@ -22,7 +20,7 @@ const receiveMessage = (queueUrl) =>
       MessageAttributeNames: ["All"],
       QueueUrl: queueUrl,
       WaitTimeSeconds: 1,
-    })
+    }),
   );
 
 export const main = async (queueUrl = SQS_QUEUE_URL) => {
@@ -33,7 +31,7 @@ export const main = async (queueUrl = SQS_QUEUE_URL) => {
       QueueUrl: queueUrl,
       ReceiptHandle: Messages[0].ReceiptHandle,
       VisibilityTimeout: 20,
-    })
+    }),
   );
   console.log(response);
   return response;

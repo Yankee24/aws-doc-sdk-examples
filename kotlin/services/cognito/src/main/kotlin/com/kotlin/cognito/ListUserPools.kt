@@ -1,11 +1,5 @@
-// snippet-sourcedescription:[ListUserPools.kt demonstrates how to to list existing user pools in the given account.]
-// snippet-keyword:[AWS SDK for Kotlin]
-// snippet-service:[Amazon Cognito]
-
-/*
-   Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
-   SPDX-License-Identifier: Apache-2.0
-*/
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 
 package com.kotlin.cognito
 
@@ -27,10 +21,10 @@ suspend fun main() {
 
 // snippet-start:[cognito.kotlin.ListUserPools.main]
 suspend fun getAllPools() {
-
-    val request = ListUserPoolsRequest {
-        maxResults = 10
-    }
+    val request =
+        ListUserPoolsRequest {
+            maxResults = 10
+        }
 
     CognitoIdentityProviderClient { region = "us-east-1" }.use { cognitoClient ->
         val response = cognitoClient.listUserPools(request)

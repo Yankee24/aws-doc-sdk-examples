@@ -1,11 +1,10 @@
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 //
 // Swift Example: GetPolicy
 //
 // An example showing how to use the Amazon Identity and Access Management (IAM)
 // `IAMClient` function `getPolicy()`.
-//
-// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
-// SPDX-License-Identifier: Apache-2.0.
 
 // snippet-start:[iam.swift.getpolicy.example]
 // snippet-start:[iam.swift.getpolicy.main.imports]
@@ -32,9 +31,8 @@ struct ExampleCommand: ParsableCommand {
     /// example.
     // snippet-start:[iam.swift.getpolicy.command.runasync]
     func runAsync() async throws {
-        let serviceHandler = await ServiceHandler()
-
         do {
+            let serviceHandler = try await ServiceHandler()
             let policy = try await serviceHandler.getPolicy(arn: arn)
 
             guard   let policyName = policy.policyName,
@@ -60,6 +58,7 @@ struct ExampleCommand: ParsableCommand {
             }
 
         } catch {
+            print("ERROR: CreateRole runAsync:", dump(error))
             throw error
         }
     }

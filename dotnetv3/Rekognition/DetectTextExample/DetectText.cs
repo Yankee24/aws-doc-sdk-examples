@@ -1,5 +1,5 @@
 ﻿// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
-// SPDX-License-Identifier:  Apache-2.0
+// SPDX-License-Identifier: Apache-2.0
 
 namespace DetectTextExample
 {
@@ -19,7 +19,7 @@ namespace DetectTextExample
         public static async Task Main()
         {
             string photo = "Dad_photographer.jpg"; // "input.jpg";
-            string bucket = "igsmiths3photos"; // "bucket";
+            string bucket = "amzn-s3-demo-bucket"; // "bucket";
 
             var rekognitionClient = new AmazonRekognitionClient();
 

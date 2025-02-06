@@ -1,7 +1,5 @@
-/**
- * Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
- * SPDX-License-Identifier: Apache-2.0
- */
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 import { describe, it, expect } from "vitest";
 import { handler } from "../scenarios/lambda-triggers/functions/custom-message-sign-up.mjs";
 
@@ -23,9 +21,10 @@ describe("custom-message-sign-up", () => {
     expect(result).toEqual(
       expect.objectContaining({
         response: expect.objectContaining({
-          emailMessage: `Thank you for signing up. Your confirmation code is 123.`,
+          emailMessage:
+            "Thank you for signing up. Your confirmation code is 123.",
         }),
-      })
+      }),
     );
   });
 });

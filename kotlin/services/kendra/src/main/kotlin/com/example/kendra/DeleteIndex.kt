@@ -1,11 +1,5 @@
-// snippet-sourcedescription:[DeleteIndex.kt demonstrates how to delete an Amazon Kendra index.]
-// snippet-keyword:[SDK for Kotlin]
-// snippet-service:[Amazon Kendra]
-
-/*
-   Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
-   SPDX-License-Identifier: Apache-2.0
-*/
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 
 package com.example.kendra
 
@@ -24,7 +18,6 @@ https://docs.aws.amazon.com/sdk-for-kotlin/latest/developer-guide/setup.html
  */
 
 suspend fun main(args: Array<String>) {
-
     val usage = """
         Usage:
             <indexId> 
@@ -44,10 +37,10 @@ suspend fun main(args: Array<String>) {
 
 // snippet-start:[kendra.kotlin.delete.index.main]
 suspend fun deleteSpecificIndex(indexId: String) {
-
-    val deleteIndexRequest = DeleteIndexRequest {
-        id = indexId
-    }
+    val deleteIndexRequest =
+        DeleteIndexRequest {
+            id = indexId
+        }
 
     KendraClient { region = "us-east-1" }.use { kendra ->
         kendra.deleteIndex(deleteIndexRequest)

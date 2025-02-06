@@ -1,7 +1,5 @@
-/*
-   Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
-   SPDX-License-Identifier: Apache-2.0
-*/
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 /**
  * Before running this C++ code example, set up your development environment, including your credentials.
  *
@@ -14,13 +12,13 @@
  *
  **/
 
-//snippet-start:[dynamodb.cpp.update_item.inc]
+// snippet-start:[dynamodb.cpp.update_item.inc]
 #include <aws/core/Aws.h>
 #include <aws/dynamodb/DynamoDBClient.h>
 #include <aws/dynamodb/model/UpdateItemRequest.h>
 #include <aws/dynamodb/model/UpdateItemResult.h>
 #include <iostream>
-//snippet-end:[dynamodb.cpp.update_item.inc]
+// snippet-end:[dynamodb.cpp.update_item.inc]
 #include "dynamodb_samples.h"
 
 // snippet-start:[dynamodb.cpp.update_item.code]
@@ -82,12 +80,12 @@ bool AwsDoc::DynamoDB::updateItem(const Aws::String &tableName,
             request);
     if (outcome.IsSuccess()) {
         std::cout << "Item was updated" << std::endl;
-    }
-    else {
+    } else {
         std::cerr << outcome.GetError().GetMessage() << std::endl;
+        return false;
     }
 
-    return outcome.IsSuccess();
+    return waitTableActive(tableName, dynamoClient);
 }
 // snippet-end:[dynamodb.cpp.update_item.code]
 

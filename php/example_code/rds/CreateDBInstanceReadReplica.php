@@ -1,64 +1,35 @@
 <?php
-/**
- * Copyright 2010-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
- *
- * This file is licensed under the Apache License, Version 2.0 (the "License").
- * You may not use this file except in compliance with the License. A copy of
- * the License is located at
- *
- * http://aws.amazon.com/apache2.0/
- *
- * This file is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
- * CONDITIONS OF ANY KIND, either express or implied. See the License for the
- * specific language governing permissions and limitations under the License.
- *
- *
- *
- *
- */
-// snippet-start:[rds.php.create_db_replica.complete]
-// snippet-start:[rds.php.create_db_replica.import]
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 
-require 'vendor/autoload.php';
+// snippet-start:[php.example_code.rds.createDBInstanceReadReplica.complete]
+// snippet-start:[php.example_code.rds.createDBInstanceReadReplica.import]
 
-use Aws\Rds\RdsClient; 
+require __DIR__ . '/vendor/autoload.php';
+
 use Aws\Exception\AwsException;
-// snippet-end:[rds.php.create_db_replica.import]
 
-// snippet-start:[rds.php.create_db_replica.main]
-//Create a RDSClient
+// snippet-end:[php.example_code.rds.createDBInstanceReadReplica.import]
+
+// snippet-start:[php.example_code.rds.createDBInstanceReadReplica.main]
+
 $rdsClient = new Aws\Rds\RdsClient([
-    'profile' => 'default',
-    'version' => '2014-10-31',
     'region' => 'us-east-2'
 ]);
 
-$replicadbIdentifier = '<<{{name-for-db-replica}}>>';
-$sourcedbIdentifier = '<<{{db-identifier-of-db-to-replicate}}>>';
+$replicaDBIdentifier = '<<{{name-for-db-replica}}>>';
+$sourceDBIdentifier = '<<{{db-identifier-of-db-to-replicate}}>>';
 
 try {
     $result = $rdsClient->createDBInstanceReadReplica([
-        'DBInstanceIdentifier' => $replicadbIdentifier,
-        'SourceDBInstanceIdentifier' => $sourcedbIdentifier,
+        'DBInstanceIdentifier' => $replicaDBIdentifier,
+        'SourceDBInstanceIdentifier' => $sourceDBIdentifier,
     ]);
     var_dump($result);
 } catch (AwsException $e) {
-    // output error message if fails
     echo $e->getMessage();
     echo "\n";
-} 
-// snippet-end:[rds.php.create_db_replica.main]
-// snippet-end:[rds.php.create_db_replica.complete]
-// snippet-comment:[These are tags for the AWS doc team's sample catalog. Do not remove.]
-// snippet-sourcedescription:[CreateDBInstanceReadReplica.php demonstrates how to create read replica for an existing DB instance running MySQL, MariaDB, or PostgreSQL.]
-// snippet-keyword:[PHP]
-// snippet-sourcesyntax:[php]
-// snippet-keyword:[AWS SDK for PHP v3]
-// snippet-keyword:[Code Sample]
-// snippet-keyword:[Amazon Relational Database Service]
-// snippet-keyword:[createDBInstanceReadReplica]
-// snippet-service:[rds]
-// snippet-sourcetype:[full-example]
-// snippet-sourcedate:[2019-02-21]
-// snippet-sourceauthor:[jschwarzwalder (AWS)]
+}
 
+// snippet-end:[php.example_code.rds.createDBInstanceReadReplica.main]
+// snippet-end:[php.example_code.rds.createDBInstanceReadReplica.complete]

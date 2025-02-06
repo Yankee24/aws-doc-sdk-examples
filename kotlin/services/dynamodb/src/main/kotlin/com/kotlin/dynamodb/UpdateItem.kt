@@ -1,11 +1,5 @@
-// snippet-sourcedescription:[UpdateItem.kt demonstrates how to update a value located in an Amazon DynamoDB table.]
-// snippet-keyword:[AWS SDK for Kotlin]
-// snippet-service:[Amazon DynamoDB]
-
-/*
-   Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
-   SPDX-License-Identifier: Apache-2.0
-*/
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 
 package com.kotlin.dynamodb
 
@@ -27,7 +21,6 @@ https://docs.aws.amazon.com/sdk-for-kotlin/latest/developer-guide/setup.html
 */
 
 suspend fun main(args: Array<String>) {
-
     val usage = """
       Usage:
         <tableName> <key> <keyVal> <name> <updateVal>
@@ -60,23 +53,24 @@ suspend fun updateTableItem(
     keyName: String,
     keyVal: String,
     name: String,
-    updateVal: String
+    updateVal: String,
 ) {
-
     val itemKey = mutableMapOf<String, AttributeValue>()
     itemKey[keyName] = AttributeValue.S(keyVal)
 
     val updatedValues = mutableMapOf<String, AttributeValueUpdate>()
-    updatedValues[name] = AttributeValueUpdate {
-        value = AttributeValue.S(updateVal)
-        action = AttributeAction.Put
-    }
+    updatedValues[name] =
+        AttributeValueUpdate {
+            value = AttributeValue.S(updateVal)
+            action = AttributeAction.Put
+        }
 
-    val request = UpdateItemRequest {
-        tableName = tableNameVal
-        key = itemKey
-        attributeUpdates = updatedValues
-    }
+    val request =
+        UpdateItemRequest {
+            tableName = tableNameVal
+            key = itemKey
+            attributeUpdates = updatedValues
+        }
 
     DynamoDbClient { region = "us-east-1" }.use { ddb ->
         ddb.updateItem(request)

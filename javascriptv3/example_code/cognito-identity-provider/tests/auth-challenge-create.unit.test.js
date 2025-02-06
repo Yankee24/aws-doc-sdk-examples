@@ -1,7 +1,5 @@
-/**
- * Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
- * SPDX-License-Identifier: Apache-2.0
- */
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 
 import { describe, it, expect } from "vitest";
 import { handler } from "../scenarios/lambda-triggers/functions/auth-challenge-create.mjs";
@@ -10,7 +8,7 @@ describe("auth-challenge-create function", () => {
   it('should return the same request/response objects if the challenge name is not "CUSTOM_CHALLENGE"', async () => {
     const result = await handler({ request: {}, response: {} });
     expect(result).toEqual(
-      expect.objectContaining({ request: {}, response: {} })
+      expect.objectContaining({ request: {}, response: {} }),
     );
   });
 
@@ -36,7 +34,7 @@ describe("auth-challenge-create function", () => {
           publicChallengeParameters: { captchaUrl: "url/123.jpg" },
           privateChallengeParameters: { answer: "5" },
         },
-      })
+      }),
     );
   });
 
@@ -53,7 +51,7 @@ describe("auth-challenge-create function", () => {
           },
           privateChallengeParameters: { answer: "Peccy" },
         },
-      })
+      }),
     );
   });
 });

@@ -1,9 +1,7 @@
-/*
- * Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
- * SPDX-License-Identifier: Apache-2.0
- */
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 
-import { fileURLToPath } from "url";
+import { fileURLToPath } from "node:url";
 
 // snippet-start:[javascript.v3.sqs.hello]
 import { SQSClient, paginateListQueues } from "@aws-sdk/client-sqs";
@@ -28,7 +26,7 @@ export const helloSqs = async () => {
   const suffix = queues.length === 1 ? "" : "s";
 
   console.log(
-    `Hello, Amazon SQS! You have ${queues.length} queue${suffix} in your account.`
+    `Hello, Amazon SQS! You have ${queues.length} queue${suffix} in your account.`,
   );
   console.log(queues.map((t) => `  * ${t}`).join("\n"));
 };

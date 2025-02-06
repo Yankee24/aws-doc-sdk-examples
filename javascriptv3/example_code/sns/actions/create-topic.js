@@ -1,9 +1,7 @@
-/*
- * Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
- * SPDX-License-Identifier: Apache-2.0
- */
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 
-import { fileURLToPath } from "url";
+import { fileURLToPath } from "node:url";
 
 // snippet-start:[sns.JavaScript.topics.createTopicV3]
 import { CreateTopicCommand } from "@aws-sdk/client-sns";
@@ -14,7 +12,7 @@ import { snsClient } from "../libs/snsClient.js";
  */
 export const createTopic = async (topicName = "TOPIC_NAME") => {
   const response = await snsClient.send(
-    new CreateTopicCommand({ Name: topicName })
+    new CreateTopicCommand({ Name: topicName }),
   );
   console.log(response);
   // {

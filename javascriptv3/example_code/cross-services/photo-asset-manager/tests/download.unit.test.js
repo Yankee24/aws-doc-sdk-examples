@@ -1,3 +1,5 @@
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 import { DynamoDBDocumentClient } from "@aws-sdk/lib-dynamodb";
 import { describe, beforeEach, afterEach, it, expect, vi } from "vitest";
 import { getImageKeysForLabels } from "../src/functions/download.js";
@@ -57,7 +59,7 @@ describe("getImageKeysForLabels", () => {
     mockDocClient.send.mockRejectedValueOnce(mockError);
 
     await expect(
-      getImageKeysForLabels(["label1", "label2", "label3"])
+      getImageKeysForLabels(["label1", "label2", "label3"]),
     ).rejects.toThrow(mockError);
   });
 });

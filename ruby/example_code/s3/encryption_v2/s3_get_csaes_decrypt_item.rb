@@ -1,5 +1,5 @@
 # Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
-# SPDX - License - Identifier: Apache - 2.0
+# SPDX-License-Identifier: Apache-2.0
 
 # Purpose
 # This code example demonstrates how to get the contents of an encrypted object
@@ -7,7 +7,7 @@
 
 # snippet-start:[s3.s3_get_csaes_decrypt_item.rb]
 
-require "aws-sdk-s3"
+require 'aws-sdk-s3'
 
 # Prerequisites:
 #
@@ -32,7 +32,7 @@ require "aws-sdk-s3"
 #   )
 #   puts get_decrypted_object_content(
 #     s3_encryption_client,
-#     'doc-example-bucket',
+#     'amzn-s3-demo-bucket',
 #     'my-file.txt'
 #   )
 def get_decrypted_object_content(
@@ -42,27 +42,25 @@ def get_decrypted_object_content(
 )
   response = s3_encryption_client.get_object(
     bucket: bucket_name,
-    key: object_key)
-  if defined?(response.body)
-    return response.body.read
-  else
-    return "Error: Object content empty or unavailable."
-  end
+    key: object_key
+  )
+  return response.body.read if defined?(response.body)
+
+  'Error: Object content empty or unavailable.'
 rescue Aws::Errors::ServiceError => e
-  return "Error getting object content: #{e.message}"
+  "Error getting object content: #{e.message}"
 end
 
-# Full example call:
-# Replace us-west-2 with the AWS Region you're using for Amazon S3.
+# Example usage:
 def run_me
-  bucket_name = "doc-example-bucket"
+  bucket_name = "amzn-s3-demo-bucket"
   object_key = "my-file.txt"
   region = "us-west-2"
 
   # Provide a base64-encoded string representation of the key that
   # was originally used to encrypt the object. For example:
-  encryption_key_string = "XSiKrmzhtDKR9tTwJRSLjgwLhiMA82TC2z3GEXAMPLE="
-  encryption_key = encryption_key_string.unpack("m")[0]
+  encryption_key_string = 'XSiKrmzhtDKR9tTwJRSLjgwLhiMA82TC2z3GEXAMPLE='
+  encryption_key = encryption_key_string.unpack1('m')
 
   # Note that in the following call:
   # - key_wrap_schema must be aes_gcm for symmetric keys.

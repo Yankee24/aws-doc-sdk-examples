@@ -1,7 +1,5 @@
-/*
-   Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
-   SPDX-License-Identifier: Apache-2.0
-*/
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 
 package com.aws.rest
 
@@ -83,7 +81,7 @@ class RedshiftService {
             param2("date", sqlDate.toString()),
             param2("description", description.toString()),
             param2("guide", guide.toString()),
-            param2("idwork", workId)
+            param2("idwork", workId),
         )
 
         val statementRequest = ExecuteStatementRequest {
@@ -288,7 +286,7 @@ class RedshiftService {
         val sqlStatement = "update work set archive = (:arch) where idwork =(:id);"
         val parametersVal = listOf(
             param2("arch", arc),
-            param2("id", id)
+            param2("id", id),
         )
         val statementRequest = ExecuteStatementRequest {
             clusterIdentifier = clusterId

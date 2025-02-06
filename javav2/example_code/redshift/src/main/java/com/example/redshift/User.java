@@ -1,35 +1,23 @@
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 package com.example.redshift;
 
 public class User {
+    private String userName;
 
-    private String username;
-    private String  password;
-
-    private String masterUsername;
-
-    private String masterUserPassword;
+    private String password;
 
     private String host;
 
-
-    //getter
-    String getUsername(){
-        return this.username;
-    }
-
-    String getPassword(){
-        return this.password;
-    }
-
-    String getHost(){
+    public String getHost(){
         return this.host;
     }
 
-    public String getMasterUsername(){
-        return this.masterUsername;
+    public String getUserName(){
+        return this.userName;
     }
 
-    public String getMasterUserPassword(){
-        return this.masterUserPassword;
+    public String getUserPassword(){
+        return this.password;
     }
 }

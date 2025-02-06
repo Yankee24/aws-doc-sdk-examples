@@ -1,6 +1,7 @@
-/* Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
-SPDX-License-Identifier: Apache-2.0
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 
+/*
 ABOUT THIS NODE.JS EXAMPLE: This example works with the AWS SDK for JavaScript version 3 (v3),
 which is available at https://github.com/aws/aws-sdk-js-v3. This example is in the 'AWS SDK for JavaScript v3 Developer Guide' at
 https://docs.aws.amazon.com/sdk-for-javascript/v3/developer-guide/ses-examples-managing-identities.html.
@@ -13,7 +14,10 @@ node ses_verifydomainidentity.js
  */
 // snippet-start:[ses.JavaScript.identities.verifyDomainIdentityV3]
 import { VerifyDomainIdentityCommand } from "@aws-sdk/client-ses";
-import { getUniqueName, postfix } from "../../libs/utils/util-string.js";
+import {
+  getUniqueName,
+  postfix,
+} from "@aws-doc-sdk-examples/lib/utils/util-string.js";
 import { sesClient } from "./libs/sesClient.js";
 
 /**

@@ -1,11 +1,5 @@
-// snippet-sourcedescription:[ListIdentities.kt demonstrates how to list identities that belong to an Amazon Cognito identity pool.]
-// snippet-keyword:[AWS SDK for Kotlin]
-// snippet-service:[Amazon Cognito]
-
-/*
-   Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
-   SPDX-License-Identifier: Apache-2.0
-*/
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 
 package com.kotlin.cognito
 
@@ -24,7 +18,6 @@ https://docs.aws.amazon.com/sdk-for-kotlin/latest/developer-guide/setup.html
  */
 
 suspend fun main(args: Array<String>) {
-
     val usage = """
     Usage:
         <identityPoolId>
@@ -44,11 +37,11 @@ suspend fun main(args: Array<String>) {
 
 // snippet-start:[cognito.kotlin.listidentities.main]
 suspend fun listPoolIdentities(identityPoolId: String?) {
-
-    val request = ListIdentitiesRequest {
-        this.identityPoolId = identityPoolId
-        maxResults = 15
-    }
+    val request =
+        ListIdentitiesRequest {
+            this.identityPoolId = identityPoolId
+            maxResults = 15
+        }
 
     CognitoIdentityClient { region = "us-east-1" }.use { cognitoIdentityClient ->
         val response = cognitoIdentityClient.listIdentities(request)

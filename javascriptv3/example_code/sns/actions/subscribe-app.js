@@ -1,9 +1,7 @@
-/*
- * Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
- * SPDX-License-Identifier: Apache-2.0
- */
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 
-import { fileURLToPath } from "url";
+import { fileURLToPath } from "node:url";
 
 // snippet-start:[sns.JavaScript.subscriptions.subscribeAppV3]
 import { SubscribeCommand } from "@aws-sdk/client-sns";
@@ -14,13 +12,16 @@ import { snsClient } from "../libs/snsClient.js";
  * @param {string} endpoint - The Endpoint ARN of an application. This endpoint is created
  *                            when an application registers for notifications.
  */
-export const subscribeApp = async (topicArn = "TOPIC_ARN", endpoint = "ENDPOINT") => {
+export const subscribeApp = async (
+  topicArn = "TOPIC_ARN",
+  endpoint = "ENDPOINT",
+) => {
   const response = await snsClient.send(
     new SubscribeCommand({
       Protocol: "application",
       TopicArn: topicArn,
       Endpoint: endpoint,
-    })
+    }),
   );
   console.log(response);
   // {

@@ -1,11 +1,5 @@
-// snippet-sourcedescription:[DescribeSecurityGroups.kt demonstrates how to get information about all the Amazon Elastic Compute Cloud (Amazon EC2) Security Groups.]
-// snippet-keyword:[AWS SDK for Kotlin]
-// snippet-service:[Amazon EC2]
-
-/*
-   Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
-   SPDX-License-Identifier: Apache-2.0
-*/
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 
 package com.kotlin.ec2
 
@@ -24,7 +18,6 @@ https://docs.aws.amazon.com/sdk-for-kotlin/latest/developer-guide/setup.html
  */
 
 suspend fun main(args: Array<String>) {
-
     val usage = """
 
     Usage:
@@ -45,10 +38,10 @@ suspend fun main(args: Array<String>) {
 
 // snippet-start:[ec2.kotlin.describe_security_groups.main]
 suspend fun describeEC2SecurityGroups(groupId: String) {
-
-    val request = DescribeSecurityGroupsRequest {
-        groupIds = listOf(groupId)
-    }
+    val request =
+        DescribeSecurityGroupsRequest {
+            groupIds = listOf(groupId)
+        }
 
     Ec2Client { region = "us-west-2" }.use { ec2 ->
 

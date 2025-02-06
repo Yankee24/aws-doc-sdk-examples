@@ -1,11 +1,5 @@
-// snippet-sourcedescription:[CreateNamedQueryExample.kt demonstrates how to create a named query.]
-// snippet-keyword:[AWS SDK for Kotlin]
-// snippet-keyword:[Amazon Athena]
-
-/*
-   Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
-   SPDX-License-Identifier: Apache-2.0
-*/
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 
 package com.kotlin.athena
 
@@ -16,7 +10,6 @@ import kotlin.system.exitProcess
 // snippet-end:[athena.kotlin.CreateNamedQueryExample.import]
 
 suspend fun main(args: Array<String>) {
-
     val usage = """
     Usage:
         <queryString> <namedQuery> <database>
@@ -41,7 +34,6 @@ suspend fun main(args: Array<String>) {
 
 // snippet-start:[athena.kotlin.CreateNamedQueryExample.main]
 suspend fun createNamedQuery(queryStringVal: String, namedQuery: String, databaseVal: String): String? {
-
     AthenaClient { region = "us-west-2" }.use { athenaClient ->
         val resp = athenaClient.createNamedQuery(
             CreateNamedQueryRequest {
@@ -49,7 +41,7 @@ suspend fun createNamedQuery(queryStringVal: String, namedQuery: String, databas
                 queryString = queryStringVal
                 description = "Created via the AWS SDK for Kotlin"
                 this.name = namedQuery
-            }
+            },
         )
         return resp.namedQueryId
     }

@@ -1,15 +1,5 @@
-//snippet-sourcedescription:[GetStages.kt demonstrates how to get information about stages.]
-//snippet-keyword:[SDK for Kotlin]
-//snippet-keyword:[Code Sample]
-//snippet-service:[Amazon API Gateway]
-//snippet-sourcetype:[full-example]
-//snippet-sourcedate:[11/03/2021]
-//snippet-sourceauthor:[scmacdon - aws]
-
-/*
-   Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
-   SPDX-License-Identifier: Apache-2.0
-*/
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 
 package com.kotlin.gateway
 
@@ -19,8 +9,7 @@ import aws.sdk.kotlin.services.apigateway.model.GetStagesRequest
 import kotlin.system.exitProcess
 // snippet-end:[apigateway.kotlin.get_stages.import]
 
-suspend fun main(args:Array<String>) {
-
+suspend fun main(args: Array<String>) {
     val usage = """
         Usage:
             <restApiId> 
@@ -30,8 +19,8 @@ suspend fun main(args:Array<String>) {
         """
 
     if (args.size != 1) {
-          println(usage)
-          exitProcess(0)
+        println(usage)
+        exitProcess(0)
     }
 
     val restApiId = args[0]
@@ -40,7 +29,6 @@ suspend fun main(args:Array<String>) {
 
 // snippet-start:[apigateway.kotlin.get_stages.main]
 suspend fun getAllStages(restApiIdVal: String?) {
-
     val stagesRequest = GetStagesRequest {
         restApiId = restApiIdVal
     }

@@ -1,3 +1,5 @@
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 import { describe, it, expect } from "vitest";
 
 import { main } from "../actions/document-client/batch-get.js";
@@ -12,17 +14,17 @@ describe("batch-get-item", () => {
     [
       { Title: { S: "How to AWS" }, PageCount: { N: "10" } },
       { Title: { S: "DynamoDB for DBAs" }, PageCount: { N: "2" } },
-    ]
+    ],
   );
 
   it("should return a list of items", async () => {
     const { Responses } = await main();
-    const books = Responses["Books"];
+    const books = Responses.Books;
     expect(books).toEqual(
       expect.arrayContaining([
         { PageCount: 10, Title: "How to AWS" },
         { PageCount: 2, Title: "DynamoDB for DBAs" },
-      ])
+      ]),
     );
   });
 });

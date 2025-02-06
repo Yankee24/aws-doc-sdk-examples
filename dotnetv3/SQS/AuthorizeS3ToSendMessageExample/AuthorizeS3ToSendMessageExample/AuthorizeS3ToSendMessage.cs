@@ -1,5 +1,5 @@
 ﻿// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
-// SPDX-License-Identifier:  Apache-2.0
+// SPDX-License-Identifier: Apache-2.0
 
 /// <summary>
 /// Shows how to authorize an Amazon Simple Storage Service (Amazon S3)
@@ -23,7 +23,7 @@ namespace AuthorizeS3ToSendMessageExample
         public static async Task Main()
         {
             string queueUrl = "https://sqs.us-east-2.amazonaws.com/0123456789ab/Example_Queue";
-            string bucketName = "doc-example-bucket";
+            string bucketName = "amzn-s3-demo-bucket";
 
             // Create an Amazon SQS client object using the
             // default user. If the AWS Region you want to use

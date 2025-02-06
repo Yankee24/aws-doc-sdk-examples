@@ -1,11 +1,5 @@
-// snippet-sourcedescription:[ListTrainingJobs.kt demonstrates how to retrieve a list of training jobs.]
-// snippet-keyword:[AWS SDK for Kotlin]
-// snippet-keyword:[Amazon SageMaker]
-
-/*
-   Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
-   SPDX-License-Identifier: Apache-2.0
-*/
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 
 package com.kotlin.sage
 
@@ -27,7 +21,6 @@ suspend fun main() {
 
 // snippet-start:[sagemaker.kotlin.list_jobs.main]
 suspend fun listJobs() {
-
     SageMakerClient { region = "us-west-2" }.use { sageMakerClient ->
         val response = sageMakerClient.listTrainingJobs(ListTrainingJobsRequest { })
         response.trainingJobSummaries?.forEach { item ->

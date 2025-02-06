@@ -1,7 +1,5 @@
-/*
-   Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
-   SPDX-License-Identifier: Apache-2.0
-*/
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 
 import com.example.sage.DASHES
 import com.example.sage.checkBucket
@@ -80,7 +78,7 @@ class KotlinTest {
          Amazon SageMaker pipeline. The pipeline uses an AWS Lambda function and an
          Amazon SQS Queue. It runs a vector enrichment reverse geocode job to
          reverse geocode addresses in an input file and store the results in an export file.
-            """.trimIndent()
+            """.trimIndent(),
         )
         println(DASHES)
 

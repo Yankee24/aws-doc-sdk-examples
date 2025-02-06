@@ -1,9 +1,7 @@
-/*
- * Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
- * SPDX-License-Identifier: Apache-2.0
- */
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 
-import { fileURLToPath } from "url";
+import { fileURLToPath } from "node:url";
 
 // snippet-start:[javascript.v3.support.actions.CreateCase]
 import { CreateCaseCommand } from "@aws-sdk/client-support";
@@ -24,9 +22,9 @@ export const main = async () => {
         severityCode: "low",
         // Use DescribeServices to find available category codes for each service.
         categoryCode: "end-user-support",
-        // The main description of the support case. 
-        communicationBody: "This is a test. Please ignore."
-      })
+        // The main description of the support case.
+        communicationBody: "This is a test. Please ignore.",
+      }),
     );
     console.log(response.caseId);
     return response;

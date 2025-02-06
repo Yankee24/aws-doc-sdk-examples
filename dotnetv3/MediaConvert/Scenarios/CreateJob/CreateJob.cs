@@ -1,8 +1,7 @@
 ﻿// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
-// SPDX-License-Identifier:  Apache-2.0
+// SPDX-License-Identifier: Apache-2.0
 
 using Amazon.MediaConvert;
-using Amazon.MediaConvert.Model;
 using MediaConvertActions;
 using Microsoft.Extensions.Configuration;
 
@@ -23,7 +22,7 @@ public class CreateJob
 
         // snippet-start:[MediaConvert.dotnetv3.Setup]
 
-        // MediaConvert role Amazon Resource Name (ARN). 
+        // MediaConvert role Amazon Resource Name (ARN).
         // For information on creating this role, see
         // https://docs.aws.amazon.com/mediaconvert/latest/ug/creating-the-iam-role-in-mediaconvert-configured.html.
         var mediaConvertRole = _configuration["mediaConvertRoleARN"];
@@ -32,32 +31,7 @@ public class CreateJob
         var fileInput = _configuration["fileInput"];
         var fileOutput = _configuration["fileOutput"];
 
-        // Load the customer endpoint, if it is known.
-        // When you know what your Region-specific endpoint is, set it here, or set it in your settings.local.json file.
-        var mediaConvertEndpoint = _configuration["mediaConvertEndpoint"];
-
-        Console.WriteLine("Welcome to the MediaConvert Create Job example.");
-        // If you don't have the customer-specific endpoint, request it here.
-        if (string.IsNullOrEmpty(mediaConvertEndpoint))
-        {
-            Console.WriteLine("Getting customer-specific MediaConvert endpoint.");
-            AmazonMediaConvertClient client = new AmazonMediaConvertClient();
-            DescribeEndpointsRequest describeRequest = new DescribeEndpointsRequest();
-            DescribeEndpointsResponse describeResponse = await client.DescribeEndpointsAsync(describeRequest);
-            mediaConvertEndpoint = describeResponse.Endpoints[0].Url;
-        }
-        Console.WriteLine(new string('-', 80));
-        Console.WriteLine($"Using endpoint {mediaConvertEndpoint}.");
-        Console.WriteLine(new string('-', 80));
-        // Because you have a service URL for MediaConvert, you don't
-        // need to set RegionEndpoint. If you do, the ServiceURL will
-        // be overwritten.
-        AmazonMediaConvertConfig mcConfig = new AmazonMediaConvertConfig
-        {
-            ServiceURL = mediaConvertEndpoint,
-        };
-
-        AmazonMediaConvertClient mcClient = new AmazonMediaConvertClient(mcConfig);
+        AmazonMediaConvertClient mcClient = new AmazonMediaConvertClient();
 
         var wrapper = new MediaConvertWrapper(mcClient);
         // snippet-end:[MediaConvert.dotnetv3.Setup]

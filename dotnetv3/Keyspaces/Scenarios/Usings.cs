@@ -1,11 +1,8 @@
 ﻿// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
-// SPDX-License-Identifier:  Apache-2.0
+// SPDX-License-Identifier: Apache-2.0
 
 // snippet-start:[Keyspaces.dotnetv3.KeyspacesBasicsGlobalUsings]
-global using System.Net.Security;
-global using System.Runtime.ConstrainedExecution;
 global using System.Security.Cryptography.X509Certificates;
-global using System.Text;
 global using Amazon.Keyspaces;
 global using Amazon.Keyspaces.Model;
 global using KeyspacesActions;

@@ -1,10 +1,5 @@
-// snippet-sourcedescription:[AddFacesToCollection.kt demonstrates how to add faces to an Amazon Rekognition collection.]
-// snippet-keyword:[AWS SDK for Kotlin]
-// snippet-service:[Amazon Rekognition]
-/*
-   Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
-   SPDX-License-Identifier: Apache-2.0
-*/
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 package com.kotlin.rekognition
 
 // snippet-start:[rekognition.kotlin.add_faces_collection.import]
@@ -25,7 +20,6 @@ For more information, see the following documentation topic:
 https://docs.aws.amazon.com/sdk-for-kotlin/latest/developer-guide/setup.html
  */
 suspend fun main(args: Array<String>) {
-
     val usage = """
     Usage: 
         <collectionId> <sourceImage>
@@ -46,19 +40,23 @@ suspend fun main(args: Array<String>) {
 }
 
 // snippet-start:[rekognition.kotlin.add_faces_collection.main]
-suspend fun addToCollection(collectionIdVal: String?, sourceImage: String) {
+suspend fun addToCollection(
+    collectionIdVal: String?,
+    sourceImage: String,
+) {
+    val souImage =
+        Image {
+            bytes = (File(sourceImage).readBytes())
+        }
 
-    val souImage = Image {
-        bytes = (File(sourceImage).readBytes())
-    }
-
-    val request = IndexFacesRequest {
-        collectionId = collectionIdVal
-        image = souImage
-        maxFaces = 1
-        qualityFilter = QualityFilter.Auto
-        detectionAttributes = listOf(Attribute.Default)
-    }
+    val request =
+        IndexFacesRequest {
+            collectionId = collectionIdVal
+            image = souImage
+            maxFaces = 1
+            qualityFilter = QualityFilter.Auto
+            detectionAttributes = listOf(Attribute.Default)
+        }
 
     RekognitionClient { region = "us-east-1" }.use { rekClient ->
         val facesResponse = rekClient.indexFaces(request)

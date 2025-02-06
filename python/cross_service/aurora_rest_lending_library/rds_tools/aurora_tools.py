@@ -8,14 +8,15 @@ Shows how to use the AWS SDK for Python (Boto3) to create and delete an Amazon A
 (Aurora) database cluster and create and delete an AWS Secrets Manager secret.
 """
 
+from demo_tools.custom_waiter import CustomWaiter, WaitState
 import json
 import logging
 import sys
+
 from botocore.exceptions import ClientError
 
 # Add relative path to include demo_tools in this code example without need for setup.
-sys.path.append('../..')
-from demo_tools.custom_waiter import CustomWaiter, WaitState
+sys.path.append("../..")
 
 logger = logging.getLogger(__name__)
 
@@ -24,22 +25,46 @@ class ClusterAvailableWaiter(CustomWaiter):
     """
     Waits for the database cluster to be available.
     """
+
     def __init__(self, client):
         super().__init__(
-            'ClusterAvailable', 'DescribeDBClusters',
-            'DBClusters[].Status',
-            {'available': WaitState.SUCCESS},
+            "ClusterAvailable",
+            "DescribeDBClusters",
+            "DBClusters[].Status",
+            {"available": WaitState.SUCCESS},
             client,
-            matcher='pathAny')
+            matcher="pathAny",
+        )
 
     def wait(self, cluster_name):
         self._wait(DBClusterIdentifier=cluster_name)
 
 
+class DBInstanceAvailableWaiter(CustomWaiter):
+    """
+    Waits for the database instance to be available.
+    """
+
+    def __init__(self, client):
+        super().__init__(
+            "DBInstanceAvailable",
+            "DescribeDBInstances",
+            "DBInstances[].DBInstanceStatus",
+            {"available": WaitState.SUCCESS},
+            client,
+            delay=10,
+            max_tries=120,
+            matcher="pathAny",
+        )
+
+    def wait(self, instance_name):
+        self._wait(DBInstanceIdentifier=instance_name)
+
+
 def create_db_cluster(cluster_name, db_name, admin_name, admin_password, rds_client):
     """
-    Creates a serverless Amazon Aurora database cluster and a MySQL database
-    within it.
+    Creates an Amazon Aurora database cluster using an Aurora Serverless v2 database instance,
+    and a PostgreSQL database within it.
 
     :param cluster_name: The name of the cluster to create.
     :param db_name: The name of the database to create.
@@ -49,21 +74,40 @@ def create_db_cluster(cluster_name, db_name, admin_name, admin_password, rds_cli
     :return: The newly created cluster.
     """
     try:
-        response = rds_client.create_db_cluster(
+        create_cluster_response = rds_client.create_db_cluster(
             DatabaseName=db_name,
             DBClusterIdentifier=cluster_name,
-            Engine='aurora-mysql',
-            EngineMode='serverless',
+            EngineMode="provisioned",
+            Engine="aurora-postgresql",
+            EngineVersion="15",
             MasterUsername=admin_name,
             MasterUserPassword=admin_password,
-            EnableHttpEndpoint=True
+            EnableHttpEndpoint=True,
+            ServerlessV2ScalingConfiguration={"MinCapacity": 0.5, "MaxCapacity": 16},
         )
-        cluster = response['DBCluster']
+        cluster = create_cluster_response["DBCluster"]
         logger.info(
-            "Created database %s in cluster %s.", cluster['DatabaseName'],
-            cluster['DBClusterIdentifier'])
+            "Created database %s in cluster %s.",
+            cluster["DatabaseName"],
+            cluster["DBClusterIdentifier"],
+        )
     except ClientError:
-        logger.exception("Couldn't create database %s.", db_name)
+        logger.exception(
+            f"Couldn't create cluster {cluster_name} containing database {db_name}."
+        )
+        raise
+
+    instance_name = f"{cluster_name}-instance"
+    try:
+        create_instance_response = rds_client.create_db_instance(
+            DBInstanceIdentifier=instance_name,
+            DBClusterIdentifier=cluster_name,
+            Engine="aurora-postgresql",
+            DBInstanceClass="db.serverless",
+        )
+        create_instance_response["DBInstance"]
+    except ClientError:
+        logger.exception(f"Couldn't create instance {db_name}.")
         raise
     else:
         return cluster
@@ -71,14 +115,18 @@ def create_db_cluster(cluster_name, db_name, admin_name, admin_password, rds_cli
 
 def delete_db_cluster(cluster_name, rds_client):
     """
-    Deletes an Amazon Aurora cluster.
+    Deletes an Amazon Aurora cluster and its associated writer DB instance.
 
     :param cluster_name: The name of the cluster to delete.
     :param rds_client: The Boto3 Amazon RDS client.
     """
     try:
+        rds_client.delete_db_instance(
+            DBInstanceIdentifier=f"{cluster_name}-instance", SkipFinalSnapshot=True
+        )
         rds_client.delete_db_cluster(
-            DBClusterIdentifier=cluster_name, SkipFinalSnapshot=True)
+            DBClusterIdentifier=cluster_name, SkipFinalSnapshot=True
+        )
         logger.info("Deleted cluster %s.", cluster_name)
     except ClientError:
         logger.exception("Couldn't delete cluster %s.", cluster_name)
@@ -86,15 +134,15 @@ def delete_db_cluster(cluster_name, rds_client):
 
 
 def create_aurora_secret(
-        secret_name, username, password, engine, host, port, cluster_name,
-        secrets_client):
+    secret_name, username, password, engine, host, port, cluster_name, secrets_client
+):
     """
-    Creates an AWS Secrets Manager secret that contains MySQL user credentials.
+    Creates an AWS Secrets Manager secret that contains PostgreSQL user credentials.
 
     :param secret_name: The name of the secret to create.
     :param username: The username to store in the credentials.
     :param password: The password to store in the credentials.
-    :param engine: The database engine these credentials are for, such as MySQL.
+    :param engine: The database engine these credentials are for, such as MySQL or PostgreSQL.
     :param host: The endpoint URL of the Aurora cluster that contains the database
                  these credentials are for.
     :param port: The port that can be used to connect to the database endpoint.
@@ -103,16 +151,17 @@ def create_aurora_secret(
     :return The newly created secret.
     """
     aurora_admin_secret = {
-        'username': username,
-        'password': password,
-        'engine': engine,
-        'host': host,
-        'port': port,
-        'dbClusterIdentifier': cluster_name
+        "username": username,
+        "password": password,
+        "engine": engine,
+        "host": host,
+        "port": port,
+        "dbClusterIdentifier": cluster_name,
     }
     try:
         secret = secrets_client.create_secret(
-            Name=secret_name, SecretString=json.dumps(aurora_admin_secret))
+            Name=secret_name, SecretString=json.dumps(aurora_admin_secret)
+        )
         logger.info("Created secret %s.", secret_name)
     except ClientError:
         logger.exception("Couldn't create secret %s.", secret_name)
@@ -131,7 +180,8 @@ def delete_secret(secret_name, secrets_client):
     """
     try:
         secrets_client.delete_secret(
-            SecretId=secret_name, ForceDeleteWithoutRecovery=True)
+            SecretId=secret_name, ForceDeleteWithoutRecovery=True
+        )
         logger.info("Deleted secret %s.", secret_name)
     except ClientError:
         logger.exception("Couldn't delete secret %s.", secret_name)

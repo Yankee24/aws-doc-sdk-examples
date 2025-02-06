@@ -1,9 +1,7 @@
-/*
- * Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
- * SPDX-License-Identifier: Apache-2.0
- */
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 
-import { fileURLToPath } from "url";
+import { fileURLToPath } from "node:url";
 
 // snippet-start:[javascript.v3.support.actions.DescribeAttachment]
 import { DescribeAttachmentCommand } from "@aws-sdk/client-support";
@@ -18,7 +16,7 @@ export const main = async () => {
         // Set value to an existing attachment id.
         // Use DescribeCommunications or DescribeCases to find an attachment id.
         attachmentId: "ATTACHMENT_ID",
-      })
+      }),
     );
     console.log(response.attachment?.fileName);
     return response;

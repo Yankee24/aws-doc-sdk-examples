@@ -1,11 +1,5 @@
-// snippet-sourcedescription:[ListPipelines.kt demonstrates how to retrieve all pipelines.]
-// snippet-keyword:[AWS SDK for Kotlin]
-// snippet-service:[AWS CodePipeline]
-
-/*
-   Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
-   SPDX-License-Identifier: Apache-2.0
-*/
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 
 package com.kotlin.pipeline
 
@@ -28,7 +22,6 @@ suspend fun main() {
 
 // snippet-start:[pipeline.kotlin.list_pipelines.main]
 suspend fun getAllPipelines() {
-
     CodePipelineClient { region = "us-east-1" }.use { pipelineClient ->
         val response = pipelineClient.listPipelines(ListPipelinesRequest {})
         response.pipelines?.forEach { pipeline ->

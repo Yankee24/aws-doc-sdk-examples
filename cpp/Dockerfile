@@ -1,7 +1,7 @@
-# To build the docker image, run the following command from the shell. This command must be run in
-# the "aws-doc-sdk-examples" directory, the parent directory of "cpp", in order to access the resources folder.
+# To build the docker image, run the following command from the shell. This Dockerfile
+# is configured to be run from within the cpp directory of aws-doc-sdk-examples. 
 #
-# 'docker build -f cpp/Dockerfile -t <container_tag> .'
+# 'docker build -t <container_tag> .'
 #
 # The following command will run the docker image, copying your AWS credentials.
 # 'docker run -it --volume ~/.aws/credentials:/home/tests/.aws/credentials <container_tag>'
@@ -15,7 +15,7 @@ RUN \
 
 # Build only the services needed for example code.
 ENV SERVICES="acm;autoscaling;cloudtrail;codebuild;codecommit;cognito-idp;dynamodb;ec2;elasticache;elasticbeanstalk"
-ENV SERVICES=${SERVICES}";elasticfilesystem;email;events;glacier;glue;guardduty;iam;kinesis;lambda;logs;mediaconvert;monitoring"
+ENV SERVICES=${SERVICES}";elasticfilesystem;email;events;glacier;glue;guardduty;iam;iot;iot-data;kinesis;lambda;logs;mediaconvert;medical-imaging;monitoring"
 ENV SERVICES=${SERVICES}";monitoring;neptune;rds;rds-data;redshift;rekognition;s3;s3-crt;s3-encryption;secretsmanager;sesv2;sns;sqs"
 ENV SERVICES=${SERVICES}";storagegateway;sts;transfer;transcribe;transcribestreaming"
 
@@ -44,18 +44,18 @@ RUN \
 # Copy the C++ example code.
 RUN mkdir -p /src/cpp
 
-COPY cpp /src/cpp/
+COPY . /src/cpp/
 
-# The sample files are needed for some of the automated tests.
-RUN mkdir -p /src/resources/sample_files
-COPY resources/sample_files /src/resources/sample_files
+# Commented until https://github.com/awsdocs/aws-doc-sdk-examples/issues/5454 resolved.
+## The sample files are needed for some of the automated tests.
+#RUN mkdir -p /src/resources/sample_files
+#COPY resources/sample_files /src/resources/sample_files
 
 WORKDIR /src/cpp/
 
 RUN useradd -ms /bin/bash tests && \
-    chown tests /src/cpp
+    chown -R tests /src/cpp
 
 USER tests
 
-CMD ["bash"]
-
+CMD ["python3", "/src/cpp/run_automated_tests.py", "-23"]

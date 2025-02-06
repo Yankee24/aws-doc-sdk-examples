@@ -1,3 +1,5 @@
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 import { describe, it, expect } from "vitest";
 import { ScanCommand, DynamoDBClient } from "@aws-sdk/client-dynamodb";
 
@@ -20,7 +22,7 @@ describe("partiql-batch-update", () => {
         AttributeType: "S",
       },
     ],
-    starterValues
+    starterValues,
   );
 
   it("should change the egg style", async () => {
@@ -39,7 +41,7 @@ describe("partiql-batch-update", () => {
       expect.arrayContaining([
         { Variety: { S: "chicken" }, Style: { S: "omelette" } },
         { Variety: { S: "duck" }, Style: { S: "fried" } },
-      ])
+      ]),
     );
   });
 });

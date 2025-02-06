@@ -1,9 +1,7 @@
-/*
- * Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
- * SPDX-License-Identifier: Apache-2.0
- */
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 
-import { fileURLToPath } from "url";
+import { fileURLToPath } from "node:url";
 
 // snippet-start:[sns.JavaScript.SMS.checkIfPhoneNumberIsOptedOutV3]
 import { CheckIfPhoneNumberIsOptedOutCommand } from "@aws-sdk/client-sns";
@@ -11,7 +9,7 @@ import { CheckIfPhoneNumberIsOptedOutCommand } from "@aws-sdk/client-sns";
 import { snsClient } from "../libs/snsClient.js";
 
 export const checkIfPhoneNumberIsOptedOut = async (
-  phoneNumber = "5555555555"
+  phoneNumber = "5555555555",
 ) => {
   const command = new CheckIfPhoneNumberIsOptedOutCommand({
     phoneNumber,

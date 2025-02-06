@@ -1,16 +1,13 @@
-/*
- * Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
- * SPDX-License-Identifier: Apache-2.0
- */
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 import {
   EC2Client,
   RunInstancesCommand,
   TerminateInstancesCommand,
 } from "@aws-sdk/client-ec2";
-import { retry } from "libs/utils/util-timers.js";
-import { DEFAULT_REGION } from "libs/utils/util-aws-sdk.js";
+import { retry } from "@aws-doc-sdk-examples/lib/utils/util-timers.js";
 
-const client = new EC2Client({ region: DEFAULT_REGION });
+const client = new EC2Client({});
 
 export const runEC2Instance = async () => {
   // Free Tier - Amazon Linux 2 AMI (HVM) - Kernel 5.10, SSD Volume Type
@@ -22,7 +19,7 @@ export const runEC2Instance = async () => {
     InstanceType: "t2.micro",
   });
   const { Instances } = await retry({ intervalInMs: 3000, maxRetries: 5 }, () =>
-    client.send(command)
+    client.send(command),
   );
   return Instances[0].InstanceId;
 };

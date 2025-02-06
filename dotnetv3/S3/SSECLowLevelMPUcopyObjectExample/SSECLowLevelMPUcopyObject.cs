@@ -1,11 +1,6 @@
 ﻿// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
-// SPDX-License-Identifier:  Apache-2.0
+// SPDX-License-Identifier: Apache-2.0
 
-/// <summary>
-/// Uses the Amazon Simple Storage Service (Amazon S3) low level API to
-/// perform a multipart upload to an Amazon S3 bucket. The example was
-/// created using the AWS SDK for .NET version 3.7 and .NET Core 5.0.
-/// </summary>
 namespace SSECLowLevelMPUcopyObjectExample
 {
     // snippet-start:[S3.dotnetv3.SSECLowLevelMPUcopyObjectExample]
@@ -17,11 +12,15 @@ namespace SSECLowLevelMPUcopyObjectExample
     using Amazon.S3;
     using Amazon.S3.Model;
 
+    /// <summary>
+    /// Uses the Amazon Simple Storage Service (Amazon S3) low level API to
+    /// perform a multipart upload to an Amazon S3 bucket.
+    /// </summary>
     public class SSECLowLevelMPUcopyObject
     {
         public static async Task Main()
         {
-            string existingBucketName = "doc-example-bucket";
+            string existingBucketName = "amzn-s3-demo-bucket";
             string sourceKeyName = "sample_file.txt";
             string targetKeyName = "sample_file_copy.txt";
             string filePath = $"sample\\{targetKeyName}";
@@ -36,8 +35,11 @@ namespace SSECLowLevelMPUcopyObjectExample
             var base64Key = CreateEncryptionKey();
 
             await CreateSampleObjUsingClientEncryptionKeyAsync(
-                client, existingBucketName,
-                sourceKeyName, filePath, base64Key);
+                client,
+                existingBucketName,
+                sourceKeyName,
+                filePath,
+                base64Key);
         }
 
         /// <summary>
@@ -116,7 +118,6 @@ namespace SSECLowLevelMPUcopyObjectExample
                     BucketName = existingBucketName,
                     Key = sourceKeyName,
                     UploadId = initResponse.UploadId,
-
                 };
                 completeRequest.AddPartETags(uploadResponses);
 

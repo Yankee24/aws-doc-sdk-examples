@@ -1,11 +1,5 @@
-// snippet-sourcedescription:[ListGrants.kt demonstrates how to get information about AWS Key Management Service (AWS KMS) grants related to a key.]
-// snippet-keyword:[AWS SDK for Kotlin]
-// snippet-service:[AWS Key Management Service]
-
-/*
-   Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
-   SPDX-License-Identifier: Apache-2.0
-*/
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 
 package com.kotlin.kms
 
@@ -23,7 +17,6 @@ For more information, see the following documentation topic:
 https://docs.aws.amazon.com/sdk-for-kotlin/latest/developer-guide/setup.html
  */
 suspend fun main(args: Array<String>) {
-
     val usage = """
         Usage:
             <keyId> 
@@ -42,11 +35,11 @@ suspend fun main(args: Array<String>) {
 
 // snippet-start:[kms.kotlin_list_grant.main]
 suspend fun displayGrantIds(keyIdVal: String?) {
-
-    val request = ListGrantsRequest {
-        keyId = keyIdVal
-        limit = 15
-    }
+    val request =
+        ListGrantsRequest {
+            keyId = keyIdVal
+            limit = 15
+        }
 
     KmsClient { region = "us-west-2" }.use { kmsClient ->
         val response = kmsClient.listGrants(request)

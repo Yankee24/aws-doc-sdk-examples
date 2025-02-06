@@ -1,9 +1,7 @@
-/*
- * Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
- * SPDX-License-Identifier: Apache-2.0
- */
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 
-import { fileURLToPath } from "url";
+import { fileURLToPath } from "node:url";
 
 // snippet-start:[sns.JavaScript.subscriptions.confirmSubscriptionV3]
 import { ConfirmSubscriptionCommand } from "@aws-sdk/client-sns";
@@ -16,7 +14,7 @@ import { snsClient } from "../libs/snsClient.js";
  */
 export const confirmSubscription = async (
   token = "TOKEN",
-  topicArn = "TOPIC_ARN"
+  topicArn = "TOPIC_ARN",
 ) => {
   const response = await snsClient.send(
     // A subscription only needs to be confirmed if the endpoint type is
@@ -26,7 +24,7 @@ export const confirmSubscription = async (
       TopicArn: topicArn,
       // If this is true, the subscriber cannot unsubscribe while unauthenticated.
       AuthenticateOnUnsubscribe: "false",
-    })
+    }),
   );
   console.log(response);
   // {

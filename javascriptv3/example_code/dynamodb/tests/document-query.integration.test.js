@@ -1,3 +1,5 @@
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 import { describe, it, expect } from "vitest";
 
 import { main } from "../actions/document-client/query.js";
@@ -21,7 +23,7 @@ describe("document-query", () => {
         OriginCountry: { S: "Ethiopia" },
         RoastDate: { S: "2023-05-02" },
       },
-    ]
+    ],
   );
 
   it("should only return coffees roasted after 2023-05-01", async () => {

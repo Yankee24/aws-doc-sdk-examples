@@ -1,9 +1,7 @@
-/*
- * Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
- * SPDX-License-Identifier: Apache-2.0
- */
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 
-import { fileURLToPath } from "url";
+import { fileURLToPath } from "node:url";
 
 // snippet-start:[sqs.JavaScript.deadLetter.setQueueAttributesV3]
 import { SetQueueAttributesCommand, SQSClient } from "@aws-sdk/client-sqs";
@@ -14,7 +12,7 @@ const DEAD_LETTER_QUEUE_ARN = "dead_letter_queue_arn";
 
 export const main = async (
   queueUrl = SQS_QUEUE_URL,
-  deadLetterQueueArn = DEAD_LETTER_QUEUE_ARN
+  deadLetterQueueArn = DEAD_LETTER_QUEUE_ARN,
 ) => {
   const command = new SetQueueAttributesCommand({
     Attributes: {

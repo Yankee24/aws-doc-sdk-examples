@@ -1,5 +1,5 @@
 ﻿// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
-// SPDX - License - Identifier: Apache - 2.0
+// SPDX-License-Identifier: Apache-2.0
 
 namespace ListObjectsPaginatorExample
 {
@@ -11,12 +11,11 @@ namespace ListObjectsPaginatorExample
 
     /// <summary>
     /// The following example lists objects in an Amazon Simple Storage
-    /// Service (Amazon S3) bucket. It was created using AWS SDK for .NET 3.5
-    /// and .NET Core 5.0.
+    /// Service (Amazon S3) bucket.
     /// </summary>
     public class ListObjectsPaginator
     {
-        private const string BucketName = "doc-example-bucket";
+        private const string BucketName = "amzn-s3-demo-bucket";
 
         public static async Task Main()
         {

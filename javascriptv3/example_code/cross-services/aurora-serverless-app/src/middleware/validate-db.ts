@@ -1,7 +1,11 @@
-import { RequestHandler } from "express";
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
+
+import type { RequestHandler } from "express";
 import { command as createTableCommand } from "../statement-commands/create-table.js";
 import { command as getAllItemsCommand } from "../statement-commands/get-all-items.js";
-import { Handler } from "src/types/handler.js";
+import type { Handler } from "src/types/handler.js";
+import type { Sendable } from "src/types/sendable.js";
 
 const errorCodes = {
   TABLE_NOT_FOUND: "Error code: 1146",

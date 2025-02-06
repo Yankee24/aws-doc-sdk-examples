@@ -1,9 +1,7 @@
-/*
- * Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
- * SPDX-License-Identifier: Apache-2.0
- */
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 
-import { fileURLToPath } from "url";
+import { fileURLToPath } from "node:url";
 
 // snippet-start:[iam.JavaScript.keys.listAccessKeysV3]
 import { ListAccessKeysCommand, IAMClient } from "@aws-sdk/client-iam";
@@ -36,7 +34,7 @@ export async function* listAccessKeys(userName) {
       response = await client.send(
         new ListAccessKeysCommand({
           Marker: response.Marker,
-        })
+        }),
       );
     } else {
       break;

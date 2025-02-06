@@ -1,12 +1,5 @@
-// snippet-comment:[These are tags for the AWS doc team's sample catalog. Do not remove.]
-// snippet-sourcedescription:[GetSessionToken.kt demonstrates how to return a set of temporary credentials.]
-// snippet-keyword:[AWS SDK for Kotlin]
-// snippet-keyword:[AWS Security Token Service (AWS STS)]
-
-/*
-   Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
-   SPDX-License-Identifier: Apache-2.0
-*/
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 
 package com.kotlin.sts
 
@@ -28,10 +21,10 @@ suspend fun main() {
 
 // snippet-start:[sts.kotlin.get_session_token.main]
 suspend fun getToken() {
-
-    val request = GetSessionTokenRequest {
-        durationSeconds = 1500
-    }
+    val request =
+        GetSessionTokenRequest {
+            durationSeconds = 1500
+        }
 
     StsClient { region = "us-east-1" }.use { stsClient ->
         val tokenResponse = stsClient.getSessionToken(request)

@@ -1,60 +1,49 @@
-/**
- * Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
- * SPDX-License-Identifier: Apache-2.0
- */
-import {
-  cond,
-  invoker,
-  startsWith,
-  compose,
-  split,
-  trim,
-  T,
-  prop,
-  apply,
-} from "ramda";
-
-import { flipApplyMap } from "./ext-ramda.js";
-import { log } from "./utils/util-log.js";
-
-const readerProp = prop("reader");
-const handlersProp = prop("handlers");
-
-const close = invoker(0, "close");
-const on = invoker(2, "on");
-
-const processCommands = (context) =>
-  cond([
-    ...handlersProp(context),
-    [startsWith(["quit"]), () => close(readerProp(context))],
-    [T, () => log("Command not recognized.")],
-  ]);
-
-const getCommands = compose(split(" "), trim);
-
-const handleInput = (context) => compose(processCommands(context), getCommands);
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
+import { startsWith } from "./utils/util-array.js";
+import { logger } from "./utils/util-log.js";
 
 /**
+ * @typedef {(...args: unknown[]) => void} HandlerFn
  *
- * @param {{
- *  reader: { on: (event: string) => void, close: () => void },
- *  handlers?: [(a: any) => boolean, (a: any) => any][]
+ * @typedef {{ on: (event: string, fn: HandlerFn ) => void}} Reader
+ *
+ * @typedef {{
+ *  reader: Reader,
+ *  handlers?: []
  *  commands?: string[]
- * }} context
- * @returns
+ * }} Context
+ *
+ * @typedef {[(a: unknown) => boolean, (a: unknown) => unknown]} Handler
  */
-const readCommands = compose(
-  apply(on("line")),
-  flipApplyMap([handleInput, readerProp])
-);
 
-export {
-  readCommands,
-  readerProp,
-  handlersProp,
-  close,
-  on,
-  processCommands,
-  getCommands,
-  handleInput,
-};
+/**
+ * @param {string} input
+ */
+function getCommands(input) {
+  return input.trim().split(" ");
+}
+
+/**
+ * @param {{ reader: Reader, handlers: Handler[] }} handlers
+ */
+function readCommands({ reader, handlers }) {
+  reader.on("line", (input) => {
+    const commands = getCommands(input);
+
+    for (const handler of handlers) {
+      if (handler[0](commands)) {
+        return handler[1](commands);
+      }
+    }
+
+    const isQuitCommand = startsWith(["quit"]);
+    if (isQuitCommand(commands)) {
+      return reader.close();
+    }
+
+    return logger.error("Command not recognized.");
+  });
+}
+
+export { readCommands, getCommands };

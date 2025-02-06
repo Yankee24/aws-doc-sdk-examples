@@ -1,9 +1,7 @@
-/*
- * Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
- * SPDX-License-Identifier: Apache-2.0
- */
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 
-import { fileURLToPath } from "url";
+import { fileURLToPath } from "node:url";
 
 // snippet-start:[sns.JavaScript.subscriptions.subscribeLambdaV3]
 import { SubscribeCommand } from "@aws-sdk/client-sns";
@@ -15,14 +13,14 @@ import { snsClient } from "../libs/snsClient.js";
  */
 export const subscribeLambda = async (
   topicArn = "TOPIC_ARN",
-  endpoint = "ENDPOINT"
+  endpoint = "ENDPOINT",
 ) => {
   const response = await snsClient.send(
     new SubscribeCommand({
       Protocol: "lambda",
       TopicArn: topicArn,
       Endpoint: endpoint,
-    })
+    }),
   );
   console.log(response);
   // {

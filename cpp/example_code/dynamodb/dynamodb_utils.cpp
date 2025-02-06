@@ -1,7 +1,5 @@
-/*
-   Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
-   SPDX-License-Identifier: Apache-2.0
-*/
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 
 /**
  *
@@ -148,12 +146,12 @@ bool AwsDoc::DynamoDB::deleteMoviesDynamoDBTable(
 /*!
   \sa waitTableActive()
   \param waitTableActive: The DynamoDB table's name.
-  \param clientConfiguration: AWS client configuration.
+  \param dynamoClient: A DynamoDB client.
   \return bool: Function succeeded.
 */
 bool AwsDoc::DynamoDB::waitTableActive(const Aws::String &tableName,
-                                       const Aws::Client::ClientConfiguration &clientConfiguration) {
-    Aws::DynamoDB::DynamoDBClient dynamoClient(clientConfiguration);
+                                       const Aws::DynamoDB::DynamoDBClient &dynamoClient) {
+
     // Repeatedly call DescribeTable until table is ACTIVE.
     const int MAX_QUERIES = 20;
     Aws::DynamoDB::Model::DescribeTableRequest request;
@@ -258,12 +256,12 @@ float AwsDoc::DynamoDB::askQuestionForFloatRange(const Aws::String &string, floa
                 float number = std::stof(string1);
                 bool result = number >= low && number <= high;
                 if (!result) {
-                    std::cout << "\nThe number is out of range." << std::endl;
+                    std::cerr << "\nThe number is out of range." << std::endl;
                 }
                 return result;
             }
             catch (const std::invalid_argument &) {
-                std::cout << "\nNot a valid number." << std::endl;
+                std::cerr << "\nNot a valid number." << std::endl;
                 return false;
             }
     });
@@ -297,12 +295,12 @@ int AwsDoc::DynamoDB::askQuestionForIntRange(const Aws::String &string, int low,
                 int number = std::stoi(string1);
                 bool result = number >= low && number <= high;
                 if (!result) {
-                    std::cout << "\nThe number is out of range." << std::endl;
+                    std::cerr << "\nThe number is out of range." << std::endl;
                 }
                 return result;
             }
             catch (const std::invalid_argument &) {
-                std::cout << "\nNot a valid number." << std::endl;
+                std::cerr << "\nNot a valid number." << std::endl;
                 return false;
             }
     });

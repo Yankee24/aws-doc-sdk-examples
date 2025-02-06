@@ -1,11 +1,5 @@
-// snippet-sourcedescription:[CreateSubscriptionFilter.kt demonstrates how to create an Amazon CloudWatch log subscription filter.]
-// snippet-keyword:[AWS SDK for Kotlin]
-// snippet-service:[Amazon CloudWatch]
-
-/*
-   Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
-   SPDX-License-Identifier: Apache-2.0
-*/
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 
 package com.kotlin.cloudwatch
 
@@ -24,7 +18,6 @@ https://docs.aws.amazon.com/sdk-for-kotlin/latest/developer-guide/setup.html
  */
 
 suspend fun main(args: Array<String>) {
-
     val usage = """
 
     Usage:
@@ -49,14 +42,19 @@ suspend fun main(args: Array<String>) {
 }
 
 // snippet-start:[cloudwatch.kotlin.create_filter.main]
-suspend fun putSubFilters(filter: String, pattern: String, logGroup: String, functionArn: String) {
-
-    val request = PutSubscriptionFilterRequest {
-        filterName = filter
-        filterPattern = pattern
-        logGroupName = logGroup
-        destinationArn = functionArn
-    }
+suspend fun putSubFilters(
+    filter: String,
+    pattern: String,
+    logGroup: String,
+    functionArn: String,
+) {
+    val request =
+        PutSubscriptionFilterRequest {
+            filterName = filter
+            filterPattern = pattern
+            logGroupName = logGroup
+            destinationArn = functionArn
+        }
 
     CloudWatchLogsClient { region = "us-west-2" }.use { cwlClient ->
         cwlClient.putSubscriptionFilter(request)

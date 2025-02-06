@@ -1,17 +1,15 @@
-/**
- * Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
- * SPDX-License-Identifier: Apache-2.0
- */
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 
-import { getFirstEntry } from "libs/utils/util-csv.js";
-import { log } from "libs/utils/util-log.js";
+import { getFirstEntry } from "@aws-doc-sdk-examples/lib/utils/util-csv.js";
+import { logger } from "@aws-doc-sdk-examples/lib/utils/util-log.js";
 import { adminGetUser } from "../../../actions/admin-get-user.js";
 import { FILE_USER_POOLS } from "./constants.js";
 
 const validateUsername = (username) => {
   if (!username) {
     throw new Error(
-      `Username is missing. It must be provided as an argument to the 'admin-get-user' command.`
+      `Username is missing. It must be provided as an argument to the 'admin-get-user' command.`,
     );
   }
 };
@@ -43,9 +41,9 @@ const adminGetUserHandler = async ([_cmd, username]) => {
 
     const user = await getUser(username);
 
-    log(formatUser(user));
+    logger.log(formatUser(user));
   } catch (err) {
-    log(err);
+    logger.error(err);
   }
 };
 

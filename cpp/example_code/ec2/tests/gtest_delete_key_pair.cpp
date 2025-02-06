@@ -1,7 +1,5 @@
-/*
-   Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
-   SPDX-License-Identifier: Apache-2.0
-*/
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 /*
  * Test types are indicated by the test label ending.
  *
@@ -22,7 +20,7 @@ namespace AwsDocTest {
         bool result = createKeyPair(keyPairName);
         ASSERT_TRUE(result) << preconditionError() << std::endl;
 
-        result = AwsDoc::EC2::DeleteKeyPair(keyPairName, *s_clientConfig);
+        result = AwsDoc::EC2::deleteKeyPair(keyPairName, *s_clientConfig);
         ASSERT_TRUE(result);
     }
 

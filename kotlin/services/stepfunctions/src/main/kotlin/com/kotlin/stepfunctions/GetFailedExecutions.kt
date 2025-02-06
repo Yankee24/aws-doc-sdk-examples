@@ -1,11 +1,5 @@
-// snippet-sourcedescription:[GetExecutionHistory.kt demonstrates how to retrieve the history of the specified execution as a list of events.]
-// snippet-keyword:[AWS SDK for Kotlin]
-// snippet-service:[AWS Step Functions]
-
-/*
-   Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
-   SPDX-License-Identifier: Apache-2.0
-*/
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 
 package com.kotlin.stepfunctions
 
@@ -25,7 +19,6 @@ https://docs.aws.amazon.com/sdk-for-kotlin/latest/developer-guide/setup.html
  */
 
 suspend fun main(args: Array<String>) {
-
     val usage = """
       Usage:
          <stateMachineARN> 
@@ -44,12 +37,12 @@ suspend fun main(args: Array<String>) {
 
 // snippet-start:[stepfunctions.kotlin.get_failed_exes.main]
 suspend fun getFailedExes(stateMachineARN: String?) {
-
-    val executionsRequest = ListExecutionsRequest {
-        maxResults = 10
-        stateMachineArn = stateMachineARN
-        statusFilter = ExecutionStatus.Failed
-    }
+    val executionsRequest =
+        ListExecutionsRequest {
+            maxResults = 10
+            stateMachineArn = stateMachineARN
+            statusFilter = ExecutionStatus.Failed
+        }
 
     SfnClient { region = "us-east-1" }.use { sfnClient ->
         val response = sfnClient.listExecutions(executionsRequest)

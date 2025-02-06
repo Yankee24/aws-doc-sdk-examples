@@ -1,9 +1,7 @@
-/*
- * Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
- * SPDX-License-Identifier: Apache-2.0
- */
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 
-import { fileURLToPath } from "url";
+import { fileURLToPath } from "node:url";
 
 // snippet-start:[iam.JavaScript.keys.getAccessKeyLastUsedV3]
 import { GetAccessKeyLastUsedCommand, IAMClient } from "@aws-sdk/client-iam";
@@ -20,7 +18,7 @@ export const getAccessKeyLastUsed = async (accessKeyId) => {
   });
 
   const response = await client.send(command);
-  
+
   if (response.AccessKeyLastUsed?.LastUsedDate) {
     console.log(`
     ${accessKeyId} was last used by ${response.UserName} via 

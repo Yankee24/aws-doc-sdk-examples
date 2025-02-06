@@ -1,11 +1,5 @@
-// snippet-sourcedescription:[DescribeAddresses.kt demonstrates how to get information about elastic IP addresses.]
-// snippet-keyword:[AWS SDK for Kotlin]
-// snippet-service:[Amazon EC2]
-
-/*
-   Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
-   SPDX-License-Identifier: Apache-2.0
-*/
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 
 package com.kotlin.ec2
 
@@ -31,7 +25,9 @@ suspend fun describeEC2Address() {
     Ec2Client { region = "us-west-2" }.use { ec2 ->
         val response = ec2.describeAddresses(DescribeAddressesRequest {})
         response.addresses?.forEach { address ->
-            println("Found address with public IP ${address.publicIp}, domain is ${address.domain}, allocation id ${address.allocationId} and NIC id: ${address.networkInterfaceId} ")
+            println(
+                "Found address with public IP ${address.publicIp}, domain is ${address.domain}, allocation id ${address.allocationId} and NIC id: ${address.networkInterfaceId} ",
+            )
         }
     }
 }

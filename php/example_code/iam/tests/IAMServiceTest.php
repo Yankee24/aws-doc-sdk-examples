@@ -1,10 +1,14 @@
 <?php
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 
 namespace Iam\Tests;
 
 use Exception;
 use Iam\IAMService;
 use PHPUnit\Framework\TestCase;
+
+// TODO rewrite as unit tests
 
 /**
  * @group integ

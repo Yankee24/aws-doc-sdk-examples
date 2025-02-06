@@ -1,3 +1,5 @@
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 import { describe, it, expect } from "vitest";
 import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
 import { DynamoDBDocumentClient, GetCommand } from "@aws-sdk/lib-dynamodb";
@@ -12,7 +14,7 @@ describe("delete-item", () => {
   tableSetupTeardown(
     tableName,
     [{ AttributeName: "Name", AttributeType: "S" }],
-    [{ Name: { S: "Pumpkin Spice Latte" } }]
+    [{ Name: { S: "Pumpkin Spice Latte" } }],
   );
 
   it("should remove an item from a database", async () => {

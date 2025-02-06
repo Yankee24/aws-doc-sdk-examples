@@ -1,10 +1,9 @@
 ﻿// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
-// SPDX-License-Identifier:  Apache-2.0
+// SPDX-License-Identifier: Apache-2.0
 
 // snippet-start:[AutoScaling.dotnetv3.AutoScalingBasics]
 
 using Amazon.EC2;
-using Amazon.EC2.Model;
 using Microsoft.Extensions.Configuration;
 using Host = Microsoft.Extensions.Hosting.Host;
 

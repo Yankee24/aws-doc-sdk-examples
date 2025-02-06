@@ -1,9 +1,7 @@
-/*
- * Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
- * SPDX-License-Identifier: Apache-2.0
- */
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 
-import { fileURLToPath } from "url";
+import { fileURLToPath } from "node:url";
 
 import { IAMClient } from "@aws-sdk/client-iam";
 import { LambdaClient } from "@aws-sdk/client-lambda";
@@ -11,13 +9,12 @@ import { SageMakerClient } from "@aws-sdk/client-sagemaker";
 import { SQSClient } from "@aws-sdk/client-sqs";
 import { S3Client } from "@aws-sdk/client-s3";
 
-import { Prompter } from "libs/prompter.js";
-import { SlowLogger } from "libs/slow-logger.js";
+import { Prompter } from "@aws-doc-sdk-examples/lib/prompter.js";
 
 import { SageMakerPipelinesWkflw } from "./SageMakerPipelinesWkflw.js";
 
 const prompter = new Prompter();
-const logger = new SlowLogger(25);
+const logger = console;
 
 export async function main() {
   const pipelineWkfw = new SageMakerPipelinesWkflw(prompter, logger, {

@@ -1,9 +1,7 @@
-/*
- * Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
- * SPDX-License-Identifier: Apache-2.0
- */
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 
-import {fileURLToPath} from "url";
+import { fileURLToPath } from "node:url";
 
 // snippet-start:[javascript.v3.ses.attachment]
 import sesClientModule from "@aws-sdk/client-ses";
@@ -21,11 +19,11 @@ import nodemailer from "nodemailer";
  */
 export const sendEmailWithAttachments = (
   from = "from@example.com",
-  to = "to@example.com"
+  to = "to@example.com",
 ) => {
   const ses = new sesClientModule.SESClient({});
   const transporter = nodemailer.createTransport({
-    SES: {ses, aws: sesClientModule},
+    SES: { ses, aws: sesClientModule },
   });
 
   return new Promise((resolve, reject) => {
@@ -35,7 +33,7 @@ export const sendEmailWithAttachments = (
         to,
         subject: "Hello World",
         text: "Greetings from Amazon SES!",
-        attachments: [{content: "Hello World!", filename: "hello.txt"}],
+        attachments: [{ content: "Hello World!", filename: "hello.txt" }],
       },
       (err, info) => {
         if (err) {
@@ -43,7 +41,7 @@ export const sendEmailWithAttachments = (
         } else {
           resolve(info);
         }
-      }
+      },
     );
   });
 };

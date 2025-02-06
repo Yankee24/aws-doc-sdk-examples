@@ -1,7 +1,5 @@
-/*
-   Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
-   SPDX-License-Identifier: Apache-2.0
-*/
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 /**
  * Before running this C++ code example, set up your development environment, including your credentials.
  *
@@ -14,12 +12,12 @@
  *
  **/
 
-//snippet-start:[sqs.cpp.list_queues.inc]
+// snippet-start:[sqs.cpp.list_queues.inc]
 #include <aws/core/Aws.h>
 #include <aws/sqs/SQSClient.h>
 #include <aws/sqs/model/ListQueuesRequest.h>
 #include <iostream>
-//snippet-end:[sqs.cpp.list_queues.inc]
+// snippet-end:[sqs.cpp.list_queues.inc]
 #include "sqs_samples.h"
 
 // snippet-start:[cpp.example_code.sqs.ListQueues]
@@ -33,23 +31,40 @@ AwsDoc::SQS::listQueues(const Aws::Client::ClientConfiguration &clientConfigurat
     // snippet-start:[sqs.cpp.list_queues.code]
     Aws::SQS::SQSClient sqsClient(clientConfiguration);
 
-    Aws::SQS::Model::ListQueuesRequest lq_req;
+    Aws::SQS::Model::ListQueuesRequest listQueuesRequest;
 
-    const Aws::SQS::Model::ListQueuesOutcome outcome = sqsClient.ListQueues(lq_req);
-    if (outcome.IsSuccess()) {
-        std::cout << "Queue Urls:" << std::endl << std::endl;
-        const auto &queue_urls = outcome.GetResult().GetQueueUrls();
-        for (const auto &iter: queue_urls) {
-            std::cout << " " << iter << std::endl;
+    Aws::String nextToken; // Used for pagination.
+    Aws::Vector<Aws::String> allQueueUrls;
+
+    do {
+        if (!nextToken.empty()) {
+            listQueuesRequest.SetNextToken(nextToken);
         }
-    }
-    else {
-        std::cerr << "Error listing queues: " <<
-                  outcome.GetError().GetMessage() << std::endl;
+        const Aws::SQS::Model::ListQueuesOutcome outcome = sqsClient.ListQueues(
+                listQueuesRequest);
+        if (outcome.IsSuccess()) {
+            const Aws::Vector<Aws::String> &queueUrls = outcome.GetResult().GetQueueUrls();
+            allQueueUrls.insert(allQueueUrls.end(),
+                                queueUrls.begin(),
+                                queueUrls.end());
+
+            nextToken = outcome.GetResult().GetNextToken();
+        }
+        else {
+            std::cerr << "Error listing queues: " <<
+                      outcome.GetError().GetMessage() << std::endl;
+            return false;
+        }
+
+    } while (!nextToken.empty());
+
+    std::cout << allQueueUrls.size() << " Amazon SQS queue(s) found." << std::endl;
+    for (const auto &iter: allQueueUrls) {
+        std::cout << " " << iter << std::endl;
     }
     // snippet-end:[sqs.cpp.list_queues.code]
 
-    return outcome.IsSuccess();
+    return true;
 }
 // snippet-end:[cpp.example_code.sqs.ListQueues]
 

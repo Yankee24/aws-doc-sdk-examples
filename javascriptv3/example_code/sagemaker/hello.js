@@ -1,9 +1,7 @@
-/*
- * Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
- * SPDX-License-Identifier: Apache-2.0
- */
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 
-import {fileURLToPath} from "url";
+import { fileURLToPath } from "node:url";
 
 // snippet-start:[javascript.v3.sagemaker.hello]
 import {
@@ -16,18 +14,18 @@ const client = new SageMakerClient({
 });
 
 export const helloSagemaker = async () => {
-  const command = new ListNotebookInstancesCommand({MaxResults: 5});
+  const command = new ListNotebookInstancesCommand({ MaxResults: 5 });
 
   const response = await client.send(command);
   console.log(
-    "Hello Amazon SageMaker! Let's list some of your notebook instances:"
+    "Hello Amazon SageMaker! Let's list some of your notebook instances:",
   );
 
   const instances = response.NotebookInstances || [];
 
   if (instances.length === 0) {
     console.log(
-      "• No notebook instances found. Try creating one in the AWS Management Console or with the CreateNotebookInstanceCommand."
+      "• No notebook instances found. Try creating one in the AWS Management Console or with the CreateNotebookInstanceCommand.",
     );
   } else {
     console.log(
@@ -36,9 +34,9 @@ export const helloSagemaker = async () => {
           (i) =>
             `• Instance: ${i.NotebookInstanceName}\n  Arn:${
               i.NotebookInstanceArn
-            } \n  Creation Date: ${i.CreationTime.toISOString()}`
+            } \n  Creation Date: ${i.CreationTime.toISOString()}`,
         )
-        .join("\n")
+        .join("\n"),
     );
   }
 

@@ -1,9 +1,7 @@
-/*
- * Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
- * SPDX-License-Identifier: Apache-2.0
- */
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 
-import { fileURLToPath } from "url";
+import { fileURLToPath } from "node:url";
 
 // snippet-start:[support.javascriptv3.actions.DescribeCommunications]
 import { DescribeCommunicationsCommand } from "@aws-sdk/client-support";
@@ -20,7 +18,7 @@ export const main = async () => {
       new DescribeCommunicationsCommand({
         // Set value to an existing case id.
         caseId: "CASE_ID",
-      })
+      }),
     );
     const text = response.communications.map((item) => item.body).join("\n");
     console.log(text);

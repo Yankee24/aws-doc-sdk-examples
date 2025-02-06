@@ -1,7 +1,5 @@
-/*
-   Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
-   SPDX-License-Identifier: Apache-2.0
-*/
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 
 package com.aws.kotlin
 
@@ -31,14 +29,10 @@ class MessageResource {
     var sns: SnsService? = null
 
     @GetMapping("/")
-    fun root(): String {
-        return "index"
-    }
+    fun root(): String = "index"
 
     @GetMapping("/subscribe")
-    fun add(): String {
-        return "sub"
-    }
+    fun add(): String = "sub"
 
     @RequestMapping(value = ["/delSub"], method = [RequestMethod.POST])
     @ResponseBody

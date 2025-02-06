@@ -1,22 +1,22 @@
 <?php
-/*
-Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
-SPDX-License-Identifier: Apache-2.0
-*/
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
+
 
 // snippet-start:[cloudwatch.php.put_metric_alarm.complete]
 // snippet-start:[cloudwatch.php.put_metric_alarm.import]
 
 require 'vendor/autoload.php';
 
-use Aws\CloudWatch\CloudWatchClient; 
+use Aws\CloudWatch\CloudWatchClient;
 use Aws\Exception\AwsException;
+
 // snippet-end:[cloudwatch.php.put_metric_alarm.import]
 
 /* ////////////////////////////////////////////////////////////////////////////
- * Purpose: Creates or updates an alarm for the specified metric 
+ * Purpose: Creates or updates an alarm for the specified metric
  * in Amazon CloudWatch.
- * 
+ *
  * Inputs:
  * - $cloudWatchClient: An initialized CloudWatch client.
  * - $cloudWatchRegion: The AWS Region for the new or updated alarm.
@@ -28,19 +28,27 @@ use Aws\Exception\AwsException;
  * - $period: The number of seconds between times the metric is evaluated.
  * - $comparison: The arithmetic operation to use when comparing the threshold.
  * - $threshold: The value against which the specified statistic is compared.
- * - $evaluationPeriods: The number of periods over which data is compared to 
+ * - $evaluationPeriods: The number of periods over which data is compared to
  *   the specified threshold.
- * 
- * Returns: Information about the new or updated alarm; 
+ *
+ * Returns: Information about the new or updated alarm;
  * otherwise, the error message.
  * ///////////////////////////////////////////////////////////////////////// */
 
 // snippet-start:[cloudwatch.php.put_metric_alarm.main]
-function putMetricAlarm($cloudWatchClient, $cloudWatchRegion, 
-    $alarmName, $namespace, $metricName, 
-    $dimensions, $statistic, $period, $comparison, $threshold, 
-    $evaluationPeriods)
-{
+function putMetricAlarm(
+    $cloudWatchClient,
+    $cloudWatchRegion,
+    $alarmName,
+    $namespace,
+    $metricName,
+    $dimensions,
+    $statistic,
+    $period,
+    $comparison,
+    $threshold,
+    $evaluationPeriods
+) {
     try {
         $result = $cloudWatchClient->putMetricAlarm([
             'AlarmName' => $alarmName,
@@ -53,12 +61,12 @@ function putMetricAlarm($cloudWatchClient, $cloudWatchRegion,
             'Threshold' => $threshold,
             'EvaluationPeriods' => $evaluationPeriods
         ]);
-        
-        if (isset($result['@metadata']['effectiveUri']))
-        {
-            if ($result['@metadata']['effectiveUri'] == 
-                'https://monitoring.' . $cloudWatchRegion . '.amazonaws.com')
-            {
+
+        if (isset($result['@metadata']['effectiveUri'])) {
+            if (
+                $result['@metadata']['effectiveUri'] ==
+                'https://monitoring.' . $cloudWatchRegion . '.amazonaws.com'
+            ) {
                 return 'Successfully created or updated specified alarm.';
             } else {
                 return 'Could not create or update specified alarm.';
@@ -107,23 +115,22 @@ function putTheMetricAlarm()
         'version' => '2010-08-01'
     ]);
 
-    echo putMetricAlarm($cloudWatchClient, $cloudWatchRegion, 
-        $alarmName, $namespace, $metricName, 
-        $dimensions, $statistic, $period, $comparison, $threshold, 
-        $evaluationPeriods);
+    echo putMetricAlarm(
+        $cloudWatchClient,
+        $cloudWatchRegion,
+        $alarmName,
+        $namespace,
+        $metricName,
+        $dimensions,
+        $statistic,
+        $period,
+        $comparison,
+        $threshold,
+        $evaluationPeriods
+    );
 }
 
 // Uncomment the following line to run this code in an AWS account.
 // putTheMetricAlarm();
 // snippet-end:[cloudwatch.php.put_metric_alarm.main]
 // snippet-end:[cloudwatch.php.put_metric_alarm.complete]
-// snippet-sourcedescription:[PutMetricAlarm.php demonstrates how to create or update an alarm and associate it with the specified Amazon CloudWatch metric.]
-// snippet-keyword:[PHP]
-// snippet-sourcesyntax:[php]
-// snippet-keyword:[AWS SDK for PHP v3]
-// snippet-keyword:[Code Sample]
-// snippet-keyword:[Amazon Cloudwatch]
-// snippet-service:[cloudwatch]
-// snippet-sourcetype:[full-example]
-// snippet-sourcedate:[2020-05-08]
-// snippet-sourceauthor:[pccornel (AWS)]

@@ -1,11 +1,5 @@
-// snippet-sourcedescription:[DescribeAccountAttributes.kt demonstrates how to retrieve attributes that belong to an Amazon Relational Database Service (RDS) account.]
-// snippet-keyword:[AWS SDK for Kotlin]
-// snippet-service:[Amazon Relational Database Service]
-
-/*
-   Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
-   SPDX-License-Identifier: Apache-2.0
-*/
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 
 package com.kotlin.rds
 
@@ -27,7 +21,6 @@ suspend fun main() {
 
 // snippet-start:[rds.kotlin.describe_account.main]
 suspend fun getAccountAttributes() {
-
     RdsClient { region = "us-west-2" }.use { rdsClient ->
         val response = rdsClient.describeAccountAttributes(DescribeAccountAttributesRequest {})
         response.accountQuotas?.forEach { quotas ->

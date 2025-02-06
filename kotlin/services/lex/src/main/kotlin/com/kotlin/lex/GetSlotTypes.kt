@@ -1,14 +1,5 @@
-// snippet-sourcedescription:[GetSlotTypes.kt demonstrates how to return slot type information.]
-// snippet-keyword:[AWS SDK for Kotlin]
-// snippet-keyword:[Code Sample]
-// snippet-service:[Amazon Lex]
-// snippet-sourcetype:[full-example]
-// snippet-sourcedate:[05/27/2022]
-
-/*
-   Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
-   SPDX-License-Identifier: Apache-2.0
-*/
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 
 package com.kotlin.lex
 
@@ -31,7 +22,6 @@ suspend fun main() {
 
 // snippet-start:[lex.kotlin.get_slot_types.main]
 suspend fun getSlotsInfo() {
-
     LexModelBuildingClient { region = "us-west-2" }.use { lexClient ->
 
         val response = lexClient.getSlotTypes(GetSlotTypesRequest { })

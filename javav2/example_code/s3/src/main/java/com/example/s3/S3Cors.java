@@ -1,20 +1,17 @@
-//snippet-sourcedescription:[S3Cors.java demonstrates how to manage cross-origin resource sharing (CORS) for an Amazon Simple Storage Service (Amazon S3) bucket.]
-//snippet-keyword:[AWS SDK for Java v2]
-//snippet-service:[Amazon S3]
-
-/*
-   Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
-   SPDX-License-Identifier: Apache-2.0
-*/
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 
 package com.example.s3;
 
+// snippet-start:[s3.java2.cors.main]
 // snippet-start:[s3.java2.cors.import]
-import software.amazon.awssdk.auth.credentials.ProfileCredentialsProvider;
+
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.s3.S3Client;
+
 import java.util.ArrayList;
 import java.util.List;
+
 import software.amazon.awssdk.services.s3.model.GetBucketCorsRequest;
 import software.amazon.awssdk.services.s3.model.GetBucketCorsResponse;
 import software.amazon.awssdk.services.s3.model.DeleteBucketCorsRequest;
@@ -25,23 +22,24 @@ import software.amazon.awssdk.services.s3.model.PutBucketCorsRequest;
 // snippet-end:[s3.java2.cors.import]
 
 /**
- * Before running this Java V2 code example, set up your development environment, including your credentials.
- *
+ * Before running this Java V2 code example, set up your development
+ * environment, including your credentials.
+ * <p>
  * For more information, see the following documentation topic:
- *
+ * <p>
  * https://docs.aws.amazon.com/sdk-for-java/latest/developer-guide/get-started.html
  */
-
 public class S3Cors {
+    public static void main(String[] args) {
+        final String usage = """
 
-    public static void main (String[] args) {
+            Usage:
+                <bucketName> <accountId>\s
 
-        final String usage = "\n" +
-            "Usage:\n" +
-            "    <bucketName> <accountId> \n\n" +
-            "Where:\n" +
-            "    bucketName - The Amazon S3 bucket to upload an object into.\n" +
-            "    accountId - The id of the account that owns the Amazon S3 bucket.\n" ;
+            Where:
+                bucketName - The Amazon S3 bucket to upload an object into.
+                accountId - The id of the account that owns the Amazon S3 bucket.
+            """;
 
         if (args.length != 2) {
             System.out.println(usage);
@@ -50,20 +48,26 @@ public class S3Cors {
 
         String bucketName = args[0];
         String accountId = args[1];
-        ProfileCredentialsProvider credentialsProvider = ProfileCredentialsProvider.create();
         Region region = Region.US_EAST_1;
         S3Client s3 = S3Client.builder()
             .region(region)
-            .credentialsProvider(credentialsProvider)
             .build();
 
-       setCorsInformation(s3, bucketName, accountId);
-       getBucketCorsInformation(s3, bucketName, accountId);
-       deleteBucketCorsInformation(s3, bucketName, accountId);
-       s3.close();
+        setCorsInformation(s3, bucketName, accountId);
+        getBucketCorsInformation(s3, bucketName, accountId);
+        deleteBucketCorsInformation(s3, bucketName, accountId);
+        s3.close();
     }
 
-    // snippet-start:[s3.java2.cors.main]
+    /**
+     * Deletes the CORS (Cross-Origin Resource Sharing) configuration for an Amazon S3 bucket.
+     *
+     * @param s3            the {@link S3Client} instance used to interact with the Amazon S3 service
+     * @param bucketName    the name of the Amazon S3 bucket for which the CORS configuration should be deleted
+     * @param accountId     the expected AWS account ID of the bucket owner
+     *
+     * @throws S3Exception if an error occurs while deleting the CORS configuration for the bucket
+     */
     public static void deleteBucketCorsInformation(S3Client s3, String bucketName, String accountId) {
         try {
             DeleteBucketCorsRequest bucketCorsRequest = DeleteBucketCorsRequest.builder()
@@ -71,7 +75,7 @@ public class S3Cors {
                 .expectedBucketOwner(accountId)
                 .build();
 
-            s3.deleteBucketCors(bucketCorsRequest) ;
+            s3.deleteBucketCors(bucketCorsRequest);
 
         } catch (S3Exception e) {
             System.err.println(e.awsErrorDetails().errorMessage());
@@ -79,8 +83,16 @@ public class S3Cors {
         }
     }
 
+    /**
+     * Retrieves the CORS (Cross-Origin Resource Sharing) configuration for the specified S3 bucket.
+     *
+     * @param s3 the S3Client instance to use for the operation
+     * @param bucketName the name of the S3 bucket to retrieve the CORS configuration for
+     * @param accountId the expected bucket owner's account ID
+     *
+     * @throws S3Exception if there is an error retrieving the CORS configuration
+     */
     public static void getBucketCorsInformation(S3Client s3, String bucketName, String accountId) {
-
         try {
             GetBucketCorsRequest bucketCorsRequest = GetBucketCorsRequest.builder()
                 .bucket(bucketName)
@@ -89,9 +101,9 @@ public class S3Cors {
 
             GetBucketCorsResponse corsResponse = s3.getBucketCors(bucketCorsRequest);
             List<CORSRule> corsRules = corsResponse.corsRules();
-            for (CORSRule rule: corsRules) {
-                System.out.println("allowOrigins: "+rule.allowedOrigins());
-                System.out.println("AllowedMethod: "+rule.allowedMethods());
+            for (CORSRule rule : corsRules) {
+                System.out.println("allowOrigins: " + rule.allowedOrigins());
+                System.out.println("AllowedMethod: " + rule.allowedMethods());
             }
 
         } catch (S3Exception e) {
@@ -101,8 +113,14 @@ public class S3Cors {
         }
     }
 
+    /**
+     * Sets the Cross-Origin Resource Sharing (CORS) rules for an Amazon S3 bucket.
+     *
+     * @param s3 The S3Client object used to interact with the Amazon S3 service.
+     * @param bucketName The name of the S3 bucket to set the CORS rules for.
+     * @param accountId The AWS account ID of the bucket owner.
+     */
     public static void setCorsInformation(S3Client s3, String bucketName, String accountId) {
-
         List<String> allowMethods = new ArrayList<>();
         allowMethods.add("PUT");
         allowMethods.add("POST");
@@ -136,5 +154,5 @@ public class S3Cors {
             System.exit(1);
         }
     }
-    // snippet-end:[s3.java2.cors.main]
 }
+// snippet-end:[s3.java2.cors.main]

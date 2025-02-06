@@ -1,13 +1,6 @@
 ﻿// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
-// SPDX - License - Identifier: Apache - 2.0
+// SPDX-License-Identifier: Apache-2.0
 
-/// <summary>
-/// Amazon Simple Storage Service (Amazon S3) Transfer Acceleration is a
-/// bucket-level feature that enables you to perform faster data transfers
-/// to Amazon S3. This example shows how to configure Transfer
-/// Acceleration. The example was written using the AWS SDK for .NET 3.7
-/// and .NET Core 5.0.
-/// </summary>
 namespace TransferAccelerationExample
 {
     // snippet-start:[S3.dotnetv3.TransferAccelerationExample]
@@ -16,7 +9,13 @@ namespace TransferAccelerationExample
     using Amazon.S3;
     using Amazon.S3.Model;
 
-    class TransferAcceleration
+    /// <summary>
+    /// Amazon Simple Storage Service (Amazon S3) Transfer Acceleration is a
+    /// bucket-level feature that enables you to perform faster data transfers
+    /// to Amazon S3. This example shows how to configure Transfer
+    /// Acceleration.
+    /// </summary>
+    public class TransferAcceleration
     {
         /// <summary>
         /// The main method initializes the client object and sets the
@@ -26,7 +25,7 @@ namespace TransferAccelerationExample
         public static async Task Main()
         {
             var s3Client = new AmazonS3Client();
-            const string bucketName = "doc-example-bucket";
+            const string bucketName = "amzn-s3-demo-bucket";
 
             await EnableAccelerationAsync(s3Client, bucketName);
         }
@@ -39,7 +38,7 @@ namespace TransferAccelerationExample
         /// acceleration on an Amazon S3 bucket.</param>
         /// <param name="bucketName">The name of the Amazon S3 bucket for which the
         /// method will be enabling acceleration.</param>
-        static async Task EnableAccelerationAsync(AmazonS3Client client, string bucketName)
+        private static async Task EnableAccelerationAsync(AmazonS3Client client, string bucketName)
         {
             try
             {

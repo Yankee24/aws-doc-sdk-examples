@@ -1,9 +1,11 @@
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 import { describe, it, expect } from "vitest";
 
 import { main } from "../actions/document-client/batch-write.js";
 import { tableSetupTeardown } from "../libs/dynamodb-test.utils.js";
 import { DynamoDBClient, GetItemCommand } from "@aws-sdk/client-dynamodb";
-import { retry } from "libs/utils/util-timers.js";
+import { retry } from "@aws-doc-sdk-examples/lib/utils/util-timers.js";
 
 describe("document-batch-write", () => {
   const tableName = "BatchWriteMoviesTable";

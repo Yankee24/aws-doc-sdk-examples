@@ -1,11 +1,5 @@
-// snippet-sourcedescription:[ListDeliveryStreams.kt demonstrates how to list all delivery streams.]
-// snippet-keyword:[AWS SDK for Kotlin]
-// snippet-service:[Amazon Kinesis Data Firehose]
-
-/*
-   Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
-   SPDX-License-Identifier: Apache-2.0
-*/
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 
 package com.kotlin.firehose
 
@@ -28,7 +22,6 @@ suspend fun main() {
 
 // snippet-start:[firehose.kotlin.list_streams.main]
 suspend fun listStreams() {
-
     FirehoseClient { region = "us-west-2" }.use { firehoseClient ->
         val response = firehoseClient.listDeliveryStreams(ListDeliveryStreamsRequest {})
         response.deliveryStreamNames?.forEach { item ->

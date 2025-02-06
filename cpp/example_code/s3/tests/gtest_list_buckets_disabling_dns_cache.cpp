@@ -1,7 +1,5 @@
-/*
-   Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
-   SPDX-License-Identifier: Apache-2.0
-*/
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 /*
  * Test types are indicated by the test label ending.
  *
@@ -14,14 +12,15 @@
 #include <gtest/gtest.h>
 #include <fstream>
 #include <aws/core/http/HttpClientFactory.h>
-#include "awsdoc/s3/s3_examples.h"
+#include "../s3_examples.h"
 #include "S3_GTests.h"
 
 namespace AwsDocTest {
+    // This test is flaky. Add the D to disable it.
     // NOLINTNEXTLINE(readability-named-parameter)
-    TEST_F(S3_GTests, list_buckets_diabling_dns_cache_2_) {
+    TEST_F(S3_GTests, list_buckets_disabling_dns_cache_2D_) {
 
-        bool result = AwsDoc::S3::ListBucketDisablingDnsCache(*s_clientConfig);
+        bool result = AwsDoc::S3::listBucketDisablingDnsCache(*s_clientConfig);
         EXPECT_TRUE(result);
 
         // Reset the http client factory.

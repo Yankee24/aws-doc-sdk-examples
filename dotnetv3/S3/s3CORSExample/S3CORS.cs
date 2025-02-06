@@ -1,15 +1,6 @@
 ﻿// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
-// SPDX - License - Identifier: Apache - 2.0
+// SPDX-License-Identifier: Apache-2.0
 
-/// <summary>
-/// This example shows how to configure your Amazon Simple Storage Service
-/// (Amazon S3) bucket to allow cross-origin requests by creating a CORS
-/// configuration. The CORS configuration is a document with rules that
-/// identify the origins that you will allow to access your bucket, the
-/// operations (HTTP methods) supported for each origin, and other operation-
-/// specific information. This example was created using the AWS SDK for
-/// .NET 3.7 and .NET Core 5.0.
-/// </summary>
 namespace S3CORSExample
 {
     using System;
@@ -19,11 +10,19 @@ namespace S3CORSExample
     using Amazon.S3;
     using Amazon.S3.Model;
 
+    /// <summary>
+    /// This example shows how to configure your Amazon Simple Storage Service
+    /// (Amazon S3) bucket to allow cross-origin requests by creating a CORS
+    /// configuration. The CORS configuration is a document with rules that
+    /// identify the origins that you will allow to access your bucket, the
+    /// operations (HTTP methods) supported for each origin, and other operation-
+    /// specific information.
+    /// </summary>
     public class S3CORS
     {
         // Remember to change the bucket name to the name of an Amazon Simple
         // Storage Service (Amazon S3) bucket that exists on your account.
-        private const string BucketName = "doc-example-bucket";
+        private const string BucketName = "amzn-s3-demo-bucket";
 
         public static async Task Main()
         {
@@ -37,13 +36,13 @@ namespace S3CORSExample
         /// Create the Amazon S3 CORS configuration.
         /// </summary>
         /// <param name="client">The initialized Amazon S3 client object used
-        /// to create the CORS configuration</param>
+        /// to create the CORS configuration.</param>
         private static async Task CORSConfigTestAsync(AmazonS3Client client)
         {
             try
             {
                 // Create a new configuration request and add two rules.
-                CORSConfiguration configuration = new()
+                CORSConfiguration configuration = new CORSConfiguration()
                 {
                     Rules = new List<CORSRule>
                         {
@@ -112,7 +111,7 @@ namespace S3CORSExample
         /// <param name="configuration">The CORS configuration to apply.</param>
         private static async Task PutCORSConfigurationAsync(AmazonS3Client client, CORSConfiguration configuration)
         {
-            PutCORSConfigurationRequest request = new()
+            PutCORSConfigurationRequest request = new PutCORSConfigurationRequest()
             {
                 BucketName = BucketName,
                 Configuration = configuration,
@@ -133,7 +132,7 @@ namespace S3CORSExample
         /// <returns>The created CORS configuration object.</returns>
         private static async Task<CORSConfiguration> RetrieveCORSConfigurationAsync(AmazonS3Client client)
         {
-            GetCORSConfigurationRequest request = new()
+            GetCORSConfigurationRequest request = new GetCORSConfigurationRequest()
             {
                 BucketName = BucketName,
             };
@@ -154,7 +153,7 @@ namespace S3CORSExample
         /// to delete the CORS configuration from the bucket.</param>
         private static async Task DeleteCORSConfigurationAsync(AmazonS3Client client)
         {
-            DeleteCORSConfigurationRequest request = new()
+            DeleteCORSConfigurationRequest request = new DeleteCORSConfigurationRequest()
             {
                 BucketName = BucketName,
             };

@@ -6,10 +6,12 @@
 package scenarios
 
 import (
+	"context"
 	"fmt"
 	"testing"
 	"time"
 
+	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb/types"
 	"github.com/awsdocs/aws-doc-sdk-examples/gov2/dynamodb/actions"
 	"github.com/awsdocs/aws-doc-sdk-examples/gov2/dynamodb/stubs"
@@ -53,6 +55,8 @@ func (scenTest *PartiQLBatchScenarioTest) SetupDataAndStubs() []testtools.Stub {
 	},
 	}
 	newRatings := []float64{7.7, 4.4, 1.1}
+	pageSize := int32(2)
+	pageToken := "test-token"
 
 	insertStatements := make([]string, len(customMovies))
 	updateStatements := make([]string, len(customMovies))
@@ -89,7 +93,10 @@ func (scenTest *PartiQLBatchScenarioTest) SetupDataAndStubs() []testtools.Stub {
 	stubList = append(stubList, stubs.StubBatchExecuteStatement(updateStatements, updateParamList, nil, nil))
 	stubList = append(stubList, stubs.StubExecuteStatement(
 		fmt.Sprintf("SELECT title, info.rating FROM \"%v\"", scenTest.TableName),
-		nil, projectedMovies, nil))
+		nil, aws.Int32(pageSize), nil, projectedMovies[0:pageSize], aws.String(pageToken), nil))
+	stubList = append(stubList, stubs.StubExecuteStatement(
+		fmt.Sprintf("SELECT title, info.rating FROM \"%v\"", scenTest.TableName),
+		nil, aws.Int32(pageSize), aws.String(pageToken), projectedMovies[pageSize:], nil, nil))
 	stubList = append(stubList, stubs.StubBatchExecuteStatement(deleteStatements, getDelParamList, nil, nil))
 	stubList = append(stubList, stubs.StubDeleteTable(scenTest.TableName, nil))
 
@@ -99,5 +106,7 @@ func (scenTest *PartiQLBatchScenarioTest) SetupDataAndStubs() []testtools.Stub {
 // RunSubTest performs a batch test run with a set of stubs that are set up to run with
 // or without errors.
 func (scenTest *PartiQLBatchScenarioTest) RunSubTest(stubber *testtools.AwsmStubber) {
-	RunPartiQLBatchScenario(*stubber.SdkConfig, scenTest.TableName)
+	RunPartiQLBatchScenario(context.Background(), *stubber.SdkConfig, scenTest.TableName)
 }
+
+func (scenTest *PartiQLBatchScenarioTest) Cleanup() {}

@@ -1,10 +1,5 @@
-// snippet-sourcedescription:[CreateCrawler.kt demonstrates how to create an AWS Glue crawler.]
-// snippet-keyword:[AWS SDK for Kotlin]
-// snippet-keyword:[AWS Glue]
-/*
-   Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
-   SPDX-License-Identifier: Apache-2.0
-*/
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 
 package com.kotlin.glue
 
@@ -25,7 +20,6 @@ https://docs.aws.amazon.com/sdk-for-kotlin/latest/developer-guide/setup.html
  */
 
 suspend fun main(args: Array<String>) {
-
     val usage = """
     Usage:
         <IAM> <s3Path> <cron> <dbName> <crawlerName>
@@ -57,28 +51,31 @@ suspend fun createGlueCrawler(
     s3Path: String?,
     cron: String?,
     dbName: String?,
-    crawlerName: String
+    crawlerName: String,
 ) {
-    val s3Target = S3Target {
-        path = s3Path
-    }
+    val s3Target =
+        S3Target {
+            path = s3Path
+        }
 
     // Add the S3Target to a list.
     val targetList = mutableListOf<S3Target>()
     targetList.add(s3Target)
 
-    val targetOb = CrawlerTargets {
-        s3Targets = targetList
-    }
+    val targetOb =
+        CrawlerTargets {
+            s3Targets = targetList
+        }
 
-    val request = CreateCrawlerRequest {
-        databaseName = dbName
-        name = crawlerName
-        description = "Created by the AWS Glue Kotlin API"
-        targets = targetOb
-        role = iam
-        schedule = cron
-    }
+    val request =
+        CreateCrawlerRequest {
+            databaseName = dbName
+            name = crawlerName
+            description = "Created by the AWS Glue Kotlin API"
+            targets = targetOb
+            role = iam
+            schedule = cron
+        }
 
     GlueClient { region = "us-west-2" }.use { glueClient ->
         glueClient.createCrawler(request)

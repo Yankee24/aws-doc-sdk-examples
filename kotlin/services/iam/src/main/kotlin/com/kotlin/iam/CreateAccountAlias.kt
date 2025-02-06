@@ -1,11 +1,5 @@
-// snippet-sourcedescription:[CreateAccountAlias.kt demonstrates how to create an alias for an AWS account.]
-// snippet-keyword:[AWS SDK for Kotlin]
-// snippet-service:[Identity and Access Management (IAM)]
-
-/*
-   Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
-   SPDX-License-Identifier: Apache-2.0
-*/
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 
 package com.kotlin.iam
 
@@ -24,7 +18,6 @@ https://docs.aws.amazon.com/sdk-for-kotlin/latest/developer-guide/setup.html
  */
 
 suspend fun main(args: Array<String>) {
-
     val usage = """
         Usage:
             <alias> 
@@ -44,10 +37,10 @@ suspend fun main(args: Array<String>) {
 
 // snippet-start:[iam.kotlin.create_account_alias.main]
 suspend fun createIAMAccountAlias(alias: String) {
-
-    val request = CreateAccountAliasRequest {
-        accountAlias = alias
-    }
+    val request =
+        CreateAccountAliasRequest {
+            accountAlias = alias
+        }
 
     IamClient { region = "AWS_GLOBAL" }.use { iamClient ->
         iamClient.createAccountAlias(request)

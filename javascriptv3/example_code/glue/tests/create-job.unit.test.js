@@ -1,7 +1,5 @@
-/*
- * Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
- * SPDX-License-Identifier: Apache-2.0
- */
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 
 import { describe, it, expect, vi } from "vitest";
 import { makeCreateJobStep } from "../scenarios/basic/steps/create-job.js";
@@ -23,7 +21,7 @@ describe("create-job", () => {
       "flight_etl_job",
       expect.stringContaining(""),
       expect.stringContaining(""),
-      "flight_etl_job_script.py"
+      "flight_etl_job_script.py",
     );
   });
 

@@ -1,63 +1,72 @@
-//snippet-sourcedescription:[DescribeAddresses.java demonstrates how to get information about elastic IP addresses.]
-//snippet-keyword:[AWS SDK for Java v2]
-//snippet-service:[Amazon EC2]
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 
-/*
-   Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
-   SPDX-License-Identifier: Apache-2.0
-*/
 package com.example.ec2;
 
+// snippet-start:[ec2.java2.describe_addresses.main]
 // snippet-start:[ec2.java2.describe_addresses.import]
-import software.amazon.awssdk.auth.credentials.ProfileCredentialsProvider;
 import software.amazon.awssdk.regions.Region;
-import software.amazon.awssdk.services.ec2.Ec2Client;
-import software.amazon.awssdk.services.ec2.model.Address;
+import software.amazon.awssdk.services.ec2.Ec2AsyncClient;
 import software.amazon.awssdk.services.ec2.model.DescribeAddressesResponse;
-import software.amazon.awssdk.services.ec2.model.Ec2Exception;
+import java.util.concurrent.CompletableFuture;
 // snippet-end:[ec2.java2.describe_addresses.import]
 
 /**
- * Before running this Java V2 code example, set up your development environment, including your credentials.
+ * Before running this Java V2 code example, set up your development
+ * environment, including your credentials.
  *
  * For more information, see the following documentation topic:
  *
  * https://docs.aws.amazon.com/sdk-for-java/latest/developer-guide/get-started.html
  */
 public class DescribeAddresses {
-
     public static void main(String[] args) {
-
-        Region region = Region.US_EAST_1;
-        Ec2Client ec2 = Ec2Client.builder()
-            .region(region)
-            .credentialsProvider(ProfileCredentialsProvider.create())
+        Ec2AsyncClient ec2AsyncClient = Ec2AsyncClient.builder()
+            .region(Region.US_EAST_1)
             .build();
 
-        describeEC2Address(ec2 );
-        ec2.close();
-    }
-
-    // snippet-start:[ec2.java2.describe_addresses.main]
-    public static void describeEC2Address(Ec2Client ec2 ) {
-
         try {
-            DescribeAddressesResponse response = ec2.describeAddresses();
-            for(Address address : response.addresses()) {
-                System.out.printf(
-                    "Found address with public IP %s, " +
-                       "domain %s, " +
-                       "allocation id %s " +
-                       "and NIC id %s",
-                    address.publicIp(),
-                    address.domain(),
-                    address.allocationId(),
-                    address.networkInterfaceId());
-            }
-        } catch (Ec2Exception e) {
-            System.err.println(e.awsErrorDetails().errorMessage());
-            System.exit(1);
+            CompletableFuture<DescribeAddressesResponse> future = describeEC2AddressAsync(ec2AsyncClient);
+            future.join();
+        } catch (RuntimeException rte) {
+            System.err.println("An exception occurred: " + (rte.getCause() != null ? rte.getCause().getMessage() : rte.getMessage()));
         }
     }
-    // snippet-end:[ec2.java2.describe_addresses.main]
+
+    /**
+     * Asynchronously describes the Elastic Compute Cloud (EC2) addresses associated with the provided
+     * {@code Ec2AsyncClient}.
+     *
+     * @param ec2AsyncClient the EC2 asynchronous client to use for the request
+     * @return a {@link CompletableFuture} containing the {@link DescribeAddressesResponse} with the
+     *     details of the described addresses
+     */
+    public static CompletableFuture<DescribeAddressesResponse> describeEC2AddressAsync(Ec2AsyncClient ec2AsyncClient) {
+        CompletableFuture<DescribeAddressesResponse> response = ec2AsyncClient.describeAddresses();
+        // Handle the response or exception.
+        response.whenComplete((addressesResponse, ex) -> {
+            if (ex != null) {
+                throw new RuntimeException("Failed to describe EC2 addresses.", ex);
+            } else if (addressesResponse == null || addressesResponse.addresses().isEmpty()) {
+                // Throw an exception if the response is null or the result is empty (no addresses found).
+                throw new RuntimeException("No EC2 addresses found.");
+            } else {
+                // Process the response if no exception occurred and the result is not empty.
+                addressesResponse.addresses().forEach(address -> {
+                    System.out.printf(
+                        "Found address with public IP %s, " +
+                            "domain %s, " +
+                            "allocation id %s, " +
+                            "and NIC id %s%n",
+                        address.publicIp(),
+                        address.domain(),
+                        address.allocationId(),
+                        address.networkInterfaceId());
+                });
+            }
+        });
+
+        return response;
+    }
 }
+// snippet-end:[ec2.java2.describe_addresses.main]

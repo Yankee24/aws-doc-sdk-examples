@@ -1,11 +1,5 @@
-// snippet-sourcedescription:[AccessKeyLastUsed.kt demonstrates how to display the time that an access key was last used.]
-// snippet-keyword:[AWS SDK for Kotlin]
-// snippet-service:[Identity and Access Management (IAM)]
-
-/*
-   Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
-   SPDX-License-Identifier: Apache-2.0
-*/
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 
 package com.kotlin.iam
 
@@ -24,7 +18,6 @@ https://docs.aws.amazon.com/sdk-for-kotlin/latest/developer-guide/setup.html
  */
 
 suspend fun main(args: Array<String>) {
-
     val usage = """
         Usage:
             <accessId> 
@@ -43,10 +36,10 @@ suspend fun main(args: Array<String>) {
 
 // snippet-start:[iam.kotlin.access_key_last_used.main]
 suspend fun getAccessKeyLastUsed(accessId: String?) {
-
-    val request = GetAccessKeyLastUsedRequest {
-        accessKeyId = accessId
-    }
+    val request =
+        GetAccessKeyLastUsedRequest {
+            accessKeyId = accessId
+        }
 
     IamClient { region = "AWS_GLOBAL" }.use { iamClient ->
         val response = iamClient.getAccessKeyLastUsed(request)

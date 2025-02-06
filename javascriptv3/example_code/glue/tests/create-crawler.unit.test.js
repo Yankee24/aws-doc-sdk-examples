@@ -1,7 +1,5 @@
-/*
- * Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
- * SPDX-License-Identifier: Apache-2.0
- */
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 
 import { describe, it, expect, vi } from "vitest";
 import { makeCreateCrawlerStep } from "../scenarios/basic/steps/create-crawler.js";
@@ -22,9 +20,7 @@ describe("create-crawler", () => {
   });
 
   it("should create a crawler if it is not already created", async () => {
-    const getCrawler = vi.fn(async () => {
-      throw new Error();
-    });
+    const getCrawler = vi.fn(() => Promise.reject(new Error()));
     const createCrawler = vi.fn();
     const createCrawlerStep = makeCreateCrawlerStep({
       getCrawler,

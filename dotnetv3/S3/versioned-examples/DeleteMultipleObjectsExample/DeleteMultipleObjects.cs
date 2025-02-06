@@ -1,26 +1,24 @@
 ﻿// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
-// SPDX-License-Identifier:  Apache-2.0
+// SPDX-License-Identifier: Apache-2.0
 
-/// <summary>
-/// This example shows how to delete objects in a version-enabled Amazon
-/// Simple StorageService (Amazon S3) bucket. It was created using AWS
-/// SDK for .NET version 3.7 and .NET Core 5.0.
-/// </summary>
 namespace DeleteMultipleObjectsExample
 {
     // snippet-start:[S3.dotnetv3.DeleteMultipleVersionedObjectsExample]
     using System;
     using System.Collections.Generic;
     using System.Threading.Tasks;
-    using Amazon;
     using Amazon.S3;
     using Amazon.S3.Model;
 
+    /// <summary>
+    /// This example shows how to delete objects in a version-enabled Amazon
+    /// Simple StorageService (Amazon S3) bucket.
+    /// </summary>
     public class DeleteMultipleObjects
     {
         public static async Task Main()
         {
-            string bucketName = "doc-example-bucket";
+            string bucketName = "amzn-s3-demo-bucket";
 
             // If the AWS Region for your Amazon S3 bucket is different from
             // the AWS Region of the default user, define the AWS Region for
@@ -71,7 +69,7 @@ namespace DeleteMultipleObjectsExample
             // Upload the sample objects.
             var keysAndVersions2 = await PutObjectsAsync(client, bucketName, 3);
 
-            // Delete objects using only keys. Amazon S3 creates a delete marker and 
+            // Delete objects using only keys. Amazon S3 creates a delete marker and
             // returns its version ID in the response.
             List<DeletedObject> deletedObjects = await NonVersionedDeleteAsync(client, bucketName, keysAndVersions2);
             return deletedObjects;
@@ -80,6 +78,9 @@ namespace DeleteMultipleObjectsExample
         /// <summary>
         /// This method creates several temporary objects and then deletes them.
         /// </summary>
+        /// <param name="client">The S3 client.</param>
+        /// <param name="bucketName">Name of the bucket.</param>
+        /// <returns>Async task.</returns>
         public static async Task DeleteObjectVersionsAsync(IAmazonS3 client, string bucketName)
         {
             // Upload the sample objects.
@@ -114,7 +115,7 @@ namespace DeleteMultipleObjectsExample
         /// <param name="bucketName">The name of the bucket from which to delete
         /// objects.</param>
         /// <param name="keys">A list of key names for the objects to delete.</param>
-        static async Task VersionedDeleteAsync(IAmazonS3 client, string bucketName, List<KeyVersion> keys)
+        private static async Task VersionedDeleteAsync(IAmazonS3 client, string bucketName, List<KeyVersion> keys)
         {
             var multiObjectDeleteRequest = new DeleteObjectsRequest
             {
@@ -144,7 +145,7 @@ namespace DeleteMultipleObjectsExample
         /// objects.</param>
         /// <param name="keys">A list of key names for the objects to delete.</param>
         /// <returns>A list of the deleted objects.</returns>
-        static async Task<List<DeletedObject>> NonVersionedDeleteAsync(IAmazonS3 client, string bucketName, List<KeyVersion> keys)
+        private static async Task<List<DeletedObject>> NonVersionedDeleteAsync(IAmazonS3 client, string bucketName, List<KeyVersion> keys)
         {
             // Create a request that includes only the object key names.
             DeleteObjectsRequest multiObjectDeleteRequest = new DeleteObjectsRequest();
@@ -229,7 +230,7 @@ namespace DeleteMultipleObjectsExample
         /// bucket where we will create the temporary objects.</param>
         /// <param name="number">The number of temporary objects to create.</param>
         /// <returns>A list of the KeyVersion objects.</returns>
-        static async Task<List<KeyVersion>> PutObjectsAsync(IAmazonS3 client, string bucketName, int number)
+        private static async Task<List<KeyVersion>> PutObjectsAsync(IAmazonS3 client, string bucketName, int number)
         {
             var keys = new List<KeyVersion>();
 

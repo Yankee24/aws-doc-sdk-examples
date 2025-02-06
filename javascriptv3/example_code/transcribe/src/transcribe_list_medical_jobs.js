@@ -1,6 +1,7 @@
-/* Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
-SPDX-License-Identifier: Apache-2.0
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 
+/*
 ABOUT THIS NODE.JS EXAMPLE: This example works with the AWS SDK for JavaScript version 3 (v3),
 which is available at https://github.com/aws/aws-sdk-js-v3.
 
@@ -27,7 +28,7 @@ export const params = {
 export const run = async () => {
   try {
     const data = await transcribeClient.send(
-      new ListMedicalTranscriptionJobsCommand(params)
+      new ListMedicalTranscriptionJobsCommand(params),
     );
     console.log("Success", data.MedicalTranscriptionJobName);
     return data; // For unit tests.

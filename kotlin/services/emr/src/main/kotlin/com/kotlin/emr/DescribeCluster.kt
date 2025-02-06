@@ -1,10 +1,5 @@
-// snippet-sourcedescription:[DescribeCluster.kt demonstrates how to describe a given cluster.]
-// snippet-keyword:[AWS SDK for Kotlin]
-// snippet-keyword:[Amazon EMR]
-/*
-   Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
-   SPDX-License-Identifier: Apache-2.0
-*/
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 
 package com.kotlin.emr
 
@@ -23,7 +18,6 @@ https://docs.aws.amazon.com/sdk-for-kotlin/latest/developer-guide/setup.html
  */
 
 suspend fun main(args: Array<String>) {
-
     val usage = """
         Usage:
             <clusterIdVal> 
@@ -43,10 +37,10 @@ suspend fun main(args: Array<String>) {
 
 // snippet-start:[erm.kotlin.describe_cluster.main]
 suspend fun describeMyCluster(clusterIdVal: String?) {
-
-    val request = DescribeClusterRequest {
-        clusterId = clusterIdVal
-    }
+    val request =
+        DescribeClusterRequest {
+            clusterId = clusterIdVal
+        }
 
     EmrClient { region = "us-west-2" }.use { emrClient ->
         val response = emrClient.describeCluster(request)

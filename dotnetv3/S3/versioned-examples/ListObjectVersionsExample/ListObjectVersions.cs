@@ -1,11 +1,6 @@
 ﻿// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
-// SPDX - License - Identifier: Apache - 2.0
+// SPDX-License-Identifier: Apache-2.0
 
-/// <summary>
-/// This example lists the versions of the objects in a version enabled
-/// Amazon Simple Storage Service (Amazon S3) bucket. It was created using
-/// the AWS SDK for .NET verion 3.7 and .NET Core 5.0.
-/// </summary>
 namespace ListObjectVersionsExample
 {
     // snippet-start:[S3.dotnetv3.ListObjectVersionsExample]
@@ -14,11 +9,15 @@ namespace ListObjectVersionsExample
     using Amazon.S3;
     using Amazon.S3.Model;
 
+    /// <summary>
+    /// This example lists the versions of the objects in a version enabled
+    /// Amazon Simple Storage Service (Amazon S3) bucket.
+    /// </summary>
     public class ListObjectVersions
     {
         public static async Task Main()
         {
-            string bucketName = "doc-example-bucket";
+            string bucketName = "amzn-s3-demo-bucket";
 
             // If the AWS Region where your bucket is defined is different from
             // the AWS Region where the Amazon S3 bucket is defined, pass the constant
@@ -46,7 +45,7 @@ namespace ListObjectVersionsExample
 
                 // For this example we set a small limit in MaxKeys to return
                 // a small list of versions.
-                ListVersionsRequest request = new()
+                ListVersionsRequest request = new ListVersionsRequest()
                 {
                     BucketName = bucketName,
                     MaxKeys = 2,

@@ -1,6 +1,7 @@
-/* Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
-SPDX-License-Identifier: Apache-2.0
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 
+/*
 ABOUT THIS NODE.JS EXAMPLE: This example works with the AWS SDK for JavaScript version 3 (v3),
 which is available at https://github.com/aws/aws-sdk-js-v3. This example is in the 'AWS SDK for JavaScript v3 Developer Guide' at
 https://docs.aws.amazon.com/sdk-for-javascript/v3/developer-guide/cross-service-example-scan-and-publish-message.html.
@@ -17,18 +18,17 @@ Inputs (replace in code):
 */
 // snippet-start:[lambda.JavaScript.general-examples-dynamodb-lambda.scanAndPublishV3]
 // snippet-start:[lambda.JavaScript.general-examples-dynamodb-lambda.scanAndPublishV3.config]
-"use strict";
 const { ScanCommand } = require("@aws-sdk/client-dynamodb");
 const { PublishCommand } = require("@aws-sdk/client-sns");
-const {snsClient} = require ( "./libs/snsClient" );
-const {dynamoClient} = require ( "./libs/dynamoClient" );
+const { snsClient } = require("./libs/snsClient");
+const { dynamoClient } = require("./libs/dynamoClient");
 
 // Get today's date.
 const today = new Date();
 const dd = String(today.getDate()).padStart(2, "0");
 const mm = String(today.getMonth() + 1).padStart(2, "0"); //January is 0!
 const yyyy = today.getFullYear();
-const date = yyyy + "-" + mm + "-" + dd;
+const date = `${yyyy}-${mm}-${dd}`;
 
 // Set the parameters for the ScanCommand method.
 const params = {
@@ -58,22 +58,17 @@ exports.handler = async () => {
   try {
     // Scan the table to identify employees with work anniversary today.
     const data = await dynamoClient.send(new ScanCommand(params));
-    data.Items.forEach(function (element) {
+    for (const element of data.Items) {
       const textParams = {
         PhoneNumber: element.phone.N,
-        Message:
-            "Hi " +
-            element.firstName.S +
-            "; congratulations on your work anniversary!",
+        Message: `Hi ${element.firstName.S}; congratulations on your work anniversary!`,
       };
       // Send message using Amazon SNS.
       sendText(textParams);
-    });
+    }
   } catch (err) {
     console.log("Error, could not scan table ", err);
   }
 };
 // snippet-end:[lambda.JavaScript.general-examples-dynamodb-lambda.scanAndPublishV3.handler]
 // snippet-end:[lambda.JavaScript.general-examples-dynamodb-lambda.scanAndPublishV3]
-
-

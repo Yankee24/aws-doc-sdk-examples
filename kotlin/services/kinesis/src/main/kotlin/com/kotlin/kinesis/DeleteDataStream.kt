@@ -1,10 +1,5 @@
-// snippet-sourcedescription:[DeleteDataStream.kt demonstrates how to delete an Amazon Kinesis data stream.]
-// snippet-keyword:[AWS SDK for Kotlin]
-// snippet-keyword:[Amazon Kinesis]
-/*
-   Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
-   SPDX-License-Identifier: Apache-2.0
-*/
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 
 package com.kotlin.kinesis
 
@@ -23,7 +18,6 @@ https://docs.aws.amazon.com/sdk-for-kotlin/latest/developer-guide/setup.html
  */
 
 suspend fun main(args: Array<String>) {
-
     val usage = """
     Usage: <streamName>
 
@@ -42,10 +36,10 @@ suspend fun main(args: Array<String>) {
 
 // snippet-start:[kinesis.kotlin.delete.main]
 suspend fun deleteStream(streamNameVal: String?) {
-
-    val request = DeleteStreamRequest {
-        streamName = streamNameVal
-    }
+    val request =
+        DeleteStreamRequest {
+            streamName = streamNameVal
+        }
 
     KinesisClient { region = "us-east-1" }.use { kinesisClient ->
         kinesisClient.deleteStream(request)

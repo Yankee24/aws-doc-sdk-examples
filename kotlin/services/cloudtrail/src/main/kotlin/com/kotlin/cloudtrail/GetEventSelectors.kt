@@ -1,12 +1,5 @@
-// snippet-comment:[These are tags for the AWS doc team's sample catalog. Do not remove.]
-// snippet-sourcedescription:[GetEventSelectors.kt demonstrates how to get event selectors for a given trail.]
-// snippet-keyword:[AWS SDK for Kotlin]
-// snippet-service:[AWS CloudTrail]
-
-/*
-   Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
-   SPDX-License-Identifier: Apache-2.0
-*/
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 
 package com.kotlin.cloudtrail
 
@@ -17,7 +10,6 @@ import kotlin.system.exitProcess
 // snippet-end:[cloudtrail.kotlin.get_event_selectors.import]
 
 suspend fun main(args: Array<String>) {
-
     val usage = """
 
     Usage:
@@ -39,10 +31,10 @@ suspend fun main(args: Array<String>) {
 
 // snippet-start:[cloudtrail.kotlin.get_event_selectors.main]
 suspend fun getSelectors(trailNameVal: String) {
-
-    val request = GetEventSelectorsRequest {
-        trailName = trailNameVal
-    }
+    val request =
+        GetEventSelectorsRequest {
+            trailName = trailNameVal
+        }
 
     CloudTrailClient { region = "us-east-1" }.use { cloudTrail ->
 

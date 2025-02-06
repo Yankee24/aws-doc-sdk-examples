@@ -1,7 +1,5 @@
-/*
- * Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
- * SPDX-License-Identifier: Apache-2.0
- */
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 
 import { describe, it, expect, vi } from "vitest";
 import { mockPrompter } from "./mock-prompter.js";
@@ -9,8 +7,10 @@ import { makePickJobRunStep } from "../scenarios/basic/steps/pick-job-run.js";
 
 describe("pick-job-run", () => {
   it("should call getJobRun for a selected job run", async () => {
-    const getJobRun = vi.fn(async () => ({}));
-    const getJobRuns = vi.fn(async () => ({ JobRuns: [{ Id: "jobRun1" }] }));
+    const getJobRun = vi.fn(() => Promise.resolve({}));
+    const getJobRuns = vi.fn(() =>
+      Promise.resolve({ JobRuns: [{ Id: "jobRun1" }] }),
+    );
     const actions = { getJobRun, getJobRuns };
     const context = {
       selectedJobName: "job1",
@@ -24,8 +24,10 @@ describe("pick-job-run", () => {
   });
 
   it("should return a context object", async () => {
-    const getJobRun = vi.fn(async () => ({}));
-    const getJobRuns = vi.fn(async () => ({ JobRuns: [{ Id: "jobRun1" }] }));
+    const getJobRun = vi.fn(() => Promise.resolve({}));
+    const getJobRuns = vi.fn(() =>
+      Promise.resolve({ JobRuns: [{ Id: "jobRun1" }] }),
+    );
     const actions = { getJobRun, getJobRuns };
 
     const step = makePickJobRunStep(actions);

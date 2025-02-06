@@ -1,12 +1,5 @@
-// snippet-comment:[These are tags for the AWS doc team's sample catalog. Do not remove.]
-// snippet-sourcedescription:[ListHealthChecks.kt demonstrates how to list health checks.]
-// snippet-keyword:[AWS SDK for Kotlin]
-// snippet-service:[Amazon Route 53]
-
-/*
-   Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
-   SPDX-License-Identifier: Apache-2.0
-*/
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 
 package com.kotlin.route
 
@@ -29,10 +22,10 @@ suspend fun main() {
 
 // snippet-start:[route53.kotlin.list_health_checks.main]
 suspend fun listAllHealthChecks() {
-
-    val requestOb = ListHealthChecksRequest {
-        this.maxItems = 10
-    }
+    val requestOb =
+        ListHealthChecksRequest {
+            this.maxItems = 10
+        }
 
     Route53Client { region = "AWS_GLOBAL" }.use { route53Client ->
         val response = route53Client.listHealthChecks(requestOb)

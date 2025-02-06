@@ -1,5 +1,5 @@
 ﻿// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
-// SPDX-License-Identifier:  Apache-2.0
+// SPDX-License-Identifier: Apache-2.0
 
 /// <summary>
 /// This example generates a presigned URL for an object in an Amazon
@@ -18,7 +18,7 @@ namespace GenPresignedUrlExample
     {
         public static void Main()
         {
-            const string bucketName = "doc-example-bucket";
+            const string bucketName = "amzn-s3-demo-bucket";
             const string objectKey = "sample.txt";
 
             // Specify how long the presigned URL lasts, in hours

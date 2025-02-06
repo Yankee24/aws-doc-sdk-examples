@@ -1,12 +1,12 @@
 # Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
-# SPDX - License - Identifier: Apache - 2.0
+# SPDX-License-Identifier: Apache-2.0
 
 # Purpose
 
 # snippet-start:[ruby.example_code.sqs.CreateQueue]
 # This code example demonstrates how to create a queue in Amazon Simple Queue Service (Amazon SQS).
 
-require "aws-sdk-sqs"
+require 'aws-sdk-sqs'
 
 # @param sqs_client [Aws::SQS::Client] An initialized Amazon SQS client.
 # @param queue_name [String] The name of the queue.
@@ -27,18 +27,19 @@ end
 # Full example call:
 # Replace us-west-2 with the AWS Region you're using for Amazon SQS.
 def run_me
-  region = "us-west-2"
-  queue_name = "my-queue"
+  region = 'us-west-2'
+  queue_name = 'my-queue'
   sqs_client = Aws::SQS::Client.new(region: region)
 
   puts "Creating the queue named '#{queue_name}'..."
 
   if queue_created?(sqs_client, queue_name)
-    puts "Queue created."
+    puts 'Queue created.'
   else
-    puts "Queue not created."
+    puts 'Queue not created.'
   end
 end
 
+# Example usage:
 run_me if $PROGRAM_NAME == __FILE__
 # snippet-end:[ruby.example_code.sqs.CreateQueue]

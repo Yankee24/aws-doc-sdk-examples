@@ -1,9 +1,7 @@
-/*
- * Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
- * SPDX-License-Identifier: Apache-2.0
- */
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 
-import { fileURLToPath } from "url";
+import { fileURLToPath } from "node:url";
 
 // snippet-start:[sns.JavaScript.SMS.setSMSAttributesV3]
 import { SetSMSAttributesCommand } from "@aws-sdk/client-sns";
@@ -21,7 +19,7 @@ export const setSmsType = async (defaultSmsType = "Transactional") => {
         // such as one-time passcodes for multi-factor authentication.
         DefaultSMSType: defaultSmsType,
       },
-    })
+    }),
   );
   console.log(response);
   // {

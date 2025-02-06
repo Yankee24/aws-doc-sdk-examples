@@ -1,10 +1,8 @@
-/**
- * Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
- * SPDX-License-Identifier: Apache-2.0
- */
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 
 import { describe, it, expect, vi, beforeAll } from "vitest";
-let mockSendFn = vi.fn(async () => {});
+const mockSendFn = vi.fn(async () => {});
 
 vi.mock("@aws-sdk/client-ses", () => {
   return {

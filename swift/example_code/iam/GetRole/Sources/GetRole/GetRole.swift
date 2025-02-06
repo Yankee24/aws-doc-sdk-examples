@@ -1,11 +1,10 @@
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 //
 // Swift Example: GetRole
 //
 // An example showing how to use the Amazon Identity and Access Management (IAM)
 // `IAMClient` function `getRole()`.
-//
-// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
-// SPDX-License-Identifier: Apache-2.0.
 
 // snippet-start:[iam.swift.getrole.example]
 // snippet-start:[iam.swift.getrole.main.imports]
@@ -32,9 +31,8 @@ struct ExampleCommand: ParsableCommand {
     /// example.
     // snippet-start:[iam.swift.getrole.command.runasync]
     func runAsync() async throws {
-        let serviceHandler = await ServiceHandler()
-
         do {
+            let serviceHandler = try await ServiceHandler()
             let role = try await serviceHandler.getRole(name: rolename)
             
             guard   let roleName = role.roleName,
@@ -74,6 +72,7 @@ struct ExampleCommand: ParsableCommand {
                 print("---------------------------")
             }
         } catch {
+            print("ERROR: GetRole runAsync:", dump(error))
             throw error
         }
     }

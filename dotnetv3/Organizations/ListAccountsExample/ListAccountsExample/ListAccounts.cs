@@ -1,5 +1,5 @@
 ﻿// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
-// SPDX - License - Identifier: Apache - 2.0
+// SPDX-License-Identifier: Apache-2.0
 
 namespace ListAccountsExample
 {
@@ -11,16 +11,15 @@ namespace ListAccountsExample
 
     /// <summary>
     /// Uses the AWS Organizations service to list the accounts associated
-    /// with the default account. The example was created using the AWS SDK for
-    /// .NET and .NET Core 5.0.
+    /// with the default account.
     /// </summary>
-    class ListAccounts
+    public class ListAccounts
     {
         /// <summary>
         /// Creates the Organizations client and then calls its
         /// ListAccountsAsync method.
         /// </summary>
-        static async Task Main()
+        public static async Task Main()
         {
             // Create the client object using the default account.
             IAmazonOrganizations client = new AmazonOrganizationsClient();

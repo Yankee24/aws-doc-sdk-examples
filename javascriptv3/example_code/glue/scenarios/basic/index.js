@@ -1,9 +1,6 @@
-/*
- * Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
- * SPDX-License-Identifier: Apache-2.0
- */
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 import inquirer from "inquirer";
-import { pipe, andThen } from "ramda";
 import { config } from "dotenv";
 
 import { deleteDatabase } from "../../actions/delete-database.js";
@@ -41,23 +38,22 @@ import { makeValidatePythonScriptStep } from "./steps/validate-python-script.js"
 
 config();
 
-const run = pipe(
-  validateEnv,
-  andThen(makeValidatePythonScriptStep({ s3ListObjects })),
-  andThen(makeCreateCrawlerStep({ createCrawler, getCrawler })),
-  andThen(makeStartCrawlerStep({ getCrawler, startCrawler })),
-  andThen(makeGetDatabaseStep({ getDatabase })),
-  andThen(makeGetTablesStep({ getTables })),
-  andThen(makeCreateJobStep({ createJob })),
-  andThen(makeStartJobRunStep({ startJobRun, getJobRun })),
-  andThen(makePickJobStep({ listJobs })),
-  andThen(makePickJobRunStep({ getJobRun, getJobRuns })),
-  andThen(makeCleanUpJobsStep({ listJobs, deleteJob })),
-  andThen(makeCleanUpTablesStep({ getTables, deleteTable })),
-  andThen(makeCleanUpDatabasesStep({ getDatabases, deleteDatabase })),
-  andThen(cleanUpCrawlerStep),
-  andThen(deleteStackReminder)
-);
+const run = (context) =>
+  validateEnv(context)
+    .then(makeValidatePythonScriptStep({ s3ListObjects }))
+    .then(makeCreateCrawlerStep({ createCrawler, getCrawler }))
+    .then(makeStartCrawlerStep({ getCrawler, startCrawler }))
+    .then(makeGetDatabaseStep({ getDatabase }))
+    .then(makeGetTablesStep({ getTables }))
+    .then(makeCreateJobStep({ createJob }))
+    .then(makeStartJobRunStep({ startJobRun, getJobRun }))
+    .then(makePickJobStep({ listJobs }))
+    .then(makePickJobRunStep({ getJobRun, getJobRuns }))
+    .then(makeCleanUpJobsStep({ listJobs, deleteJob }))
+    .then(makeCleanUpTablesStep({ getTables, deleteTable }))
+    .then(makeCleanUpDatabasesStep({ getDatabases, deleteDatabase }))
+    .then(cleanUpCrawlerStep)
+    .then(deleteStackReminder);
 
 try {
   await run({
